@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+version = '1.0.0'
+
+jar.baseName("rival-chess-model")
+
+jar {
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    manifest {
+        attributes(
+                'Implementation-Title': 'Gradle Quickstart',
+                'Implementation-Version': version
+        )
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.slf4j', name: 'slf4j-jdk14', version: '1.7.30'
+
+    testImplementation 'junit:junit:4.12'
+
+}
+
+test {
+    useJUnit()
+    maxHeapSize = '1G'
+    testLogging.showStandardStreams = true
+}
+
+task createProperties(dependsOn: processResources) {
+    doLast {
+        new File("$buildDir/resources/main/version.properties").withWriter { w ->
+            Properties p = new Properties()
+            p['version'] = project.version.toString()
+            p.store w, null
+        }
+    }
+}

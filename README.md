@@ -1,0 +1,2 @@
+Rival Chess Model
+=================
