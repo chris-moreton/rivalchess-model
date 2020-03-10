@@ -2,18 +2,23 @@ package com.netsensia.rivalchess.model;
 
 public class Board {
 
-	private static final int DEFAULT_BOARD_NUM_FILES = 8;
-    private static final int DEFAULT_BOARD_NUM_RANKS = 8;
+	public static final int DEFAULT_BOARD_NUM_FILES = 8;
+	public static final int DEFAULT_BOARD_NUM_RANKS = 8;
 
     public static final char VACANT_TILE = '_';
 
-    private boolean isWhiteKingSideCastleAvailable = true;
-    private boolean isWhiteQueenSideCastleAvailable = true;
-    private boolean isBlackKingSideCastleAvailable = true;
-    private boolean isBlackQueenSideCastleAvailable = true;
+    protected final char[] boardArray;
+    protected final int numXFiles;
+    protected final int numYRanks;
+    protected int enPassantFile = 0;
 
-    private final int halfMoveCount = 0;
-    private boolean isWhiteToMove = true;
+    protected boolean isWhiteKingSideCastleAvailable = true;
+    protected boolean isWhiteQueenSideCastleAvailable = true;
+    protected boolean isBlackKingSideCastleAvailable = true;
+    protected boolean isBlackQueenSideCastleAvailable = true;
+
+    protected final int halfMoveCount = 0;
+    protected boolean isWhiteToMove = true;
 
     public Board() {
         this(DEFAULT_BOARD_NUM_FILES, DEFAULT_BOARD_NUM_RANKS);
