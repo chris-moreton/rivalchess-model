@@ -1,16 +1,19 @@
 package com.netsensia.rivalchess.model;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class BoardTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class BoardTest {
+
+    @Test
     public void testCustomRankAndFileCounts() {
         Board board = new Board(10, 12);
 
-        board.setPieceCode(9, 11, 'q');
-        assertEquals('q', board.getPieceCode(9, 11));
+        board.setSquareOccupant(9, 11, SquareOccupant.BQ);
+        assertEquals(SquareOccupant.BQ, board.getSquareOccupant(9, 11));
 
         Square square = new Square(9, 11);
-        assertEquals('q', board.getPieceCode(square));
+        assertEquals(SquareOccupant.BQ, board.getSquareOccupant(square));
     }
 }

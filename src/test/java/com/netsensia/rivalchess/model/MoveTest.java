@@ -1,11 +1,11 @@
 package com.netsensia.rivalchess.model;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-public class MoveTest extends TestCase {
+public class MoveTest {
 
     @Test
     public void testConstructFromFileAndRankRefs() {
@@ -40,6 +40,7 @@ public class MoveTest extends TestCase {
         assertEquals("a2b1q", move2.toString());
     }
 
+    @Test
     public void testEquals() {
         final Move move1 = new Move(3,1,4,2);
         final Move move2 = new Move(0,6,1,7);

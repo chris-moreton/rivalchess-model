@@ -2,23 +2,23 @@ package com.netsensia.rivalchess.model;
 
 public class Board {
 
-	public static final int DEFAULT_BOARD_NUM_FILES = 8;
-	public static final int DEFAULT_BOARD_NUM_RANKS = 8;
+	private static final int DEFAULT_BOARD_NUM_FILES = 8;
+    private static final int DEFAULT_BOARD_NUM_RANKS = 8;
 
-    public static final char VACANT_TILE = '_';
+    private static final char VACANT_TILE = '_';
 
-    protected final char[] boardArray;
-    protected final int numXFiles;
-    protected final int numYRanks;
-    protected int enPassantFile = 0;
+    private final char[] boardArray;
+    private final int numXFiles;
+    private final int numYRanks;
+    private int enPassantFile = 0;
 
-    protected boolean isWhiteKingSideCastleAvailable = true;
-    protected boolean isWhiteQueenSideCastleAvailable = true;
-    protected boolean isBlackKingSideCastleAvailable = true;
-    protected boolean isBlackQueenSideCastleAvailable = true;
+    private boolean isWhiteKingSideCastleAvailable = true;
+    private boolean isWhiteQueenSideCastleAvailable = true;
+    private boolean isBlackKingSideCastleAvailable = true;
+    private boolean isBlackQueenSideCastleAvailable = true;
 
-    protected final int halfMoveCount = 0;
-    protected boolean isWhiteToMove = true;
+    private final int halfMoveCount = 0;
+    private boolean isWhiteToMove = true;
 
     public Board() {
         this(DEFAULT_BOARD_NUM_FILES, DEFAULT_BOARD_NUM_RANKS);
@@ -30,19 +30,19 @@ public class Board {
         this.boardArray = new char[this.numYRanks * this.numXFiles];
     }
 
-    public char getPieceCode(Square boardRef) {
-        return this.getPieceCode(boardRef.getXFile(), boardRef.getYRank());
+    public SquareOccupant getSquareOccupant(Square boardRef) {
+        return this.getSquareOccupant(boardRef.getXFile(), boardRef.getYRank());
     }
 
-    public char getPieceCode(int xFile, int yRank) {
-        return this.boardArray[this.getBoardArrayIndex(xFile, yRank)];
+    public SquareOccupant getSquareOccupant(int xFile, int yRank) {
+        return SquareOccupant.fromChar(this.boardArray[this.getBoardArrayIndex(xFile, yRank)]);
     }
 
-    public void setPieceCode(int xFile, int yRank, char pieceCode) {
-        this.boardArray[this.getBoardArrayIndex(xFile, yRank)] = pieceCode;
+    public void setSquareOccupant(int xFile, int yRank, SquareOccupant squareOccupant) {
+        this.boardArray[this.getBoardArrayIndex(xFile, yRank)] = squareOccupant.toChar();
     }
 
-    protected int getBoardArrayIndex(int xFile, int yRank) {
+    private int getBoardArrayIndex(int xFile, int yRank) {
         return (this.numXFiles * yRank) + xFile;
     }
 

@@ -1,23 +1,79 @@
-plugins {
-    id 'java'
-    id 'maven-publish'
+buildscript {
+    repositories {
+        jcenter()
+    }
 }
 
-version = '1.0.1'
+plugins {
+    id 'java'
+    id 'maven'
+    id 'signing'
+}
 
-jar.baseName("rival-chess-model")
+group = "com.netsensia.rivalchess"
+version = '1.1.0'
 
-jar {
-    from {
-        configurations.compile.collect {
-            it.isDirectory() ? it : zipTree(it)
+jar.baseName("rivalchess-model")
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from tasks.javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            pom.project {
+                name 'rivalchess-model'
+                packaging 'jar'
+                description 'The simple model classes used by Rival Chess'
+                url 'https://github.com/chris-moreton/rivalchess-model'
+
+                scm {
+                    connection = 'scm:git:git://github.com/chris-moreton/rivalchess-model.git'
+                    developerConnection = 'scm:git:ssh://github.com/chris-moreton/rivalchess-model.git'
+                    url = 'https://github.com/chris-moreton/rivalchess-model'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'chris-moreton'
+                        name = 'Chris Moreton'
+                        email = 'chris@netsensia.com'
+                    }
+                }
+            }
         }
-    }
-    manifest {
-        attributes(
-                'Implementation-Title': 'Gradle Quickstart',
-                'Implementation-Version': version
-        )
     }
 }
 
@@ -45,28 +101,6 @@ task createProperties(dependsOn: processResources) {
             Properties p = new Properties()
             p['version'] = project.version.toString()
             p.store w, null
-        }
-    }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId = 'rivalchess-model'
-            groupId = 'com.netsensia.rivalchess'
-            from components.java
-            pom {
-                description = 'The model classes used by the Rival Chess Engine'
-            }
-        }
-    }
-    repositories {
-        maven {
-            mavenLocal()
-            // change URLs to point to your repos, e.g. http://my.org/repo
-            def releasesRepoUrl = "$buildDir/repos/releases"
-            def snapshotsRepoUrl = "$buildDir/repos/snapshots"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
         }
     }
 }
