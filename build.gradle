@@ -2,15 +2,12 @@ buildscript {
     repositories {
         jcenter()
     }
-    dependencies {
-        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
-    }
 }
 
 plugins {
     id 'java'
-    id 'maven-publish'
-    id 'io.codearte.nexus-staging' version '0.11.0'
+    id 'maven'
+    id 'signing'
 }
 
 group = "com.netsensia.rivalchess"
@@ -18,17 +15,65 @@ version = '1.0.2'
 
 jar.baseName("rivalchess-model")
 
-jar {
-    from {
-        configurations.compile.collect {
-            it.isDirectory() ? it : zipTree(it)
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from tasks.javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            pom.project {
+                name 'rivalchess-model'
+                packaging 'jar'
+                description 'The simple model classes used by Rival Chess'
+                url 'https://github.com/chris-moreton/rivalchess-model'
+
+                scm {
+                    connection = 'scm:git:git://github.com/chris-moreton/rivalchess-model.git'
+                    developerConnection = 'scm:git:ssh://github.com/chris-moreton/rivalchess-model.git'
+                    url = 'https://github.com/chris-moreton/rivalchess-model'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'chris-moreton'
+                        name = 'Chris Moreton'
+                        email = 'chris@netsensia.com'
+                    }
+                }
+            }
         }
-    }
-    manifest {
-        attributes(
-                'Implementation-Title': 'Gradle Quickstart',
-                'Implementation-Version': version
-        )
     }
 }
 
@@ -36,8 +81,6 @@ repositories {
     mavenLocal()
     mavenCentral()
 }
-
-apply plugin: 'com.bmuschko.nexus'
 
 dependencies {
     compile group: 'org.slf4j', name: 'slf4j-jdk14', version: '1.7.30'
@@ -60,18 +103,4 @@ task createProperties(dependsOn: processResources) {
             p.store w, null
         }
     }
-}
-
-extraArchive {
-    sources = true
-    tests = true
-}
-
-nexus {
-    sign = true
-    repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-    snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
-}
-
-nexusStaging {
 }
