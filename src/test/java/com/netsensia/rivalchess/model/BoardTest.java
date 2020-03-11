@@ -1,9 +1,12 @@
 package com.netsensia.rivalchess.model;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class BoardTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class BoardTest {
+
+    @Test
     public void testCustomRankAndFileCounts() {
         Board board = new Board(10, 12);
 
