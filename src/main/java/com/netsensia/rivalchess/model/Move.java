@@ -11,7 +11,7 @@ public class Move {
 
     final static private int DEFAULT_FILE_COUNT = 8;
 
-    private String promotedPieceCode = "";
+    private SquareOccupant promotedPiece = SquareOccupant.NONE;
 
     public Move(Square srcBoardRef, Square tgtBoardRef) {
         this(srcBoardRef.getXFile(), srcBoardRef.getYRank(), tgtBoardRef.getXFile(), tgtBoardRef.getYRank());
@@ -58,12 +58,12 @@ public class Move {
         this.tgtYRank = tgtYRank;
     }
 
-    public void setPromotedPieceCode(String promotedPieceCode) {
-        this.promotedPieceCode = promotedPieceCode;
+    public void setPromotedPiece(SquareOccupant promotedPieceCode) {
+        this.promotedPiece = promotedPieceCode;
     }
 
-    public String getPromotedPieceCode() {
-        return this.promotedPieceCode;
+    public SquareOccupant getPromotedPiece() {
+        return this.promotedPiece;
     }
 
     @Override
@@ -71,7 +71,9 @@ public class Move {
         return
                 this.getSrcBoardRef().getAlgebraic(numFiles) +
                         this.getTgtBoardRef().getAlgebraic(numFiles) +
-                        (this.promotedPieceCode == " " ? "" : this.promotedPieceCode);
+                        (promotedPiece == SquareOccupant.NONE
+                                ? ""
+                                : promotedPiece.toChar());
     }
 
     @Override
@@ -80,7 +82,7 @@ public class Move {
             Move move = (Move) o;
             return (move.getSrcBoardRef().equals(this.getSrcBoardRef())
                     && move.getTgtBoardRef().equals(this.getTgtBoardRef())
-                    && move.getPromotedPieceCode() == this.getPromotedPieceCode());
+                    && move.getPromotedPiece() == this.getPromotedPiece());
             }
         return false;
     }

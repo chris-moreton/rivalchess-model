@@ -36,8 +36,12 @@ public class MoveTest {
         assertEquals("d7e6", move1.toString());
 
         final Move move2 = new Move(0,6,1,7);
-        move2.setPromotedPieceCode("q");
+        move2.setPromotedPiece(SquareOccupant.BQ);
         assertEquals("a2b1q", move2.toString());
+
+        final Move move3 = new Move(0,1,1,0);
+        move3.setPromotedPiece(SquareOccupant.WQ);
+        assertEquals("a7b8Q", move3.toString());
     }
 
     @Test
@@ -58,5 +62,10 @@ public class MoveTest {
         assertNotEquals(move1, move3);
         assertNotEquals(move1, move5);
         assertNotEquals(move1, move6);
+    }
+
+    @Test
+    public void testGetPromotedPiece() {
+        final Move move1 = new Move(3,1,4,2);
     }
 }
