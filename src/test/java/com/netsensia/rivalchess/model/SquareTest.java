@@ -47,4 +47,13 @@ public class SquareTest {
         Square br1 = new Square(1, 2);
         assertEquals('6', br1.getAlgebraicYRank(8));
     }
+
+    @Test
+    public void createFromAlgebraic() {
+        Square square = Square.fromAlgebraic("b6");
+        assertEquals(1, square.getXFile());
+        assertEquals(2, square.getYRank());
+        assertEquals('b', square.getAlgebraicXFile());
+        assertEquals('6', square.getAlgebraicYRank(8));
+    }
 }

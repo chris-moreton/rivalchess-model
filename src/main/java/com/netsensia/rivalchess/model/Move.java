@@ -1,65 +1,101 @@
 package com.netsensia.rivalchess.model;
 
 public class Move {
-    private int srcXFile;
-    private int srcYRank;
+    final private int srcXFile;
+    final private int srcYRank;
 
-    private int tgtXFile;
-    private int tgtYRank;
+    final private int tgtXFile;
+    final private int tgtYRank;
 
     final private int numFiles;
 
     final static private int DEFAULT_FILE_COUNT = 8;
 
-    private SquareOccupant promotedPiece = SquareOccupant.NONE;
+    final private SquareOccupant promotedPiece;
 
-    public Move(Square srcBoardRef, Square tgtBoardRef) {
-        this(srcBoardRef.getXFile(), srcBoardRef.getYRank(), tgtBoardRef.getXFile(), tgtBoardRef.getYRank());
+    public Move(
+            final Square srcBoardRef,
+            final Square tgtBoardRef
+    ) {
+        this(
+                srcBoardRef.getXFile(),
+                srcBoardRef.getYRank(),
+                tgtBoardRef.getXFile(),
+                tgtBoardRef.getYRank(),
+                SquareOccupant.NONE);
     }
 
-    public Move(int srcXFile, int srcYRank, int tgtXFile, int tgtYRank) {
-        this(srcXFile, srcYRank, tgtXFile, tgtYRank, DEFAULT_FILE_COUNT);
+    public Move(
+            final Square srcBoardRef,
+            final Square tgtBoardRef,
+            final SquareOccupant promotionPiece
+    ) {
+        this(
+                srcBoardRef.getXFile(),
+                srcBoardRef.getYRank(),
+                tgtBoardRef.getXFile(),
+                tgtBoardRef.getYRank(),
+                promotionPiece);
     }
 
-    public Move(int srcXFile, int srcYRank, int tgtXFile, int tgtYRank, int numFiles) {
+    public Move(
+            final int srcXFile,
+            final int srcYRank,
+            final int tgtXFile,
+            final int tgtYRank
+    ) {
+        this(srcXFile, srcYRank, tgtXFile, tgtYRank, SquareOccupant.NONE, DEFAULT_FILE_COUNT);
+    }
+
+    public Move(
+            final int srcXFile,
+            final int srcYRank,
+            final int tgtXFile,
+            final int tgtYRank,
+            final SquareOccupant promotionPiece
+    ) {
+        this(srcXFile, srcYRank, tgtXFile, tgtYRank, promotionPiece, DEFAULT_FILE_COUNT);
+    }
+
+    public Move(
+            final int srcXFile,
+            final int srcYRank,
+            final int tgtXFile,
+            final int tgtYRank,
+            final SquareOccupant promotionPiece,
+            final int numFiles
+    ) {
         this.numFiles = numFiles;
-        this.set(srcXFile, srcYRank, tgtXFile, tgtYRank);
+        this.srcXFile = srcXFile;
+        this.srcYRank = srcYRank;
+        this.tgtXFile = tgtXFile;
+        this.tgtYRank = tgtYRank;
+        this.promotedPiece = promotionPiece;
+    }
+
+    public static Move fromAlgebraic(String algebraic) {
+
+        if (algebraic.length() < 4 || algebraic.length() > 5) {
+            throw new RuntimeException("Algebraic move must be four or five characters");
+        }
+
+        final Square from = Square.fromAlgebraic(algebraic.substring(0, 2));
+        final Square to = Square.fromAlgebraic(algebraic.substring(2, 4));
+
+        final SquareOccupant promotionPiece =
+                algebraic.length() == 5
+                ? SquareOccupant.fromChar(algebraic.toCharArray()[4])
+                : SquareOccupant.NONE;
+
+        return new Move(from, to, promotionPiece);
     }
 
     public Square getSrcBoardRef() {
-        return new Square(this.getSrcXFile(), this.getSrcYRank());
+        return new Square(srcXFile, srcYRank);
     }
 
     public Square getTgtBoardRef() {
-        return new Square(this.getTgtXFile(), this.getTgtYRank());
-    }
-
-    public int getSrcXFile() {
-        return this.srcXFile;
-    }
-
-    public int getSrcYRank() {
-        return this.srcYRank;
-    }
-
-    public int getTgtXFile() {
-        return this.tgtXFile;
-    }
-
-    public int getTgtYRank() {
-        return this.tgtYRank;
-    }
-
-    public void set(int srcXFile, int srcYRank, int tgtXFile, int tgtYRank) {
-        this.srcXFile = srcXFile;
-        this.srcYRank = srcYRank;
-
-        this.tgtXFile = tgtXFile;
-        this.tgtYRank = tgtYRank;
-    }
-
-    public void setPromotedPiece(SquareOccupant promotedPieceCode) {
-        this.promotedPiece = promotedPieceCode;
+        return new Square(tgtXFile, tgtYRank);
     }
 
     public SquareOccupant getPromotedPiece() {

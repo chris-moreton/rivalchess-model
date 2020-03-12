@@ -8,6 +8,20 @@ public class Square {
         this.set(xFile, yRank);
     }
 
+    public static Square fromAlgebraic(String algebraic) {
+        return fromAlgebraic(algebraic, 8);
+    }
+
+    public static Square fromAlgebraic(String algebraic, int boardRanks) {
+        if (algebraic.length() != 2) {
+            throw new RuntimeException("Invalid algebraic square " + algebraic);
+        }
+        final int x = algebraic.toCharArray()[0] - 97;
+        final int y = boardRanks - (algebraic.toCharArray()[1] - 48);
+
+        return new Square(x,y);
+    }
+
     public int getXFile() {
         return this.xFile;
     }
@@ -23,6 +37,10 @@ public class Square {
 
     public char getAlgebraicXFile() {
         return (char) (97 + this.getXFile());
+    }
+
+    public char getAlgebraicYRank() {
+        return getAlgebraicYRank(8);
     }
 
     public char getAlgebraicYRank(int boardRanks) {

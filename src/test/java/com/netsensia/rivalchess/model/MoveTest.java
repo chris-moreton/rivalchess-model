@@ -12,10 +12,10 @@ public class MoveTest {
 
         final Move move1 = new Move(3, 1, 4, 2);
 
-        assertEquals(3, move1.getSrcXFile());
-        assertEquals(1, move1.getSrcYRank());
-        assertEquals(4, move1.getTgtXFile());
-        assertEquals(2, move1.getTgtYRank());
+        assertEquals(3, move1.getSrcBoardRef().getXFile());
+        assertEquals(1, move1.getSrcBoardRef().getYRank());
+        assertEquals(4, move1.getTgtBoardRef().getXFile());
+        assertEquals(2, move1.getTgtBoardRef().getYRank());
     }
 
     @Test
@@ -24,10 +24,10 @@ public class MoveTest {
         final Square square2 = new Square(4, 2);
         final Move move1 = new Move(square1, square2);
 
-        assertEquals(3, move1.getSrcXFile());
-        assertEquals(1, move1.getSrcYRank());
-        assertEquals(4, move1.getTgtXFile());
-        assertEquals(2, move1.getTgtYRank());
+        assertEquals(3, move1.getSrcBoardRef().getXFile());
+        assertEquals(1, move1.getSrcBoardRef().getYRank());
+        assertEquals(4, move1.getTgtBoardRef().getXFile());
+        assertEquals(2, move1.getTgtBoardRef().getYRank());
     }
 
     @Test
@@ -35,12 +35,10 @@ public class MoveTest {
         final Move move1 = new Move(3,1,4,2);
         assertEquals("d7e6", move1.toString());
 
-        final Move move2 = new Move(0,6,1,7);
-        move2.setPromotedPiece(SquareOccupant.BQ);
+        final Move move2 = new Move(0,6,1,7, SquareOccupant.BQ);
         assertEquals("a2b1q", move2.toString());
 
-        final Move move3 = new Move(0,1,1,0);
-        move3.setPromotedPiece(SquareOccupant.WQ);
+        final Move move3 = new Move(0,1,1,0, SquareOccupant.WQ);
         assertEquals("a7b8Q", move3.toString());
     }
 
@@ -67,5 +65,16 @@ public class MoveTest {
     @Test
     public void testGetPromotedPiece() {
         final Move move1 = new Move(3,1,4,2);
+    }
+
+    @Test
+    public void testFromAlgebraic() {
+        final Move move1 = Move.fromAlgebraic("a2a3");
+        assertEquals(SquareOccupant.NONE, move1.getPromotedPiece());
+        assertEquals('a', move1.getSrcBoardRef().getAlgebraicXFile());
+        assertEquals('2', move1.getSrcBoardRef().getAlgebraicYRank(8));
+        assertEquals('a', move1.getTgtBoardRef().getAlgebraicXFile());
+        assertEquals('3', move1.getTgtBoardRef().getAlgebraicYRank(8));
+
     }
 }
