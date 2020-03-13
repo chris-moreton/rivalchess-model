@@ -4,7 +4,6 @@ import com.netsensia.rivalchess.model.MoveDirection;
 import com.netsensia.rivalchess.model.Square;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Moves {
@@ -23,10 +22,13 @@ public class Moves {
         final int nextY = square.getYRank() + direction.getYIncrement();
 
         if (!directionIsValid(square, direction)) {
-            return new ArrayList<Square>(Arrays.asList(new Square(nextX, nextY)));
+            return new ArrayList<>();
         }
 
-        return getDirectionalPotentialSquaresFromSquare(
-                new Square(nextX, nextY), direction);
+        final Square head = new Square(nextX, nextY);
+        List<Square> tail = getDirectionalPotentialSquaresFromSquare(head, direction);
+        tail.add(head);
+
+        return tail;
     }
 }
