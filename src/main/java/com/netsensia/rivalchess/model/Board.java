@@ -2,14 +2,10 @@ package com.netsensia.rivalchess.model;
 
 public class Board {
 
-	private static final int DEFAULT_BOARD_NUM_FILES = 8;
-    private static final int DEFAULT_BOARD_NUM_RANKS = 8;
-
-    private static final char VACANT_TILE = '_';
+	private static final int NUM_FILES = 8;
+    private static final int NUM_RANKS = 8;
 
     private final char[] boardArray;
-    private final int numXFiles;
-    private final int numYRanks;
     private int enPassantFile = 0;
 
     private boolean isWhiteKingSideCastleAvailable = true;
@@ -18,16 +14,10 @@ public class Board {
     private boolean isBlackQueenSideCastleAvailable = true;
 
     private final int halfMoveCount = 0;
-    private boolean isWhiteToMove = true;
+    private Colour sideToMove;
 
     public Board() {
-        this(DEFAULT_BOARD_NUM_FILES, DEFAULT_BOARD_NUM_RANKS);
-    }
-
-    public Board(int numXFiles, int numYRanks) {
-        this.numXFiles = numXFiles;
-        this.numYRanks = numYRanks;
-        this.boardArray = new char[this.numYRanks * this.numXFiles];
+        this.boardArray = new char[NUM_FILES * NUM_RANKS];
     }
 
     public SquareOccupant getSquareOccupant(Square boardRef) {
@@ -35,38 +25,43 @@ public class Board {
     }
 
     public SquareOccupant getSquareOccupant(int xFile, int yRank) {
-        return SquareOccupant.fromChar(this.boardArray[this.getBoardArrayIndex(xFile, yRank)]);
+        return SquareOccupant.fromChar(boardArray[this.getBoardArrayIndex(xFile, yRank)]);
+    }
+
+    public void setSquareOccupant(Square boardRef, SquareOccupant squareOccupant) {
+        boardArray[getBoardArrayIndex(boardRef.getXFile(), boardRef.getYRank())]
+                = squareOccupant.toChar();
     }
 
     public void setSquareOccupant(int xFile, int yRank, SquareOccupant squareOccupant) {
-        this.boardArray[this.getBoardArrayIndex(xFile, yRank)] = squareOccupant.toChar();
+        boardArray[getBoardArrayIndex(xFile, yRank)] = squareOccupant.toChar();
     }
 
     private int getBoardArrayIndex(int xFile, int yRank) {
-        return (this.numXFiles * yRank) + xFile;
+        return (NUM_FILES * yRank) + xFile;
     }
 
     public int getNumXFiles() {
-        return this.numXFiles;
+        return NUM_FILES;
     }
 
     public int getNumYRanks() {
-        return this.numYRanks;
+        return NUM_RANKS;
     }
 
     public boolean isWhiteKingSideCastleAvailable() {
-        return this.isWhiteKingSideCastleAvailable;
+        return isWhiteKingSideCastleAvailable;
     }
 
-    public void setWhiteKingSideCastleAvailable(boolean isWhiteKingSideCastleAvailable) {
+    public void setWhiteKingSideCastleAvailable(final boolean isWhiteKingSideCastleAvailable) {
         this.isWhiteKingSideCastleAvailable = isWhiteKingSideCastleAvailable;
     }
 
     public boolean isWhiteQueenSideCastleAvailable() {
-        return this.isWhiteQueenSideCastleAvailable;
+        return isWhiteQueenSideCastleAvailable;
     }
 
-    public void setWhiteQueenSideCastleAvailable(boolean isWhiteQueenSideCastleAvailable) {
+    public void setWhiteQueenSideCastleAvailable(final boolean isWhiteQueenSideCastleAvailable) {
         this.isWhiteQueenSideCastleAvailable = isWhiteQueenSideCastleAvailable;
     }
 
@@ -74,7 +69,7 @@ public class Board {
         return this.isBlackKingSideCastleAvailable;
     }
 
-    public void setBlackKingSideCastleAvailable(boolean isBlackKingSideCastleAvailable) {
+    public void setBlackKingSideCastleAvailable(final boolean isBlackKingSideCastleAvailable) {
         this.isBlackKingSideCastleAvailable = isBlackKingSideCastleAvailable;
     }
 
@@ -82,7 +77,7 @@ public class Board {
         return this.isBlackQueenSideCastleAvailable;
     }
 
-    public void setBlackQueenSideCastleAvailable(boolean isBlackQueenSideCastleAvailable) {
+    public void setBlackQueenSideCastleAvailable(final boolean isBlackQueenSideCastleAvailable) {
         this.isBlackQueenSideCastleAvailable = isBlackQueenSideCastleAvailable;
     }
 
@@ -90,23 +85,20 @@ public class Board {
         return this.halfMoveCount;
     }
 
-    public boolean isWhiteToMove() {
-        return this.isWhiteToMove;
+    public Colour getSideToMove() {
+        return sideToMove;
     }
 
-    public boolean isBlackToMove() {
-        return !this.isWhiteToMove;
-    }
-
-    public void setWhiteToMove(boolean isWhiteToMove) {
-        this.isWhiteToMove = isWhiteToMove;
+    public void setSideToMove(final Colour sideToMove) {
+        this.sideToMove = sideToMove;
     }
 
     public int getEnPassantFile() {
         return this.enPassantFile;
     }
 
-    public void setEnPassantFile(int enPassantFile) {
+    public void setEnPassantFile(final int enPassantFile) {
         this.enPassantFile = enPassantFile;
     }
+
 }

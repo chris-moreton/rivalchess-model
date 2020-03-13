@@ -7,13 +7,10 @@ import static org.junit.Assert.assertEquals;
 public class BoardTest {
 
     @Test
-    public void testCustomRankAndFileCounts() {
-        Board board = new Board(10, 12);
-
-        board.setSquareOccupant(9, 11, SquareOccupant.BQ);
-        assertEquals(SquareOccupant.BQ, board.getSquareOccupant(9, 11));
-
-        Square square = new Square(9, 11);
-        assertEquals(SquareOccupant.BQ, board.getSquareOccupant(square));
+    public void testSetSquareOccupant() {
+        Board board = new Board();
+        board.setSquareOccupant(new Square(1,7), SquareOccupant.BB);
+        assertEquals(SquareOccupant.BB, board.getSquareOccupant(1, 7));
     }
+
 }
