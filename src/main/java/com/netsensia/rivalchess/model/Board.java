@@ -1,16 +1,16 @@
 package com.netsensia.rivalchess.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 public class Board {
 
 	private static final int NUM_FILES = 8;
     private static final int NUM_RANKS = 8;
 
-    private final List<SquareOccupant> squareOccupants;
+    private final Map<Square, SquareOccupant> squareOccupants;
+
     private int enPassantFile = 0;
 
     private boolean isWhiteKingSideCastleAvailable = true;
@@ -22,26 +22,31 @@ public class Board {
     private Colour sideToMove;
 
     public Board() {
-        squareOccupants = new ArrayList<>(
-                Collections.nCopies(NUM_FILES * NUM_RANKS, SquareOccupant.NONE));
+        squareOccupants = new HashMap<>();
+        for (int x=0; x<8; x++) {
+            for (int y=0; y<8; y++) {
+                squareOccupants.put(
+                        new Square(x,y),
+                        SquareOccupant.NONE
+                );
+            }
+        }
     }
 
     public SquareOccupant getSquareOccupant(Square boardRef) {
-        return this.getSquareOccupant(boardRef.getXFile(), boardRef.getYRank());
+        return squareOccupants.get(boardRef);
     }
 
     public SquareOccupant getSquareOccupant(int xFile, int yRank) {
-        return squareOccupants.get(this.getBoardArrayIndex(xFile, yRank));
+        return getSquareOccupant(new Square(xFile, yRank));
     }
 
     public void setSquareOccupant(Square boardRef, SquareOccupant squareOccupant) {
-        setSquareOccupant(boardRef.getXFile(), boardRef.getYRank(), squareOccupant);
+        squareOccupants.put(boardRef, squareOccupant);
     }
 
     public void setSquareOccupant(int xFile, int yRank, SquareOccupant squareOccupant) {
-        squareOccupants.set(
-                getBoardArrayIndex(xFile, yRank),
-                squareOccupant);
+        setSquareOccupant(new Square(xFile, yRank), squareOccupant);
     }
 
     private int getBoardArrayIndex(Square square) {

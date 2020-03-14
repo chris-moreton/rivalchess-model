@@ -142,6 +142,6 @@ public enum SquareOccupant {
             default:
                 return SquareOccupant.NONE;
         }
-
     }
+
 }
