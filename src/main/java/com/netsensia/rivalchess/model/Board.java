@@ -3,6 +3,7 @@ package com.netsensia.rivalchess.model;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Board {
 
@@ -98,7 +99,10 @@ public class Board {
     }
 
     public List<Square> getSquaresWithOccupant(SquareOccupant squareOccupant) {
-        return null;
+        return squareOccupants.entrySet()
+                .stream()
+                .filter(e -> e.getValue() == squareOccupant)
+                .map(Map.Entry::getKey).collect(Collectors.toList());
     }
 
     public int getHalfMoveCount() {

@@ -21,6 +21,15 @@ public class BoardTest {
     @Test
     public void testGetPieceSquares() {
 
+        final List<Square> expectedSquares =
+                new ArrayList<>(Arrays.asList(
+                        new Square(6, 0),
+                        new Square(1,0)
+                ));
+
+        Collections.sort(expectedSquares);
+
+        assertEquals(expectedSquares, getStartBoard().getSquaresWithOccupant(SquareOccupant.BN));
     }
 
     private Board getStartBoard() {
