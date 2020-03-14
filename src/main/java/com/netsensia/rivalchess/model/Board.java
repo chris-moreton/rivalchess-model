@@ -1,11 +1,16 @@
 package com.netsensia.rivalchess.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Board {
 
 	private static final int NUM_FILES = 8;
     private static final int NUM_RANKS = 8;
 
-    private final char[] boardArray;
+    private final List<SquareOccupant> squareOccupants;
     private int enPassantFile = 0;
 
     private boolean isWhiteKingSideCastleAvailable = true;
@@ -17,7 +22,8 @@ public class Board {
     private Colour sideToMove;
 
     public Board() {
-        this.boardArray = new char[NUM_FILES * NUM_RANKS];
+        squareOccupants = new ArrayList<>(
+                Collections.nCopies(NUM_FILES * NUM_RANKS, SquareOccupant.NONE));
     }
 
     public SquareOccupant getSquareOccupant(Square boardRef) {
@@ -25,16 +31,21 @@ public class Board {
     }
 
     public SquareOccupant getSquareOccupant(int xFile, int yRank) {
-        return SquareOccupant.fromChar(boardArray[this.getBoardArrayIndex(xFile, yRank)]);
+        return squareOccupants.get(this.getBoardArrayIndex(xFile, yRank));
     }
 
     public void setSquareOccupant(Square boardRef, SquareOccupant squareOccupant) {
-        boardArray[getBoardArrayIndex(boardRef.getXFile(), boardRef.getYRank())]
-                = squareOccupant.toChar();
+        setSquareOccupant(boardRef.getXFile(), boardRef.getYRank(), squareOccupant);
     }
 
     public void setSquareOccupant(int xFile, int yRank, SquareOccupant squareOccupant) {
-        boardArray[getBoardArrayIndex(xFile, yRank)] = squareOccupant.toChar();
+        squareOccupants.set(
+                getBoardArrayIndex(xFile, yRank),
+                squareOccupant);
+    }
+
+    private int getBoardArrayIndex(Square square) {
+        return getBoardArrayIndex(square.getXFile(), square.getYRank());
     }
 
     private int getBoardArrayIndex(int xFile, int yRank) {
@@ -79,6 +90,10 @@ public class Board {
 
     public void setBlackQueenSideCastleAvailable(final boolean isBlackQueenSideCastleAvailable) {
         this.isBlackQueenSideCastleAvailable = isBlackQueenSideCastleAvailable;
+    }
+
+    public List<Square> getSquaresWithOccupant(SquareOccupant squareOccupant) {
+        return null;
     }
 
     public int getHalfMoveCount() {
