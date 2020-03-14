@@ -1,6 +1,6 @@
 package com.netsensia.rivalchess.model;
 
-public class Square {
+public class Square implements Comparable {
     private int xFile;
 	private int yRank;
 
@@ -63,6 +63,11 @@ public class Square {
             return (br.getXFile() == this.xFile && br.getYRank() == this.yRank);
         }
         return false;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return this.toString().compareTo(o.toString());
     }
 
     @Override

@@ -1,22 +1,30 @@
 package com.netsensia.rivalchess.model.util;
 
+import com.netsensia.rivalchess.model.Board;
+import com.netsensia.rivalchess.model.Colour;
 import com.netsensia.rivalchess.model.MoveDirection;
 import com.netsensia.rivalchess.model.Square;
+import com.netsensia.rivalchess.model.SquareOccupant;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static com.netsensia.rivalchess.model.util.Common.isValidRankFileBoardReference;
+
 public class Moves {
-    public static boolean isValidRankFileBoardReference(int n) {
-        return (n >= 0 && n <= 7);
-    }
+
+    private Moves() {}
 
     public static boolean directionIsValid(Square square, MoveDirection direction) {
         return isValidRankFileBoardReference(square.getXFile() + direction.getXIncrement()) &&
                 isValidRankFileBoardReference(square.getYRank() + direction.getYIncrement());
     }
 
-    public static List<Square> getDirectionalPotentialSquaresFromSquare(Square square, MoveDirection direction) {
+    public static List<Square> getDirectionalSquaresFromSquare(
+            final Square square,
+            final MoveDirection direction,
+            final Board board) {
 
         final int nextX = square.getXFile() + direction.getXIncrement();
         final int nextY = square.getYRank() + direction.getYIncrement();
@@ -26,7 +34,15 @@ public class Moves {
         }
 
         final Square head = new Square(nextX, nextY);
-        List<Square> tail = getDirectionalPotentialSquaresFromSquare(head, direction);
+        final SquareOccupant squareOccupant = board.getSquareOccupant(head);
+
+        if (squareOccupant != SquareOccupant.NONE) {
+            return squareOccupant.getColour() == board.getSideToMove()
+                    ? new ArrayList<>()
+                    : new ArrayList<>(Arrays.asList(head));
+        }
+
+        List<Square> tail = getDirectionalSquaresFromSquare(head, direction, board);
         tail.add(head);
 
         return tail;
