@@ -1,6 +1,6 @@
 package com.netsensia.rivalchess.model;
 
-public class Move {
+public class Move implements Comparable {
     final private int srcXFile;
     final private int srcYRank;
 
@@ -121,6 +121,11 @@ public class Move {
                     && move.getPromotedPiece() == this.getPromotedPiece());
             }
         return false;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return this.toString().compareTo(o.toString());
     }
 
 }

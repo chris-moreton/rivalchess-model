@@ -2,10 +2,10 @@ package com.netsensia.rivalchess.model.util;
 
 import org.junit.Test;
 
-import static com.netsensia.rivalchess.model.util.Common.isValidRankFileBoardReference;
+import static com.netsensia.rivalchess.model.util.CommonUtils.isValidRankFileBoardReference;
 import static org.junit.Assert.*;
 
-public class CommonTest {
+public class CommonUtilsTest {
 
     @Test
     public void testIsNumberInRange() {

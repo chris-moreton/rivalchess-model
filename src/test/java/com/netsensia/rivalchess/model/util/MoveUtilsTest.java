@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class MovesTest {
+public class MoveUtilsTest {
 
     @Test
     public void testGetDirectionalPotentialSquaresFromSquare_shouldIncludeCaptureSquare() {
@@ -25,7 +25,7 @@ public class MovesTest {
         board.setSideToMove(Colour.WHITE);
 
         final List<Square> actualSquares =
-                Moves.getDirectionalSquaresFromSquare(new Square(2,3), MoveDirection.SE, board);
+                MoveUtils.getDirectionalSquaresFromSquare(new Square(2,3), MoveDirection.SE, board);
 
         final List<Square> expectedSquares =
                 new ArrayList<>(Arrays.asList(
@@ -48,7 +48,7 @@ public class MovesTest {
         board.setSideToMove(Colour.BLACK);
 
         final List<Square> actualSquares =
-                Moves.getDirectionalSquaresFromSquare(new Square(2,3), MoveDirection.SE, board);
+                MoveUtils.getDirectionalSquaresFromSquare(new Square(2,3), MoveDirection.SE, board);
 
         final List<Square> expectedSquares =
                 new ArrayList<>(Arrays.asList(

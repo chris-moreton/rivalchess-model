@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Board {
 
@@ -98,11 +99,9 @@ public class Board {
         this.isBlackQueenSideCastleAvailable = isBlackQueenSideCastleAvailable;
     }
 
-    public List<Square> getSquaresWithOccupant(SquareOccupant squareOccupant) {
+    public Stream<Map.Entry<Square, SquareOccupant>> squareOccupantStream() {
         return squareOccupants.entrySet()
-                .stream()
-                .filter(e -> e.getValue() == squareOccupant)
-                .map(Map.Entry::getKey).collect(Collectors.toList());
+                .stream();
     }
 
     public int getHalfMoveCount() {
