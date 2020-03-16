@@ -122,27 +122,48 @@ public class BoardUtils {
                 getSquaresWithOccupant(board, Piece.PAWN.toSquareOccupant(board.getSideToMove()));
 
         for (final Square fromSquare : fromSquares) {
-            final Square toSquare =
+            final Square oneSquareForward =
                     new Square(fromSquare.getXFile(),
-                            PawnMoves.homeRank(mover) + PawnMoves.advanceDirection(mover));
-            if (board.getSquareOccupant(toSquare) == SquareOccupant.NONE) {
-                moves.add(new Move(fromSquare, toSquare));
+                            fromSquare.getYRank() + PawnMoves.advanceDirection(mover));
+
+            if (board.getSquareOccupant(oneSquareForward) == SquareOccupant.NONE) {
+                moves.add(new Move(fromSquare, oneSquareForward));
 
                 if (fromSquare.getYRank() == PawnMoves.homeRank(mover)) {
-                    final Square toSquareJump =
+                    final Square twoSquaresForward =
                             new Square(fromSquare.getXFile(),
                                     PawnMoves.homeRank(mover) + PawnMoves.advanceDirection(mover) * 2);
-                    if (board.getSquareOccupant(toSquareJump) == SquareOccupant.NONE) {
-                        moves.add(new Move(fromSquare, toSquareJump));
+                    if (board.getSquareOccupant(twoSquaresForward) == SquareOccupant.NONE) {
+                        moves.add(new Move(fromSquare, twoSquaresForward));
                     }
                 } else if (fromSquare.getYRank() == PawnMoves.promotionRank(mover)) {
-                    moves.add(new Move(fromSquare, toSquare, SquareOccupant.WQ.ofColour(mover)));
-                    moves.add(new Move(fromSquare, toSquare, SquareOccupant.WN.ofColour(mover)));
-                    moves.add(new Move(fromSquare, toSquare, SquareOccupant.WB.ofColour(mover)));
-                    moves.add(new Move(fromSquare, toSquare, SquareOccupant.WR.ofColour(mover)));
+                    moves.add(new Move(fromSquare, oneSquareForward, SquareOccupant.WQ.ofColour(mover)));
+                    moves.add(new Move(fromSquare, oneSquareForward, SquareOccupant.WN.ofColour(mover)));
+                    moves.add(new Move(fromSquare, oneSquareForward, SquareOccupant.WB.ofColour(mover)));
+                    moves.add(new Move(fromSquare, oneSquareForward, SquareOccupant.WR.ofColour(mover)));
                 }
             }
 
+            final List<SliderDirection> captureDirections = Arrays.asList(
+                    SliderDirection.E, SliderDirection.W
+            );
+            for (SliderDirection captureDirection : captureDirections) {
+                final int captureX = fromSquare.getXFile() + captureDirection.getXIncrement();
+                final int captureY = fromSquare.getYRank() + PawnMoves.advanceDirection(mover);
+
+                if (isValidSquareReference(captureX, captureY)) {
+                    final Square captureSquare = new Square(captureX, captureY);
+
+                    if (board.getSquareOccupant(captureSquare) == SquareOccupant.NONE) {
+                        if (board.getEnPassantFile() == captureSquare.getXFile() &&
+                                captureSquare.getYRank() == PawnMoves.enPassantToRank(mover)) {
+                            moves.add(new Move(fromSquare, captureSquare));
+                        }
+                    } else if (board.getSquareOccupant(captureSquare).getColour() == mover.opponent()) {
+                        moves.add(new Move(fromSquare, captureSquare));
+                    }
+                }
+            }
         }
 
         return moves;

@@ -249,4 +249,120 @@ public class BoardUtilsTest {
 
         assertEquals(expectedSquares, actualSquares);
     }
+
+    @Test
+    public void getWhitePawnMoves() {
+        final Board board = CommonTestUtils.getStartBoard();
+
+        board.setSquareOccupant(1,6, SquareOccupant.NONE);
+        board.setSquareOccupant(1,3, SquareOccupant.WP);
+
+        board.setSquareOccupant(2,1, SquareOccupant.NONE);
+        board.setSquareOccupant(2,3, SquareOccupant.BP);
+
+        board.setSquareOccupant(6,1, SquareOccupant.NONE);
+        board.setSquareOccupant(6,2, SquareOccupant.BP);
+
+        board.setSquareOccupant(6,6, SquareOccupant.NONE);
+        board.setSquareOccupant(6,4, SquareOccupant.WP);
+
+        board.setSquareOccupant(5,6, SquareOccupant.NONE);
+        board.setSquareOccupant(5,5, SquareOccupant.WP);
+
+        board.setSquareOccupant(5,0, SquareOccupant.NONE);
+        board.setSquareOccupant(4,4, SquareOccupant.BB);
+
+        board.setSquareOccupant(3,6, SquareOccupant.NONE);
+        board.setSquareOccupant(4,2, SquareOccupant.WP);
+
+        board.setSquareOccupant(1,0, SquareOccupant.NONE);
+        board.setSquareOccupant(2,5, SquareOccupant.BN);
+
+        board.setEnPassantFile(2);
+
+        final List<Move> actualMoves = BoardUtils.getPawnMoves(board);
+
+        final List<Move> expectedMoves =
+                new ArrayList<>(Arrays.asList(
+                        new Move(new Square(0,6), new Square(0,5)),
+                        new Move(new Square(0,6), new Square(0,4)),
+                        new Move(new Square(1,3), new Square(1,2)),
+                        new Move(new Square(1,3), new Square(2,2)),
+                        new Move(new Square(4,2), new Square(3,1)),
+                        new Move(new Square(4,2), new Square(5,1)),
+                        new Move(new Square(4,6), new Square(4,5)),
+                        new Move(new Square(5,5), new Square(4,4)),
+                        new Move(new Square(5,5), new Square(5,4)),
+                        new Move(new Square(6,4), new Square(6,3)),
+                        new Move(new Square(7,6), new Square(7,5)),
+                        new Move(new Square(7,6), new Square(7,4))
+                ));
+
+        Collections.sort(expectedMoves);
+        Collections.sort(actualMoves);
+
+        assertEquals(expectedMoves, actualMoves);
+
+    }
+
+    @Test
+    public void getBlackPawnMoves() {
+        final Board board = CommonTestUtils.getStartBoard();
+
+        board.setSideToMove(Colour.BLACK);
+
+        board.setSquareOccupant(1,6, SquareOccupant.NONE);
+        board.setSquareOccupant(1,3, SquareOccupant.WP);
+
+        board.setSquareOccupant(2,1, SquareOccupant.NONE);
+        board.setSquareOccupant(2,3, SquareOccupant.BP);
+
+        board.setSquareOccupant(6,1, SquareOccupant.NONE);
+        board.setSquareOccupant(6,2, SquareOccupant.BP);
+
+        board.setSquareOccupant(6,6, SquareOccupant.NONE);
+        board.setSquareOccupant(6,4, SquareOccupant.WP);
+
+        board.setSquareOccupant(5,6, SquareOccupant.NONE);
+        board.setSquareOccupant(5,5, SquareOccupant.WP);
+
+        board.setSquareOccupant(5,0, SquareOccupant.NONE);
+        board.setSquareOccupant(4,4, SquareOccupant.BB);
+
+        board.setSquareOccupant(3,6, SquareOccupant.NONE);
+        board.setSquareOccupant(4,2, SquareOccupant.WP);
+
+        board.setSquareOccupant(1,0, SquareOccupant.NONE);
+        board.setSquareOccupant(2,5, SquareOccupant.BN);
+
+        board.setSquareOccupant(7,1, SquareOccupant.NONE);
+        board.setSquareOccupant(7,4, SquareOccupant.BP);
+
+        board.setEnPassantFile(6);
+
+        final List<Move> actualMoves = BoardUtils.getPawnMoves(board);
+
+        final List<Move> expectedMoves =
+                new ArrayList<>(Arrays.asList(
+                        new Move(new Square(0,1), new Square(0,2)),
+                        new Move(new Square(0,1), new Square(0,3)),
+                        new Move(new Square(1,1), new Square(1,2)),
+                        new Move(new Square(2,3), new Square(2,4)),
+                        new Move(new Square(3,1), new Square(3,2)),
+                        new Move(new Square(3,1), new Square(3,3)),
+                        new Move(new Square(3,1), new Square(4,2)),
+                        new Move(new Square(5,1), new Square(4,2)),
+                        new Move(new Square(5,1), new Square(5,2)),
+                        new Move(new Square(5,1), new Square(5,3)),
+                        new Move(new Square(6,2), new Square(6,3)),
+                        new Move(new Square(7,4), new Square(6,5)),
+                        new Move(new Square(7,4), new Square(7,5))
+                ));
+
+        Collections.sort(expectedMoves);
+        Collections.sort(actualMoves);
+
+        assertEquals(expectedMoves, actualMoves);
+
+    }
 }

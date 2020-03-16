@@ -12,6 +12,10 @@ public class PawnMoves {
         return colour == Colour.WHITE ? 3 : 4;
     }
 
+    public static int enPassantToRank(Colour colour) {
+        return colour == Colour.WHITE ? 2 : 5;
+    }
+
     public static int promotionRank(Colour colour) {
         return colour == Colour.WHITE ? 1 : 6;
     }
