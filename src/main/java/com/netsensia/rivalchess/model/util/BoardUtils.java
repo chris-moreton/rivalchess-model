@@ -1,8 +1,10 @@
 package com.netsensia.rivalchess.model.util;
 
 import com.netsensia.rivalchess.model.Board;
-import com.netsensia.rivalchess.model.KnightDirection;
+import com.netsensia.rivalchess.model.Colour;
+import com.netsensia.rivalchess.model.KnightMoves;
 import com.netsensia.rivalchess.model.Move;
+import com.netsensia.rivalchess.model.PawnMoves;
 import com.netsensia.rivalchess.model.SliderDirection;
 import com.netsensia.rivalchess.model.Piece;
 import com.netsensia.rivalchess.model.Square;
@@ -93,10 +95,10 @@ public class BoardUtils {
         List<Square> fromSquares = getSquaresWithOccupant(board, Piece.KNIGHT.toSquareOccupant(board.getSideToMove()));
 
         for (Square fromSquare : fromSquares) {
-            for (KnightDirection knightDirection : KnightDirection.values()) {
+            for (KnightMoves knightMoves : KnightMoves.values()) {
 
-                final int newX = fromSquare.getXFile() + knightDirection.getXIncrement();
-                final int newY = fromSquare.getYRank() + knightDirection.getYIncrement();
+                final int newX = fromSquare.getXFile() + knightMoves.getXIncrement();
+                final int newY = fromSquare.getYRank() + knightMoves.getYIncrement();
 
                 if (isValidSquareReference(newX, newY)) {
                     final Square targetSquare = new Square(newX, newY);
@@ -113,11 +115,41 @@ public class BoardUtils {
     }
 
     public static List<Move> getPawnMoves(Board board) {
-        return null;
+        final List<Move> moves = new ArrayList<>();
+        final Colour mover = board.getSideToMove();
+
+        final List<Square> fromSquares =
+                getSquaresWithOccupant(board, Piece.PAWN.toSquareOccupant(board.getSideToMove()));
+
+        for (final Square fromSquare : fromSquares) {
+            final Square toSquare =
+                    new Square(fromSquare.getXFile(),
+                            PawnMoves.homeRank(mover) + PawnMoves.advanceDirection(mover));
+            if (board.getSquareOccupant(toSquare) == SquareOccupant.NONE) {
+                moves.add(new Move(fromSquare, toSquare));
+
+                if (fromSquare.getYRank() == PawnMoves.homeRank(mover)) {
+                    final Square toSquareJump =
+                            new Square(fromSquare.getXFile(),
+                                    PawnMoves.homeRank(mover) + PawnMoves.advanceDirection(mover) * 2);
+                    if (board.getSquareOccupant(toSquareJump) == SquareOccupant.NONE) {
+                        moves.add(new Move(fromSquare, toSquareJump));
+                    }
+                } else if (fromSquare.getYRank() == PawnMoves.promotionRank(mover)) {
+                    moves.add(new Move(fromSquare, toSquare, SquareOccupant.WQ.ofColour(mover)));
+                    moves.add(new Move(fromSquare, toSquare, SquareOccupant.WN.ofColour(mover)));
+                    moves.add(new Move(fromSquare, toSquare, SquareOccupant.WB.ofColour(mover)));
+                    moves.add(new Move(fromSquare, toSquare, SquareOccupant.WR.ofColour(mover)));
+                }
+            }
+
+        }
+
+        return moves;
     }
 
     public static List<Move> getKingMoves(final Board board) {
-        Square fromSquare =
+        final Square fromSquare =
                 getSquaresWithOccupant(board, Piece.KING.toSquareOccupant(board.getSideToMove())).get(0);
 
         final List<Move> moves = new ArrayList<>();

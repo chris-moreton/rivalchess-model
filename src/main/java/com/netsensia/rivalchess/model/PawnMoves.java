@@ -1,0 +1,22 @@
+package com.netsensia.rivalchess.model;
+
+public class PawnMoves {
+
+    private PawnMoves() { }
+
+    public static int homeRank(Colour colour) {
+        return colour == Colour.WHITE ? 6 : 1;
+    }
+
+    public static int enPassantFromRank(Colour colour) {
+        return colour == Colour.WHITE ? 3 : 4;
+    }
+
+    public static int promotionRank(Colour colour) {
+        return colour == Colour.WHITE ? 1 : 6;
+    }
+
+    public static int advanceDirection(Colour colour) {
+        return colour == Colour.WHITE ? -1 : 1;
+    }
+}
