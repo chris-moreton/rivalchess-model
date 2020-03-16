@@ -233,7 +233,7 @@ public class BoardUtils {
         return moves;
     }
 
-    public List<Move> getLegalMoves(Board board) {
+    public static List<Move> getLegalMoves(final Board board) {
         List<Move> moves = new ArrayList<>();
 
         moves.addAll(getPawnMoves(board));

@@ -90,7 +90,6 @@ public class FenUtils {
 
     private static int padBoardWithSpaces(Board board, int boardArrayIndex, char fenToken) {
         for (int n = 1; n <= Character.digit(fenToken, 10); n++) {
-            // Todo use Board.VACANT_TILE
             boardArrayIndex = setPiece(board, boardArrayIndex, '_');
         }
         return boardArrayIndex;

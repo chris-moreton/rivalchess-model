@@ -1,8 +1,11 @@
 package com.netsensia.rivalchess.model;
 
+import com.netsensia.rivalchess.model.util.BoardUtils;
+import com.netsensia.rivalchess.model.util.FenUtils;
 import com.netsensia.rivalchess.model.util.MoveMaker;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -36,7 +39,7 @@ public class Board {
     }
 
     public static Board fromFen(String fen) {
-        return null;
+        return FenUtils.getBoardModel(fen);
     }
 
     public static Board copy(final Board board) {
@@ -145,6 +148,10 @@ public class Board {
 
     public void setEnPassantFile(final int enPassantFile) {
         this.enPassantFile = enPassantFile;
+    }
+
+    public List<Move> getLegalMoves() {
+        return BoardUtils.getLegalMoves(this);
     }
 
     @Override
