@@ -4,7 +4,7 @@ import com.netsensia.rivalchess.model.Board;
 import com.netsensia.rivalchess.model.Colour;
 import com.netsensia.rivalchess.model.CommonTestUtils;
 import com.netsensia.rivalchess.model.Move;
-import com.netsensia.rivalchess.model.MoveDirection;
+import com.netsensia.rivalchess.model.SliderDirection;
 import com.netsensia.rivalchess.model.Piece;
 import com.netsensia.rivalchess.model.Square;
 import com.netsensia.rivalchess.model.SquareOccupant;
@@ -160,6 +160,52 @@ public class BoardUtilsTest {
     }
 
     @Test
+    public void getKingMovesWhenKingOnAnEdge() {
+        final Board board = CommonTestUtils.getStartBoard();
+
+        board.setSquareOccupant(4,7, SquareOccupant.NONE);
+        board.setSquareOccupant(7,2, SquareOccupant.WK);
+
+        final List<Move> actualMoves = BoardUtils.getKingMoves(board);
+
+        final List<Move> expectedMoves =
+                new ArrayList<>(Arrays.asList(
+                        new Move(new Square(7,2), new Square(7,1)),
+                        new Move(new Square(7,2), new Square(7,3)),
+                        new Move(new Square(7,2), new Square(6,3)),
+                        new Move(new Square(7,2), new Square(6,2)),
+                        new Move(new Square(7,2), new Square(6,1))
+                ));
+
+        Collections.sort(expectedMoves);
+        Collections.sort(actualMoves);
+
+        assertEquals(expectedMoves, actualMoves);
+
+    }
+
+    @Test
+    public void getKnightMoves() {
+        final Board board = CommonTestUtils.getStartBoard();
+
+        final List<Move> actualMoves = BoardUtils.getKnightMoves(board);
+
+        final List<Move> expectedMoves =
+                new ArrayList<>(Arrays.asList(
+                        new Move(new Square(1,7), new Square(2,5)),
+                        new Move(new Square(1,7), new Square(0,5)),
+                        new Move(new Square(6,7), new Square(7,5)),
+                        new Move(new Square(6,7), new Square(5,5))
+                ));
+
+        Collections.sort(expectedMoves);
+        Collections.sort(actualMoves);
+
+        assertEquals(expectedMoves, actualMoves);
+
+    }
+
+    @Test
     public void testGetDirectionalPotentialSquaresFromSquare_shouldIncludeCaptureSquare() {
         final Board board = new Board();
 
@@ -167,7 +213,7 @@ public class BoardUtilsTest {
         board.setSideToMove(Colour.WHITE);
 
         final List<Square> actualSquares =
-                BoardUtils.getDirectionalSquaresFromSquare(new Square(2,3), MoveDirection.SE, board);
+                BoardUtils.getDirectionalSquaresFromSquare(new Square(2,3), SliderDirection.SE, board);
 
         final List<Square> expectedSquares =
                 new ArrayList<>(Arrays.asList(
@@ -190,7 +236,7 @@ public class BoardUtilsTest {
         board.setSideToMove(Colour.BLACK);
 
         final List<Square> actualSquares =
-                BoardUtils.getDirectionalSquaresFromSquare(new Square(2,3), MoveDirection.SE, board);
+                BoardUtils.getDirectionalSquaresFromSquare(new Square(2,3), SliderDirection.SE, board);
 
         final List<Square> expectedSquares =
                 new ArrayList<>(Arrays.asList(

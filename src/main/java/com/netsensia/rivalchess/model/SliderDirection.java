@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public enum MoveDirection {
+public enum SliderDirection {
     N (0,-1),
     NE (1,-1),
     E (1,0),
@@ -18,7 +18,7 @@ public enum MoveDirection {
     private final int xIncrement;
     private final int yIncrement;
 
-    private MoveDirection(final int xIncrement, final int yIncrement) {
+    private SliderDirection(final int xIncrement, final int yIncrement) {
         this.xIncrement = xIncrement;
         this.yIncrement = yIncrement;
     }
@@ -31,21 +31,21 @@ public enum MoveDirection {
         return this.yIncrement;
     }
 
-    public static List<MoveDirection> getDirectionsForPiece(Piece piece) {
+    public static List<SliderDirection> getDirectionsForPiece(Piece piece) {
         switch (piece) {
             case KING:
             case QUEEN:
                 return new ArrayList<>(Arrays.asList(
-                        MoveDirection.NE, MoveDirection.NW, MoveDirection.SE, MoveDirection.SW,
-                        MoveDirection.N, MoveDirection.W, MoveDirection.S, MoveDirection.E
+                        SliderDirection.NE, SliderDirection.NW, SliderDirection.SE, SliderDirection.SW,
+                        SliderDirection.N, SliderDirection.W, SliderDirection.S, SliderDirection.E
                 ));
             case BISHOP:
                 return new ArrayList<>(Arrays.asList(
-                        MoveDirection.NE, MoveDirection.NW, MoveDirection.SE, MoveDirection.SW
+                        SliderDirection.NE, SliderDirection.NW, SliderDirection.SE, SliderDirection.SW
                 ));
             case ROOK:
                 return new ArrayList<>(Arrays.asList(
-                        MoveDirection.N, MoveDirection.W, MoveDirection.S, MoveDirection.E
+                        SliderDirection.N, SliderDirection.W, SliderDirection.S, SliderDirection.E
                 ));
             default:
                 throw new RuntimeException("Can't get directions for a non-sliding piece");
