@@ -20,7 +20,20 @@ public enum Piece {
         return index;
     }
 
-    public static Piece fromSquareOccupant(SquareOccupant squareOccupant) {
+    public SquareOccupant toSquareOccupant(final Colour colour) {
+        switch (this) {
+            case PAWN: return colour == Colour.WHITE ? SquareOccupant.WP : SquareOccupant.BP;
+            case KNIGHT: return colour == Colour.WHITE ? SquareOccupant.WN : SquareOccupant.BN;
+            case BISHOP: return colour == Colour.WHITE ? SquareOccupant.WB : SquareOccupant.BB;
+            case ROOK: return colour == Colour.WHITE ? SquareOccupant.WR : SquareOccupant.BR;
+            case QUEEN: return colour == Colour.WHITE ? SquareOccupant.WQ : SquareOccupant.BQ;
+            case KING: return colour == Colour.WHITE ? SquareOccupant.WK : SquareOccupant.BK;
+            default:
+                throw new RuntimeException("Can't create squareOccupant from " + this + " and " + colour);
+        }
+    }
+
+    public static Piece fromSquareOccupant(final SquareOccupant squareOccupant) {
         switch (squareOccupant) {
             case WP:
             case BP:

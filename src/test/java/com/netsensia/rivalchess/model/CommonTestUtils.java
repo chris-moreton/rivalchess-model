@@ -40,6 +40,7 @@ public class CommonTestUtils {
         board.setSquareOccupant(new Square(6,6), SquareOccupant.WP);
         board.setSquareOccupant(new Square(7,6), SquareOccupant.WP);
 
+        board.setSideToMove(Colour.WHITE);
         return board;
     }
 }

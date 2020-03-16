@@ -25,7 +25,7 @@ public class BoardUtilsTest {
         board.setSquareOccupant(3, 1, SquareOccupant.NONE);
 
         final List<Move> actualMoves =
-                BoardUtils.getBishopMoves(new Square(2,0), board);
+                BoardUtils.getBishopMoves(board);
 
         final List<Move> expectedMoves =
                 new ArrayList<>(Arrays.asList(
@@ -40,5 +40,55 @@ public class BoardUtilsTest {
         Collections.sort(actualMoves);
 
         assertEquals(expectedMoves, actualMoves);
+    }
+
+    @Test
+    public void getRookMoves() {
+        final Board board = CommonTestUtils.getStartBoard();
+        board.setSquareOccupant(4, 4, SquareOccupant.WR);
+
+        final List<Move> actualMoves =
+                BoardUtils.getRookMoves(board);
+
+        final List<Move> expectedMoves =
+                new ArrayList<>(Arrays.asList(
+                        new Move(new Square(4,4), new Square(4,1)),
+                        new Move(new Square(4,4), new Square(4,2)),
+                        new Move(new Square(4,4), new Square(4,3)),
+                        new Move(new Square(4,4), new Square(4,5)),
+                        new Move(new Square(4,4), new Square(0,4)),
+                        new Move(new Square(4,4), new Square(1,4)),
+                        new Move(new Square(4,4), new Square(2,4)),
+                        new Move(new Square(4,4), new Square(3,4)),
+                        new Move(new Square(4,4), new Square(5,4)),
+                        new Move(new Square(4,4), new Square(6,4)),
+                        new Move(new Square(4,4), new Square(7,4))
+                ));
+
+        Collections.sort(expectedMoves);
+        Collections.sort(actualMoves);
+
+        assertEquals(expectedMoves, actualMoves);
+
+        board.setSideToMove(Colour.BLACK);
+    }
+
+    @Test
+    public void getRookMovesWhenNoMovesAvailable() {
+        final Board board = CommonTestUtils.getStartBoard();
+        board.setSideToMove(Colour.BLACK);
+        board.setSquareOccupant(4, 4, SquareOccupant.WR);
+
+        final List<Move> actualMoves =
+                BoardUtils.getRookMoves(board);
+
+        final List<Move> expectedMoves =
+                new ArrayList<>(Arrays.asList());
+
+        Collections.sort(expectedMoves);
+        Collections.sort(actualMoves);
+
+        assertEquals(expectedMoves, actualMoves);
+
     }
 }
