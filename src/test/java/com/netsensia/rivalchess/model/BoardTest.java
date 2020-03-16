@@ -70,4 +70,15 @@ public class BoardTest {
         assertTrue(board.isQueenSideCastleAvailable(Colour.BLACK));
     }
 
+    @Test
+    public void testEquality() {
+        Board board = CommonTestUtils.getStartBoard();
+        Board boardCopy = Board.copy(board);
+        assertTrue(board.equals(boardCopy));
+        assertTrue(boardCopy.equals(board));
+
+        boardCopy.setHalfMoveCount(3);
+        assertFalse(board.equals(boardCopy));
+        assertFalse(boardCopy.equals(board));
+    }
 }

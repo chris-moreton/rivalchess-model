@@ -128,7 +128,15 @@ public class BoardUtils {
                             fromSquare.getYRank() + PawnMoveHelper.advanceDirection(mover));
 
             if (board.getSquareOccupant(oneSquareForward) == SquareOccupant.NONE) {
-                moves.add(new Move(fromSquare, oneSquareForward));
+
+                if (fromSquare.getYRank() == PawnMoveHelper.promotionRank(mover)) {
+                    moves.add(new Move(fromSquare, oneSquareForward, SquareOccupant.WQ.ofColour(mover)));
+                    moves.add(new Move(fromSquare, oneSquareForward, SquareOccupant.WN.ofColour(mover)));
+                    moves.add(new Move(fromSquare, oneSquareForward, SquareOccupant.WB.ofColour(mover)));
+                    moves.add(new Move(fromSquare, oneSquareForward, SquareOccupant.WR.ofColour(mover)));
+                } else {
+                    moves.add(new Move(fromSquare, oneSquareForward));
+                }
 
                 if (fromSquare.getYRank() == PawnMoveHelper.homeRank(mover)) {
                     final Square twoSquaresForward =
@@ -137,11 +145,6 @@ public class BoardUtils {
                     if (board.getSquareOccupant(twoSquaresForward) == SquareOccupant.NONE) {
                         moves.add(new Move(fromSquare, twoSquaresForward));
                     }
-                } else if (fromSquare.getYRank() == PawnMoveHelper.promotionRank(mover)) {
-                    moves.add(new Move(fromSquare, oneSquareForward, SquareOccupant.WQ.ofColour(mover)));
-                    moves.add(new Move(fromSquare, oneSquareForward, SquareOccupant.WN.ofColour(mover)));
-                    moves.add(new Move(fromSquare, oneSquareForward, SquareOccupant.WB.ofColour(mover)));
-                    moves.add(new Move(fromSquare, oneSquareForward, SquareOccupant.WR.ofColour(mover)));
                 }
             }
 
@@ -161,7 +164,14 @@ public class BoardUtils {
                             moves.add(new Move(fromSquare, captureSquare));
                         }
                     } else if (board.getSquareOccupant(captureSquare).getColour() == mover.opponent()) {
-                        moves.add(new Move(fromSquare, captureSquare));
+                        if (fromSquare.getYRank() == PawnMoveHelper.promotionRank(mover)) {
+                            moves.add(new Move(fromSquare, captureSquare, SquareOccupant.WQ.ofColour(mover)));
+                            moves.add(new Move(fromSquare, captureSquare, SquareOccupant.WN.ofColour(mover)));
+                            moves.add(new Move(fromSquare, captureSquare, SquareOccupant.WB.ofColour(mover)));
+                            moves.add(new Move(fromSquare, captureSquare, SquareOccupant.WR.ofColour(mover)));
+                        } else {
+                            moves.add(new Move(fromSquare, captureSquare));
+                        }
                     }
                 }
             }
@@ -224,6 +234,15 @@ public class BoardUtils {
     }
 
     public List<Move> getLegalMoves(Board board) {
-        return null;
+        List<Move> moves = new ArrayList<>();
+
+        moves.addAll(getPawnMoves(board));
+        moves.addAll(getSliderMoves(board, Piece.QUEEN));
+        moves.addAll(getSliderMoves(board, Piece.BISHOP));
+        moves.addAll(getSliderMoves(board, Piece.ROOK));
+        moves.addAll(getKnightMoves(board));
+        moves.addAll(getKingMoves(board));
+
+        return moves;
     }
 }

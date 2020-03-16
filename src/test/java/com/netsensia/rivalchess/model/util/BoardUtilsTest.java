@@ -159,11 +159,6 @@ public class BoardUtilsTest {
 
     }
 
-    private List<Move> sortedMoveList(List<Move> moves) {
-        Collections.sort(moves);
-        return moves;
-    }
-
     @Test
     public void testNoCastlingAvailable() {
         final Board board = CommonTestUtils.getStartBoard();
@@ -409,6 +404,9 @@ public class BoardUtilsTest {
         board.setSquareOccupant(1,0, SquareOccupant.NONE);
         board.setSquareOccupant(2,5, SquareOccupant.BN);
 
+        board.setSquareOccupant(7,6, SquareOccupant.NONE);
+        board.setSquareOccupant(7,1, SquareOccupant.WP);
+
         board.setEnPassantFile(2);
 
         final List<Move> actualMoves = BoardUtils.getPawnMoves(board);
@@ -425,9 +423,11 @@ public class BoardUtilsTest {
                         new Move(new Square(5,5), new Square(4,4)),
                         new Move(new Square(5,5), new Square(5,4)),
                         new Move(new Square(6,4), new Square(6,3)),
-                        new Move(new Square(7,6), new Square(7,5)),
-                        new Move(new Square(7,6), new Square(7,4))
-                ));
+                        new Move(new Square(7,1), new Square(6,0), SquareOccupant.WB),
+                        new Move(new Square(7,1), new Square(6,0), SquareOccupant.WN),
+                        new Move(new Square(7,1), new Square(6,0), SquareOccupant.WR),
+                        new Move(new Square(7,1), new Square(6,0), SquareOccupant.WQ)
+                        ));
 
         Collections.sort(expectedMoves);
         Collections.sort(actualMoves);
@@ -467,7 +467,9 @@ public class BoardUtilsTest {
         board.setSquareOccupant(2,5, SquareOccupant.BN);
 
         board.setSquareOccupant(7,1, SquareOccupant.NONE);
-        board.setSquareOccupant(7,4, SquareOccupant.BP);
+        board.setSquareOccupant(7,6, SquareOccupant.BP);
+
+        board.setSquareOccupant(7,7, SquareOccupant.NONE);
 
         board.setEnPassantFile(6);
 
@@ -486,9 +488,15 @@ public class BoardUtilsTest {
                         new Move(new Square(5,1), new Square(5,2)),
                         new Move(new Square(5,1), new Square(5,3)),
                         new Move(new Square(6,2), new Square(6,3)),
-                        new Move(new Square(7,4), new Square(6,5)),
-                        new Move(new Square(7,4), new Square(7,5))
-                ));
+                        new Move(new Square(7,6), new Square(6,7), SquareOccupant.BB),
+                        new Move(new Square(7,6), new Square(6,7), SquareOccupant.BN),
+                        new Move(new Square(7,6), new Square(6,7), SquareOccupant.BR),
+                        new Move(new Square(7,6), new Square(6,7), SquareOccupant.BQ),
+                        new Move(new Square(7,6), new Square(7,7), SquareOccupant.BB),
+                        new Move(new Square(7,6), new Square(7,7), SquareOccupant.BN),
+                        new Move(new Square(7,6), new Square(7,7), SquareOccupant.BR),
+                        new Move(new Square(7,6), new Square(7,7), SquareOccupant.BQ)
+                        ));
 
         Collections.sort(expectedMoves);
         Collections.sort(actualMoves);

@@ -1,5 +1,7 @@
 package com.netsensia.rivalchess.model;
 
+import com.netsensia.rivalchess.model.util.MoveMaker;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -18,7 +20,7 @@ public class Board {
     private boolean isBlackKingSideCastleAvailable = true;
     private boolean isBlackQueenSideCastleAvailable = true;
 
-    private final int halfMoveCount = 0;
+    private int halfMoveCount = 0;
     private Colour sideToMove;
 
     public Board() {
@@ -31,6 +33,30 @@ public class Board {
                 );
             }
         }
+    }
+
+    public static Board copy(final Board board) {
+        Board newBoard = new Board();
+
+        for (int x=0; x<8; x++) {
+            for (int y=0; y<8; y++) {
+                newBoard.setSquareOccupant(x, y, board.getSquareOccupant(x, y));
+            }
+        }
+
+        newBoard.setSideToMove(board.getSideToMove());
+        newBoard.setEnPassantFile(board.getEnPassantFile());
+        newBoard.setKingSideCastleAvailable(Colour.WHITE, board.isKingSideCastleAvailable(Colour.WHITE));
+        newBoard.setKingSideCastleAvailable(Colour.BLACK, board.isKingSideCastleAvailable(Colour.BLACK));
+        newBoard.setQueenSideCastleAvailable(Colour.WHITE, board.isKingSideCastleAvailable(Colour.WHITE));
+        newBoard.setQueenSideCastleAvailable(Colour.BLACK, board.isKingSideCastleAvailable(Colour.BLACK));
+        newBoard.setHalfMoveCount(board.getHalfMoveCount());
+
+        return newBoard;
+    }
+
+    public static Board fromMove(final Board board, final Move move) {
+        return MoveMaker.makeMove(board, move);
     }
 
     public SquareOccupant getSquareOccupant(Square boardRef) {
@@ -93,6 +119,10 @@ public class Board {
         return squareOccupants.entrySet().stream();
     }
 
+    public void setHalfMoveCount(int halfMoveCount) {
+        this.halfMoveCount = halfMoveCount;
+    }
+
     public int getHalfMoveCount() {
         return this.halfMoveCount;
     }
@@ -111,6 +141,32 @@ public class Board {
 
     public void setEnPassantFile(final int enPassantFile) {
         this.enPassantFile = enPassantFile;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Board) {
+            Board bo = (Board) o;
+
+            for (int x=0; x<8; x++) {
+                for (int y=0; y<8; y++) {
+                    if (!this.getSquareOccupant(x,y).equals(bo.getSquareOccupant(x,y))) {
+                        return false;
+                    }
+                }
+            }
+
+            return this.getHalfMoveCount() == bo.getHalfMoveCount() &&
+                    this.getEnPassantFile() == bo.getEnPassantFile() &&
+                    this.getSideToMove() == bo.getSideToMove() &&
+                    this.isKingSideCastleAvailable(Colour.WHITE) == bo.isKingSideCastleAvailable(Colour.WHITE) &&
+                    this.isKingSideCastleAvailable(Colour.BLACK) == bo.isKingSideCastleAvailable(Colour.BLACK) &&
+                    this.isQueenSideCastleAvailable(Colour.WHITE) == bo.isQueenSideCastleAvailable(Colour.WHITE) &&
+                    this.isQueenSideCastleAvailable(Colour.BLACK) == bo.isQueenSideCastleAvailable(Colour.BLACK);
+
+        }
+
+        return false;
     }
 
 }
