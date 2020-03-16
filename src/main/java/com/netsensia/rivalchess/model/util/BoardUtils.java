@@ -1,12 +1,12 @@
 package com.netsensia.rivalchess.model.util;
 
 import com.netsensia.rivalchess.model.Board;
-import com.netsensia.rivalchess.model.CastlingHelper;
+import com.netsensia.rivalchess.model.helper.CastlingHelper;
 import com.netsensia.rivalchess.model.Colour;
-import com.netsensia.rivalchess.model.KnightDirection;
+import com.netsensia.rivalchess.model.helper.KnightDirection;
 import com.netsensia.rivalchess.model.Move;
-import com.netsensia.rivalchess.model.PawnMoveHelper;
-import com.netsensia.rivalchess.model.SliderDirection;
+import com.netsensia.rivalchess.model.helper.PawnMoveHelper;
+import com.netsensia.rivalchess.model.helper.SliderDirection;
 import com.netsensia.rivalchess.model.Piece;
 import com.netsensia.rivalchess.model.Square;
 import com.netsensia.rivalchess.model.SquareOccupant;

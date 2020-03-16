@@ -35,6 +35,10 @@ public class Board {
         }
     }
 
+    public static Board fromFen(String fen) {
+        return null;
+    }
+
     public static Board copy(final Board board) {
         Board newBoard = new Board();
 

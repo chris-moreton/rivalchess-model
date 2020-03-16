@@ -1,4 +1,4 @@
-package com.netsensia.rivalchess.model;
+package com.netsensia.rivalchess.model.helper;
 
 public enum KnightDirection {
     NE (1,-2),

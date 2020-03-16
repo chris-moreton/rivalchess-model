@@ -1,4 +1,7 @@
-package com.netsensia.rivalchess.model;
+package com.netsensia.rivalchess.model.helper;
+
+import com.netsensia.rivalchess.model.Colour;
+import com.netsensia.rivalchess.model.Square;
 
 public class CastlingHelper {
 

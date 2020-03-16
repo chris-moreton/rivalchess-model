@@ -4,7 +4,7 @@ import com.netsensia.rivalchess.model.Board;
 import com.netsensia.rivalchess.model.Colour;
 import com.netsensia.rivalchess.model.CommonTestUtils;
 import com.netsensia.rivalchess.model.Move;
-import com.netsensia.rivalchess.model.SliderDirection;
+import com.netsensia.rivalchess.model.helper.SliderDirection;
 import com.netsensia.rivalchess.model.Piece;
 import com.netsensia.rivalchess.model.Square;
 import com.netsensia.rivalchess.model.SquareOccupant;
