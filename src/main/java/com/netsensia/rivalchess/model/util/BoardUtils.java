@@ -190,6 +190,15 @@ public class BoardUtils {
             }
         }
 
+        moves.addAll(getCastlingMoves(board));
+
+        return moves;
+    }
+
+    public static List<Move> getCastlingMoves(Board board) {
+
+        final List<Move> moves = new ArrayList<>();
+
         for (Colour colour : Colour.list()) {
             if (board.isKingSideCastleAvailable(colour) &&
                     board.getSquareOccupant(CastlingHelper.kingHome(colour)) == SquareOccupant.WK.ofColour(colour) &&
@@ -197,7 +206,7 @@ public class BoardUtils {
                     board.getSquareOccupant(CastlingHelper.kingKnightHome(colour)) == SquareOccupant.NONE &&
                     board.getSquareOccupant(CastlingHelper.kingBishopHome(colour)) == SquareOccupant.NONE
             ) {
-                moves.add(new Move(fromSquare, CastlingHelper.kingKnightHome(colour)));
+                moves.add(new Move(CastlingHelper.kingHome(colour), CastlingHelper.kingKnightHome(colour)));
             }
 
             if (board.isQueenSideCastleAvailable(colour) &&
@@ -207,7 +216,7 @@ public class BoardUtils {
                     board.getSquareOccupant(CastlingHelper.queenKnightHome(colour)) == SquareOccupant.NONE &&
                     board.getSquareOccupant(CastlingHelper.queenBishopHome(colour)) == SquareOccupant.NONE
             ) {
-                moves.add(new Move(fromSquare, CastlingHelper.kingKnightHome(colour)));
+                moves.add(new Move(CastlingHelper.kingHome(colour), CastlingHelper.queenBishopHome(colour)));
             }
         }
 

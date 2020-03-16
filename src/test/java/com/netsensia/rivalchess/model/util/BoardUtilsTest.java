@@ -159,6 +159,137 @@ public class BoardUtilsTest {
 
     }
 
+    private List<Move> sortedMoveList(List<Move> moves) {
+        Collections.sort(moves);
+        return moves;
+    }
+
+    @Test
+    public void testNoCastlingAvailable() {
+        final Board board = CommonTestUtils.getStartBoard();
+
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+    }
+
+    @Test
+    public void testCastlingAvailableButBlocked() {
+        final Board board = CommonTestUtils.getStartBoard();
+        board.setKingSideCastleAvailable(Colour.WHITE, true);
+        board.setKingSideCastleAvailable(Colour.BLACK, true);
+        board.setQueenSideCastleAvailable(Colour.WHITE, true);
+        board.setQueenSideCastleAvailable(Colour.BLACK, true);
+
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+    }
+
+    @Test
+    public void testWhiteKingSideCastling() {
+        final Board board = CommonTestUtils.getStartBoard();
+
+        board.setKingSideCastleAvailable(Colour.WHITE, true);
+        board.setKingSideCastleAvailable(Colour.BLACK, true);
+        board.setQueenSideCastleAvailable(Colour.WHITE, true);
+        board.setQueenSideCastleAvailable(Colour.BLACK, true);
+
+        board.setSquareOccupant(5, 7, SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+
+        board.setSquareOccupant(6, 7, SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList(
+                new Move(new Square(4,7), new Square(6,7))
+        )), BoardUtils.getCastlingMoves(board));
+
+        board.setSquareOccupant(7, 7, SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+
+        board.setSquareOccupant(7, 7, SquareOccupant.WR);
+        board.setSquareOccupant(4, 7, SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+    }
+
+    @Test
+    public void testWhiteQueenSideCastling() {
+        final Board board = CommonTestUtils.getStartBoard();
+
+        board.setKingSideCastleAvailable(Colour.WHITE, true);
+        board.setKingSideCastleAvailable(Colour.BLACK, true);
+        board.setQueenSideCastleAvailable(Colour.WHITE, true);
+        board.setQueenSideCastleAvailable(Colour.BLACK, true);
+
+        board.setSquareOccupant(3, 7, SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+
+        board.setSquareOccupant(2, 7, SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+
+        board.setSquareOccupant(1, 7, SquareOccupant.NONE);
+
+        assertEquals(new ArrayList<>(Arrays.asList(
+                new Move(new Square(4,7), new Square(2,7))
+        )), BoardUtils.getCastlingMoves(board));
+
+        board.setSquareOccupant(0, 7, SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+
+        board.setSquareOccupant(0, 7, SquareOccupant.WR);
+        board.setSquareOccupant(4, 7, SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+    }
+
+    @Test
+    public void testBlackKingSideCastling() {
+        final Board board = CommonTestUtils.getStartBoard();
+
+        board.setKingSideCastleAvailable(Colour.WHITE, true);
+        board.setKingSideCastleAvailable(Colour.BLACK, true);
+        board.setQueenSideCastleAvailable(Colour.WHITE, true);
+        board.setQueenSideCastleAvailable(Colour.BLACK, true);
+
+        board.setSquareOccupant(5, 0, SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+
+        board.setSquareOccupant(6, 0, SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList(
+                new Move(new Square(4,0), new Square(6,0))
+        )), BoardUtils.getCastlingMoves(board));
+
+        board.setSquareOccupant(7, 0, SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+
+        board.setSquareOccupant(7, 0, SquareOccupant.WR);
+        board.setSquareOccupant(4, 0, SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+    }
+
+    @Test
+    public void testBlackQueenSideCastling() {
+        final Board board = CommonTestUtils.getStartBoard();
+
+        board.setKingSideCastleAvailable(Colour.WHITE, true);
+        board.setKingSideCastleAvailable(Colour.BLACK, true);
+        board.setQueenSideCastleAvailable(Colour.WHITE, true);
+        board.setQueenSideCastleAvailable(Colour.BLACK, true);
+
+        board.setSquareOccupant(3, 0, SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+
+        board.setSquareOccupant(2, 0, SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+
+        board.setSquareOccupant(1, 0, SquareOccupant.NONE);
+
+        assertEquals(new ArrayList<>(Arrays.asList(
+                new Move(new Square(4,0), new Square(2,0))
+        )), BoardUtils.getCastlingMoves(board));
+
+        board.setSquareOccupant(0, 0, SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+
+        board.setSquareOccupant(0, 0, SquareOccupant.WR);
+        board.setSquareOccupant(4, 0, SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+    }
+
     @Test
     public void getKingMovesWhenKingOnAnEdge() {
         final Board board = CommonTestUtils.getStartBoard();
