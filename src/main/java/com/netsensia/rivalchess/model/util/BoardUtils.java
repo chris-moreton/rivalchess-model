@@ -21,8 +21,10 @@ import static com.netsensia.rivalchess.model.util.CommonUtils.isValidRankFileBoa
 import static com.netsensia.rivalchess.model.util.CommonUtils.isValidSquareReference;
 
 public class BoardUtils {
-    public static boolean isCheck(final Board board) {
-        return true;
+    public static boolean isCheck(final Board board, final Move move) {
+        Board newBoard = Board.fromMove(board, move);
+
+        return false;
     }
 
     public static List<Square> getAttackersOfSquare(final Board board, final Square square) {
@@ -243,6 +245,6 @@ public class BoardUtils {
         moves.addAll(getKnightMoves(board));
         moves.addAll(getKingMoves(board));
 
-        return moves;
+        return moves.stream().filter(m -> BoardUtils.isCheck(board, m)).collect(Collectors.toList());
     }
 }
