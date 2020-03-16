@@ -21,10 +21,22 @@ import static com.netsensia.rivalchess.model.util.CommonUtils.isValidRankFileBoa
 import static com.netsensia.rivalchess.model.util.CommonUtils.isValidSquareReference;
 
 public class BoardUtils {
-    public static boolean isCheck(final Board board, final Move move) {
-        Board newBoard = Board.fromMove(board, move);
 
-        return false;
+    public static boolean isCheck(final Board board) {
+
+        final Board newBoard = Board.copy(board);
+
+        newBoard.setSideToMove(board.getSideToMove().opponent());
+
+        final List<Move> moveList = getLegalMoves(newBoard);
+
+        final Square ourKingSquare =
+                BoardUtils.getSquaresWithOccupant(board, SquareOccupant.WK.ofColour(board.getSideToMove())).get(0);
+
+        final List<Move> kingCaptureMoves =
+                moveList.stream().filter(m -> m.getTgtBoardRef().equals(ourKingSquare)).collect(Collectors.toList());
+
+        return kingCaptureMoves.size() > 0;
     }
 
     public static List<Square> getAttackersOfSquare(final Board board, final Square square) {
@@ -235,7 +247,7 @@ public class BoardUtils {
         return moves;
     }
 
-    public static List<Move> getLegalMoves(final Board board) {
+    public static List<Move> getAllMovesWithoutRemovingChecks(final Board board) {
         List<Move> moves = new ArrayList<>();
 
         moves.addAll(getPawnMoves(board));
@@ -245,6 +257,16 @@ public class BoardUtils {
         moves.addAll(getKnightMoves(board));
         moves.addAll(getKingMoves(board));
 
-        return moves.stream().filter(m -> BoardUtils.isCheck(board, m)).collect(Collectors.toList());
+        return moves;
+
+    }
+
+    public static List<Move> getLegalMoves(final Board board) {
+        final List<Move> moves = getAllMovesWithoutRemovingChecks(board);
+
+        return moves.stream().filter(m -> {
+            final Board newBoard = MoveMaker.makeMove(board, m);
+            return BoardUtils.isCheck(newBoard);
+        }).collect(Collectors.toList());
     }
 }
