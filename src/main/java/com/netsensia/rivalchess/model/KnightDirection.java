@@ -1,6 +1,6 @@
 package com.netsensia.rivalchess.model;
 
-public enum KnightMoves {
+public enum KnightDirection {
     NE (1,-2),
     NW (-1,-2),
     EN (2,-1),
@@ -14,7 +14,7 @@ public enum KnightMoves {
     private final int xIncrement;
     private final int yIncrement;
 
-    private KnightMoves(final int xIncrement, final int yIncrement) {
+    private KnightDirection(final int xIncrement, final int yIncrement) {
         this.xIncrement = xIncrement;
         this.yIncrement = yIncrement;
     }

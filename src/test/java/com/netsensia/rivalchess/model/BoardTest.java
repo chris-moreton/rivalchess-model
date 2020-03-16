@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class BoardTest {
 
@@ -32,6 +34,40 @@ public class BoardTest {
 
         assertEquals(expectedSquares, BoardUtils.getSquaresWithOccupant(
                 CommonTestUtils.getStartBoard(), SquareOccupant.BN));
+    }
+
+    @Test
+    public void testCastleFlags() {
+        final Board board = CommonTestUtils.getStartBoard();
+
+        assertTrue(board.isKingSideCastleAvailable(Colour.WHITE));
+        assertTrue(board.isKingSideCastleAvailable(Colour.BLACK));
+        assertTrue(board.isQueenSideCastleAvailable(Colour.WHITE));
+        assertTrue(board.isQueenSideCastleAvailable(Colour.BLACK));
+
+        board.setKingSideCastleAvailable(Colour.WHITE, false);
+        assertFalse(board.isKingSideCastleAvailable(Colour.WHITE));
+
+        board.setKingSideCastleAvailable(Colour.WHITE, true);
+        assertTrue(board.isKingSideCastleAvailable(Colour.WHITE));
+
+        board.setKingSideCastleAvailable(Colour.BLACK, false);
+        assertFalse(board.isKingSideCastleAvailable(Colour.BLACK));
+
+        board.setKingSideCastleAvailable(Colour.BLACK, true);
+        assertTrue(board.isKingSideCastleAvailable(Colour.BLACK));
+
+        board.setQueenSideCastleAvailable(Colour.WHITE, false);
+        assertFalse(board.isQueenSideCastleAvailable(Colour.WHITE));
+
+        board.setQueenSideCastleAvailable(Colour.WHITE, true);
+        assertTrue(board.isQueenSideCastleAvailable(Colour.WHITE));
+
+        board.setQueenSideCastleAvailable(Colour.BLACK, false);
+        assertFalse(board.isQueenSideCastleAvailable(Colour.BLACK));
+
+        board.setQueenSideCastleAvailable(Colour.BLACK, true);
+        assertTrue(board.isQueenSideCastleAvailable(Colour.BLACK));
     }
 
 }

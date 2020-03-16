@@ -1,8 +1,8 @@
 package com.netsensia.rivalchess.model;
 
-public class PawnMoves {
+public class PawnMoveHelper {
 
-    private PawnMoves() { }
+    private PawnMoveHelper() { }
 
     public static int homeRank(Colour colour) {
         return colour == Colour.WHITE ? 6 : 1;

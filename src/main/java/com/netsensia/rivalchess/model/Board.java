@@ -1,9 +1,7 @@
 package com.netsensia.rivalchess.model;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Board {
@@ -67,41 +65,32 @@ public class Board {
         return NUM_RANKS;
     }
 
-    public boolean isWhiteKingSideCastleAvailable() {
-        return isWhiteKingSideCastleAvailable;
+    public boolean isKingSideCastleAvailable(final Colour colour) {
+        return colour == Colour.WHITE ? isWhiteKingSideCastleAvailable : isBlackKingSideCastleAvailable;
     }
 
-    public void setWhiteKingSideCastleAvailable(final boolean isWhiteKingSideCastleAvailable) {
-        this.isWhiteKingSideCastleAvailable = isWhiteKingSideCastleAvailable;
+    public void setKingSideCastleAvailable(final Colour colour, final boolean isKingSideCastleAvailable) {
+        if (colour == Colour.WHITE) {
+            isWhiteKingSideCastleAvailable = isKingSideCastleAvailable;
+        } else {
+            isBlackKingSideCastleAvailable = isKingSideCastleAvailable;
+        }
     }
 
-    public boolean isWhiteQueenSideCastleAvailable() {
-        return isWhiteQueenSideCastleAvailable;
+    public boolean isQueenSideCastleAvailable(final Colour colour) {
+        return colour == Colour.WHITE ? isWhiteQueenSideCastleAvailable : isBlackQueenSideCastleAvailable;
     }
 
-    public void setWhiteQueenSideCastleAvailable(final boolean isWhiteQueenSideCastleAvailable) {
-        this.isWhiteQueenSideCastleAvailable = isWhiteQueenSideCastleAvailable;
-    }
-
-    public boolean isBlackKingSideCastleAvailable() {
-        return this.isBlackKingSideCastleAvailable;
-    }
-
-    public void setBlackKingSideCastleAvailable(final boolean isBlackKingSideCastleAvailable) {
-        this.isBlackKingSideCastleAvailable = isBlackKingSideCastleAvailable;
-    }
-
-    public boolean isBlackQueenSideCastleAvailable() {
-        return this.isBlackQueenSideCastleAvailable;
-    }
-
-    public void setBlackQueenSideCastleAvailable(final boolean isBlackQueenSideCastleAvailable) {
-        this.isBlackQueenSideCastleAvailable = isBlackQueenSideCastleAvailable;
+    public void setQueenSideCastleAvailable(final Colour colour, final boolean isQueenSideCastleAvailable) {
+        if (colour == Colour.WHITE) {
+            this.isWhiteQueenSideCastleAvailable = isQueenSideCastleAvailable;
+        } else {
+            this.isBlackQueenSideCastleAvailable = isQueenSideCastleAvailable;
+        }
     }
 
     public Stream<Map.Entry<Square, SquareOccupant>> squareOccupantStream() {
-        return squareOccupants.entrySet()
-                .stream();
+        return squareOccupants.entrySet().stream();
     }
 
     public int getHalfMoveCount() {
