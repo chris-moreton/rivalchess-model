@@ -121,10 +121,7 @@ public class BoardUtils {
             if (board.getSquareOccupant(oneSquareForward) == SquareOccupant.NONE) {
 
                 if (fromSquare.getYRank() == PawnMoveHelper.promotionRank(mover)) {
-                    moves.add(new Move(fromSquare, oneSquareForward, SquareOccupant.WQ.ofColour(mover)));
-                    moves.add(new Move(fromSquare, oneSquareForward, SquareOccupant.WN.ofColour(mover)));
-                    moves.add(new Move(fromSquare, oneSquareForward, SquareOccupant.WB.ofColour(mover)));
-                    moves.add(new Move(fromSquare, oneSquareForward, SquareOccupant.WR.ofColour(mover)));
+                    moves.addAll(getAllPromotionOptionsForMove(mover, fromSquare, oneSquareForward));
                 } else {
                     moves.add(new Move(fromSquare, oneSquareForward));
                 }
@@ -141,6 +138,17 @@ public class BoardUtils {
 
             moves.addAll(getPawnCaptures(board, mover, fromSquare));
         }
+
+        return moves;
+    }
+
+    private static List<Move> getAllPromotionOptionsForMove(Colour mover, Square fromSquare, Square toSquare) {
+        List<Move> moves = new ArrayList<>();
+
+        moves.add(new Move(fromSquare, toSquare, SquareOccupant.WQ.ofColour(mover)));
+        moves.add(new Move(fromSquare, toSquare, SquareOccupant.WN.ofColour(mover)));
+        moves.add(new Move(fromSquare, toSquare, SquareOccupant.WB.ofColour(mover)));
+        moves.add(new Move(fromSquare, toSquare, SquareOccupant.WR.ofColour(mover)));
 
         return moves;
     }
@@ -172,10 +180,7 @@ public class BoardUtils {
                 }
             } else if (board.getSquareOccupant(captureSquare).getColour() == mover.opponent()) {
                 if (fromSquare.getYRank() == PawnMoveHelper.promotionRank(mover)) {
-                    moves.add(new Move(fromSquare, captureSquare, SquareOccupant.WQ.ofColour(mover)));
-                    moves.add(new Move(fromSquare, captureSquare, SquareOccupant.WN.ofColour(mover)));
-                    moves.add(new Move(fromSquare, captureSquare, SquareOccupant.WB.ofColour(mover)));
-                    moves.add(new Move(fromSquare, captureSquare, SquareOccupant.WR.ofColour(mover)));
+                    moves.addAll(getAllPromotionOptionsForMove(mover, fromSquare, captureSquare));
                 } else {
                     moves.add(new Move(fromSquare, captureSquare));
                 }
@@ -221,6 +226,10 @@ public class BoardUtils {
                     board.getSquareOccupant(CastlingHelper.kingKnightHome(colour)) == SquareOccupant.NONE &&
                     board.getSquareOccupant(CastlingHelper.kingBishopHome(colour)) == SquareOccupant.NONE
             ) {
+                if (BoardUtils.isSquareAttacked(board, CastlingHelper.kingKnightHome(colour), colour.opponent()) ||
+                        BoardUtils.isSquareAttacked(board, CastlingHelper.kingBishopHome(colour), colour.opponent())) {
+                    continue;
+                }
                 moves.add(new Move(CastlingHelper.kingHome(colour), CastlingHelper.kingKnightHome(colour)));
             }
 
@@ -231,6 +240,10 @@ public class BoardUtils {
                     board.getSquareOccupant(CastlingHelper.queenKnightHome(colour)) == SquareOccupant.NONE &&
                     board.getSquareOccupant(CastlingHelper.queenBishopHome(colour)) == SquareOccupant.NONE
             ) {
+                if (BoardUtils.isSquareAttacked(board, CastlingHelper.queenBishopHome(colour), colour.opponent()) ||
+                        BoardUtils.isSquareAttacked(board, CastlingHelper.queenHome(colour), colour.opponent())) {
+                    continue;
+                }
                 moves.add(new Move(CastlingHelper.kingHome(colour), CastlingHelper.queenBishopHome(colour)));
             }
         }

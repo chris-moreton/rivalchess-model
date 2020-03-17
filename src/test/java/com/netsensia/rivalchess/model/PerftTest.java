@@ -4,11 +4,17 @@ import static org.junit.Assert.assertEquals;
 
 import com.netsensia.rivalchess.model.exception.IllegalFenException;
 import com.netsensia.rivalchess.model.exception.InvalidMoveException;
+import com.netsensia.rivalchess.model.util.EpdPerftItem;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Objects;
 
 public class PerftTest {
 
@@ -70,5 +76,23 @@ public class PerftTest {
         assertPerftScore("rnbqkb1r/ppppp1pp/7n/4Pp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 3", 5, 11139762);
         assertPerftScore("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - -", 7, 178633661);
         assertPerftScore("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -", 5, 193690690);
+    }
+
+    @Test
+    public void epdPerftSuite() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(Objects.requireNonNull(classLoader.getResource("epd/perft.epd")).getFile());
+
+        FileReader fr = new FileReader(file);
+        BufferedReader br = new BufferedReader(fr);
+        String line;
+
+        while ((line = br.readLine()) != null) {
+            if (!line.trim().equals("")) {
+
+            }
+        }
+        fr.close();
+
     }
 }

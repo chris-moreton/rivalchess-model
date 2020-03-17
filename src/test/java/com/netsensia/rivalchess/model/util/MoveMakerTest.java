@@ -209,4 +209,18 @@ public class MoveMakerTest {
                 board, new Move(2,1,2,3)).getEnPassantFile());
 
     }
+
+    @Test
+    public void testCastlingThroughCheck() {
+        final Board board = CommonTestUtils.getStartBoard();
+        board.setSquareOccupant(6,6, SquareOccupant.NONE);
+        board.setSquareOccupant(6,7, SquareOccupant.NONE);
+        board.setSquareOccupant(5,7, SquareOccupant.NONE);
+
+        assertEquals(20, BoardUtils.getLegalMoves(board).size());
+        board.setSquareOccupant(7,5, SquareOccupant.BB);
+        // two kings moves and two pawn moves restricted
+        assertEquals(16, BoardUtils.getLegalMoves(board).size());
+
+    }
 }
