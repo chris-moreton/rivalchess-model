@@ -22,23 +22,6 @@ import static com.netsensia.rivalchess.model.util.CommonUtils.isValidSquareRefer
 
 public class BoardUtils {
 
-    public static boolean isCheck(final Board board) {
-
-        final Board newBoard = Board.copy(board);
-
-        newBoard.setSideToMove(board.getSideToMove().opponent());
-
-        final List<Move> moveList = getLegalMoves(newBoard);
-
-        final Square ourKingSquare =
-                BoardUtils.getSquaresWithOccupant(board, SquareOccupant.WK.ofColour(board.getSideToMove())).get(0);
-
-        final List<Move> kingCaptureMoves =
-                moveList.stream().filter(m -> m.getTgtBoardRef().equals(ourKingSquare)).collect(Collectors.toList());
-
-        return kingCaptureMoves.size() > 0;
-    }
-
     public static List<Square> getAttackersOfSquare(final Board board, final Square square) {
         return null;
     }
@@ -261,12 +244,33 @@ public class BoardUtils {
 
     }
 
+    public static boolean isCheck(final Board board) {
+
+        final Board newBoard = Board.copy(board);
+
+        newBoard.setSideToMove(board.getSideToMove().opponent());
+
+        final List<Move> moveList = getAllMovesWithoutRemovingChecks(newBoard);
+
+        final Square ourKingSquare =
+                BoardUtils.getSquaresWithOccupant(board, SquareOccupant.WK.ofColour(board.getSideToMove())).get(0);
+
+        final List<Move> kingCaptureMoves =
+                moveList.stream().filter(m -> m.getTgtBoardRef().equals(ourKingSquare)).collect(Collectors.toList());
+
+        return kingCaptureMoves.size() > 0;
+    }
+
     public static List<Move> getLegalMoves(final Board board) {
         final List<Move> moves = getAllMovesWithoutRemovingChecks(board);
 
-        return moves.stream().filter(m -> {
-            final Board newBoard = MoveMaker.makeMove(board, m);
-            return BoardUtils.isCheck(newBoard);
-        }).collect(Collectors.toList());
+        return moves.stream()
+                .filter(m -> {
+                    final Board newBoard = MoveMaker.makeMove(board, m);
+                    // If it were still my move, would I be in check?
+                    newBoard.setSideToMove(newBoard.getSideToMove().opponent());
+                    return !BoardUtils.isCheck(newBoard);
+                })
+                .collect(Collectors.toList());
     }
 }

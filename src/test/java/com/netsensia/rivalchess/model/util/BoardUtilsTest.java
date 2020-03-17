@@ -525,8 +525,8 @@ public class BoardUtilsTest {
     public void testRemoveChecksFromMoves() {
         final Board board = CommonTestUtils.getStartBoard();
 
-        board.setSquareOccupant(7,5, SquareOccupant.BB);
-        assertTrue(BoardUtils.isCheck(board));
+        board.setSquareOccupant(7,4, SquareOccupant.BB);
+        assertFalse(BoardUtils.isCheck(board));
 
         assertEquals(19, BoardUtils.getAllMovesWithoutRemovingChecks(board).size());
         assertEquals(17, BoardUtils.getLegalMoves(board).size());

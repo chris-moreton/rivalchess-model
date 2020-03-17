@@ -22,6 +22,8 @@ public class MoveMaker {
 
         newBoard.setSquareOccupant(move.getSrcBoardRef(), SquareOccupant.NONE);
 
+        newBoard.setSideToMove(board.getSideToMove().opponent());
+
         return newBoard;
     }
 

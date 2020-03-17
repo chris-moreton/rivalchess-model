@@ -146,5 +146,6 @@ public class MoveMakerTest {
 
         assertEquals(SquareOccupant.WB, newBoard.getSquareOccupant(6,6));
         assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(4,4));
+        assertEquals(Colour.BLACK, newBoard.getSideToMove());
     }
 }
