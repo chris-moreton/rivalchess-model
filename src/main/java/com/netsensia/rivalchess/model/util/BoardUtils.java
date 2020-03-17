@@ -265,8 +265,8 @@ public class BoardUtils {
 
     public static boolean isSquareAttacked(final Board board, final Square square, final Colour byColour) {
 
-        final Board newBoard = Board.copy(board)
-                ;
+        final Board newBoard = Board.copy(board);
+
         newBoard.setKingSideCastleAvailable(Colour.WHITE, false);
         newBoard.setKingSideCastleAvailable(Colour.BLACK, false);
         newBoard.setQueenSideCastleAvailable(Colour.WHITE, false);
@@ -289,21 +289,15 @@ public class BoardUtils {
 
     public static boolean isCheck(final Board board) {
 
-        final Board newBoard = Board.copy(board);
-
-        newBoard.setSideToMove(board.getSideToMove().opponent());
-
-        final List<Move> moveList = getAllMovesWithoutRemovingChecks(newBoard);
-
         final List<Square> squares = BoardUtils.getSquaresWithOccupant(
                 board, SquareOccupant.WK.ofColour(board.getSideToMove()));
 
         final Square ourKingSquare = squares.get(0);
 
-        final List<Move> kingCaptureMoves =
-                moveList.stream().filter(m -> m.getTgtBoardRef().equals(ourKingSquare)).collect(Collectors.toList());
+        return BoardUtils.isSquareAttacked(
+                board,
+                ourKingSquare, board.getSideToMove().opponent());
 
-        return !kingCaptureMoves.isEmpty();
     }
 
     public static List<Move> getLegalMoves(final Board board) {

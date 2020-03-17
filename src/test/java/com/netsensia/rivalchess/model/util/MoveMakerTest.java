@@ -62,7 +62,7 @@ public class MoveMakerTest {
 
         assertFalse(newBoard.isKingSideCastleAvailable(Colour.WHITE));
         assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
-        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+        assertFalse(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
         assertTrue(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
 
     }
@@ -86,7 +86,7 @@ public class MoveMakerTest {
         assertEquals(SquareOccupant.WR, newBoard.getSquareOccupant(3,7));
         assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(4,7));
 
-        assertTrue(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertFalse(newBoard.isKingSideCastleAvailable(Colour.WHITE));
         assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
         assertFalse(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
         assertTrue(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
@@ -111,7 +111,7 @@ public class MoveMakerTest {
         assertTrue(newBoard.isKingSideCastleAvailable(Colour.WHITE));
         assertFalse(newBoard.isKingSideCastleAvailable(Colour.BLACK));
         assertTrue(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
-        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
+        assertFalse(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
 
     }
 
@@ -135,7 +135,7 @@ public class MoveMakerTest {
         assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(4,0));
 
         assertTrue(newBoard.isKingSideCastleAvailable(Colour.WHITE));
-        assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertFalse(newBoard.isKingSideCastleAvailable(Colour.BLACK));
         assertTrue(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
         assertFalse(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
     }
@@ -221,6 +221,147 @@ public class MoveMakerTest {
         board.setSquareOccupant(7,5, SquareOccupant.BB);
         // two kings moves and two pawn moves restricted
         assertEquals(16, BoardUtils.getLegalMoves(board).size());
+    }
 
+    @Test
+    public void testDisableCastleFlagsForWhiteCastling() {
+        final Board board = CommonTestUtils.getStartBoard();
+        board.setSquareOccupant(6,7, SquareOccupant.NONE);
+        board.setSquareOccupant(5,7, SquareOccupant.NONE);
+        board.setSquareOccupant(1,7, SquareOccupant.NONE);
+        board.setSquareOccupant(2,7, SquareOccupant.NONE);
+        board.setSquareOccupant(3,7, SquareOccupant.NONE);
+
+        assertTrue(board.isKingSideCastleAvailable(Colour.WHITE));
+        assertTrue(board.isKingSideCastleAvailable(Colour.BLACK));
+        assertTrue(board.isQueenSideCastleAvailable(Colour.WHITE));
+        assertTrue(board.isQueenSideCastleAvailable(Colour.BLACK));
+
+        Board newBoard = MoveMaker.makeMove(board, new Move(4,7,6,7));
+
+        assertFalse(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertFalse(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
+
+        newBoard = MoveMaker.makeMove(board, new Move(7,7,6,7));
+
+        assertFalse(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
+
+        newBoard = MoveMaker.makeMove(board, new Move(4,7,2,7));
+
+        assertFalse(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertFalse(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
+
+        newBoard = MoveMaker.makeMove(board, new Move(0,7,1,7));
+
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertFalse(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
+    }
+
+    @Test
+    public void testDisableCastleFlagsForWHITECastling() {
+        final Board board = CommonTestUtils.getStartBoard();
+        board.setSideToMove(Colour.BLACK);
+
+        board.setSquareOccupant(6,0, SquareOccupant.NONE);
+        board.setSquareOccupant(5,0, SquareOccupant.NONE);
+        board.setSquareOccupant(1,0, SquareOccupant.NONE);
+        board.setSquareOccupant(2,0, SquareOccupant.NONE);
+        board.setSquareOccupant(3,0, SquareOccupant.NONE);
+
+        assertTrue(board.isKingSideCastleAvailable(Colour.BLACK));
+        assertTrue(board.isKingSideCastleAvailable(Colour.WHITE));
+        assertTrue(board.isQueenSideCastleAvailable(Colour.BLACK));
+        assertTrue(board.isQueenSideCastleAvailable(Colour.WHITE));
+
+        Board newBoard = MoveMaker.makeMove(board, new Move(4,0,6,0));
+
+        assertFalse(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertFalse(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+
+        newBoard = MoveMaker.makeMove(board, new Move(7,0,6,0));
+
+        assertFalse(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+
+        newBoard = MoveMaker.makeMove(board, new Move(4,0,2,0));
+
+        assertFalse(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertFalse(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+
+        newBoard = MoveMaker.makeMove(board, new Move(0,0,1,0));
+
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertFalse(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+    }
+
+    @Test
+    public void testDisableCastleFlagsWhenBlackQueenRookCaptured() {
+        final Board board = CommonTestUtils.getStartBoard();
+
+        board.setSquareOccupant(0,1, SquareOccupant.WR);
+        Board newBoard = MoveMaker.makeMove(board, new Move(0,1,0,0));
+
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertFalse(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+    }
+
+    @Test
+    public void testDisableCastleFlagsWhenBlackKingRookCaptured() {
+        final Board board = CommonTestUtils.getStartBoard();
+
+        board.setSquareOccupant(7,1, SquareOccupant.WR);
+        Board newBoard = MoveMaker.makeMove(board, new Move(7,1,7,0));
+
+        assertFalse(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+    }
+
+    @Test
+    public void testDisableCastleFlagsWhenWhiteQueenRookCaptured() {
+        final Board board = CommonTestUtils.getStartBoard();
+        board.setSideToMove(Colour.BLACK);
+
+        board.setSquareOccupant(0,6, SquareOccupant.WR);
+        Board newBoard = MoveMaker.makeMove(board, new Move(0,6,0,7));
+
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
+        assertFalse(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+    }
+
+    @Test
+    public void testDisableCastleFlagsWhenWhiteKingRookCaptured() {
+        final Board board = CommonTestUtils.getStartBoard();
+        board.setSideToMove(Colour.BLACK);
+
+        board.setSquareOccupant(7,6, SquareOccupant.WR);
+        Board newBoard = MoveMaker.makeMove(board, new Move(7,6,7,7));
+
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertFalse(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
     }
 }

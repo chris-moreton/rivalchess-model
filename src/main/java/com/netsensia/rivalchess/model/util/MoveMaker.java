@@ -16,7 +16,13 @@ public class MoveMaker {
     public static Board makeMove(final Board board, final Move move) {
         final Board newBoard = Board.copy(board);
 
-        final SquareOccupant movingPiece = board.getSquareOccupant(move.getSrcBoardRef());
+        final Square fromSquare = move.getSrcBoardRef();
+        final Square toSquare = move.getTgtBoardRef();
+
+        final SquareOccupant movingPiece = board.getSquareOccupant(fromSquare);
+
+        disableCastleFlags(newBoard, fromSquare, board.getSideToMove());
+        disableCastleFlags(newBoard, toSquare, board.getSideToMove().opponent());
 
         newBoard.setSquareOccupant(move.getTgtBoardRef(), movingPiece);
 
@@ -30,6 +36,19 @@ public class MoveMaker {
         newBoard.setSideToMove(board.getSideToMove().opponent());
 
         return newBoard;
+    }
+
+    private static void disableCastleFlags(Board board, Square square, Colour colour) {
+        if (square.equals(CastlingHelper.kingHome(colour))) {
+            board.setKingSideCastleAvailable(colour, false);
+            board.setQueenSideCastleAvailable(colour, false);
+        }
+        if (square.equals(CastlingHelper.queenRookHome(colour))) {
+            board.setQueenSideCastleAvailable(colour, false);
+        }
+        if (square.equals(CastlingHelper.kingRookHome(colour))) {
+            board.setKingSideCastleAvailable(colour, false);
+        }
     }
 
     private static void setEnPassantFile(Move move, Board newBoard, SquareOccupant movingPiece) {
@@ -53,11 +72,9 @@ public class MoveMaker {
             if (move.getTgtBoardRef().equals(CastlingHelper.kingKnightHome(mover))) {
                 board.setSquareOccupant(CastlingHelper.kingBishopHome(mover), SquareOccupant.WR.ofColour(mover));
                 board.setSquareOccupant(CastlingHelper.kingRookHome(mover), SquareOccupant.NONE);
-                board.setKingSideCastleAvailable(mover, false);
             } else if (move.getTgtBoardRef().equals(CastlingHelper.queenBishopHome(mover))) {
                 board.setSquareOccupant(CastlingHelper.queenHome(mover), SquareOccupant.WR.ofColour(mover));
                 board.setSquareOccupant(CastlingHelper.queenRookHome(mover), SquareOccupant.NONE);
-                board.setQueenSideCastleAvailable(mover, false);
             }
         }
     }
