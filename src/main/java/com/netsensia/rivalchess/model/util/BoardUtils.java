@@ -320,7 +320,7 @@ public class BoardUtils {
     public static List<Move> getLegalMoves(final Board board) {
         final List<Move> moves = getAllMovesWithoutRemovingChecks(board);
 
-        return moves.stream()
+        return moves.parallelStream()
                 .filter(m -> !BoardUtils.isMoveLeavesMoverInCheck(board, m))
                 .collect(Collectors.toList());
     }
