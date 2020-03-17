@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import com.netsensia.rivalchess.model.exception.IllegalFenException;
 import com.netsensia.rivalchess.model.exception.InvalidMoveException;
-import com.netsensia.rivalchess.model.util.EpdPerftItem;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,10 +77,9 @@ public class PerftTest {
         assertPerftScore("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -", 5, 193690690);
     }
 
-    @Test
-    public void epdPerftSuite() throws IOException {
+    private void epdPerftSuiteToDepth(final int atDepth) throws IOException, InvalidMoveException {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(Objects.requireNonNull(classLoader.getResource("epd/perft.epd")).getFile());
+        File file = new File(Objects.requireNonNull(classLoader.getResource("perft.epd")).getFile());
 
         FileReader fr = new FileReader(file);
         BufferedReader br = new BufferedReader(fr);
@@ -89,10 +87,23 @@ public class PerftTest {
 
         while ((line = br.readLine()) != null) {
             if (!line.trim().equals("")) {
-
+                final String[] parts = line.split(";");
+                final String fen = parts[0];
+                final int availableDepths = parts.length - 1;
+                if (atDepth <= availableDepths) {
+                    final String[] nodeCountSplit = parts[atDepth].split(" ");
+                    final int depth = Integer.valueOf(nodeCountSplit[0].trim().replace("D", ""));
+                    final int nodeCount = Integer.valueOf(nodeCountSplit[1]);
+                    System.out.println("Testing " + fen + " for " + nodeCount + " nodes at depth " + depth);
+                    assertPerftScore(fen, depth, nodeCount);
+                }
             }
         }
         fr.close();
+    }
+    @Test
+    public void epdPerftSuite() throws IOException, InvalidMoveException {
 
+        epdPerftSuiteToDepth(1);
     }
 }
