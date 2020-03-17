@@ -22,18 +22,12 @@ import static com.netsensia.rivalchess.model.util.CommonUtils.isValidSquareRefer
 
 public class BoardUtils {
 
-    public static List<Square> getAttackersOfSquare(final Board board, final Square square) {
-        return null;
-    }
+    private BoardUtils() {}
 
     public static List<Square> getSquaresWithOccupant(Board board, SquareOccupant squareOccupant) {
         return board.squareOccupantStream()
                 .filter(e -> e.getValue() == squareOccupant)
                 .map(Map.Entry::getKey).collect(Collectors.toList());
-    }
-
-    public static List<Move> getMoves(final Square square) {
-        return null;
     }
 
     public static List<Move> getSliderMoves(final Board board, final Piece piece) {
@@ -145,31 +139,45 @@ public class BoardUtils {
                 }
             }
 
-            final List<SliderDirection> captureDirections = Arrays.asList(
-                    SliderDirection.E, SliderDirection.W
-            );
-            for (SliderDirection captureDirection : captureDirections) {
-                final int captureX = fromSquare.getXFile() + captureDirection.getXIncrement();
-                final int captureY = fromSquare.getYRank() + PawnMoveHelper.advanceDirection(mover);
+            moves.addAll(getPawnCaptures(board, mover, fromSquare));
+        }
 
-                if (isValidSquareReference(captureX, captureY)) {
-                    final Square captureSquare = new Square(captureX, captureY);
+        return moves;
+    }
 
-                    if (board.getSquareOccupant(captureSquare) == SquareOccupant.NONE) {
-                        if (board.getEnPassantFile() == captureSquare.getXFile() &&
-                                captureSquare.getYRank() == PawnMoveHelper.enPassantToRank(mover)) {
-                            moves.add(new Move(fromSquare, captureSquare));
-                        }
-                    } else if (board.getSquareOccupant(captureSquare).getColour() == mover.opponent()) {
-                        if (fromSquare.getYRank() == PawnMoveHelper.promotionRank(mover)) {
-                            moves.add(new Move(fromSquare, captureSquare, SquareOccupant.WQ.ofColour(mover)));
-                            moves.add(new Move(fromSquare, captureSquare, SquareOccupant.WN.ofColour(mover)));
-                            moves.add(new Move(fromSquare, captureSquare, SquareOccupant.WB.ofColour(mover)));
-                            moves.add(new Move(fromSquare, captureSquare, SquareOccupant.WR.ofColour(mover)));
-                        } else {
-                            moves.add(new Move(fromSquare, captureSquare));
-                        }
-                    }
+    private static List<Move> getPawnCaptures(Board board, Colour mover, Square fromSquare) {
+
+        final List<Move> moves = new ArrayList<>();
+
+        for (SliderDirection captureDirection : Arrays.asList(SliderDirection.E, SliderDirection.W)) {
+            moves.addAll(getPawnCapturesInDirection(board, mover, fromSquare, captureDirection));
+        }
+        return moves;
+    }
+
+    private static List<Move> getPawnCapturesInDirection(Board board, Colour mover, Square fromSquare, SliderDirection captureDirection) {
+
+        final List<Move> moves = new ArrayList<>();
+
+        final int captureX = fromSquare.getXFile() + captureDirection.getXIncrement();
+        final int captureY = fromSquare.getYRank() + PawnMoveHelper.advanceDirection(mover);
+
+        if (isValidSquareReference(captureX, captureY)) {
+            final Square captureSquare = new Square(captureX, captureY);
+
+            if (board.getSquareOccupant(captureSquare) == SquareOccupant.NONE) {
+                if (board.getEnPassantFile() == captureSquare.getXFile() &&
+                        captureSquare.getYRank() == PawnMoveHelper.enPassantToRank(mover)) {
+                    moves.add(new Move(fromSquare, captureSquare));
+                }
+            } else if (board.getSquareOccupant(captureSquare).getColour() == mover.opponent()) {
+                if (fromSquare.getYRank() == PawnMoveHelper.promotionRank(mover)) {
+                    moves.add(new Move(fromSquare, captureSquare, SquareOccupant.WQ.ofColour(mover)));
+                    moves.add(new Move(fromSquare, captureSquare, SquareOccupant.WN.ofColour(mover)));
+                    moves.add(new Move(fromSquare, captureSquare, SquareOccupant.WB.ofColour(mover)));
+                    moves.add(new Move(fromSquare, captureSquare, SquareOccupant.WR.ofColour(mover)));
+                } else {
+                    moves.add(new Move(fromSquare, captureSquare));
                 }
             }
         }
@@ -244,6 +252,23 @@ public class BoardUtils {
 
     }
 
+    public static boolean isSquareAttacked(final Board board, final Square square, final Colour byColour) {
+
+        final Board newBoard = Board.copy(board);
+
+        // put something there to capture
+        newBoard.setSquareOccupant(square, SquareOccupant.BR.ofColour(byColour.opponent()));
+
+        newBoard.setSideToMove(byColour);
+
+        final List<Move> moveList = getAllMovesWithoutRemovingChecks(newBoard);
+
+        final List<Move> captureMoves =
+                moveList.stream().filter(m -> m.getTgtBoardRef().equals(square)).collect(Collectors.toList());
+
+        return !captureMoves.isEmpty();
+    }
+
     public static boolean isCheck(final Board board) {
 
         final Board newBoard = Board.copy(board);
@@ -252,13 +277,15 @@ public class BoardUtils {
 
         final List<Move> moveList = getAllMovesWithoutRemovingChecks(newBoard);
 
-        final Square ourKingSquare =
-                BoardUtils.getSquaresWithOccupant(board, SquareOccupant.WK.ofColour(board.getSideToMove())).get(0);
+        final List<Square> squares = BoardUtils.getSquaresWithOccupant(
+                board, SquareOccupant.WK.ofColour(board.getSideToMove()));
+
+        final Square ourKingSquare = squares.get(0);
 
         final List<Move> kingCaptureMoves =
                 moveList.stream().filter(m -> m.getTgtBoardRef().equals(ourKingSquare)).collect(Collectors.toList());
 
-        return kingCaptureMoves.size() > 0;
+        return !kingCaptureMoves.isEmpty();
     }
 
     public static List<Move> getLegalMoves(final Board board) {
@@ -269,7 +296,13 @@ public class BoardUtils {
                     final Board newBoard = MoveMaker.makeMove(board, m);
                     // If it were still my move, would I be in check?
                     newBoard.setSideToMove(newBoard.getSideToMove().opponent());
-                    return !BoardUtils.isCheck(newBoard);
+                    boolean ok;
+                    try {
+                        ok = !BoardUtils.isCheck(newBoard);
+                    } catch (Exception e) {
+                        return false;
+                    }
+                    return ok;
                 })
                 .collect(Collectors.toList());
     }

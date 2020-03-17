@@ -502,7 +502,6 @@ public class BoardUtilsTest {
         Collections.sort(actualMoves);
 
         assertEquals(expectedMoves, actualMoves);
-
     }
 
     @Test
@@ -530,5 +529,60 @@ public class BoardUtilsTest {
 
         assertEquals(19, BoardUtils.getAllMovesWithoutRemovingChecks(board).size());
         assertEquals(17, BoardUtils.getLegalMoves(board).size());
+    }
+
+    @Test
+    public void testIsSquareAttacked() {
+        final Board board = Board.fromFen("8/7p/p5pb/4k3/P1pPn3/8/P5PP/1rB2RK1 b - d3 0 28");
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(0,0), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(0,0), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(0,1), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(0,1), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(0,2), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(0,2), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(0,3), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(0,3), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(0,4), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(0,4), Colour.BLACK));
+
+        assertTrue(BoardUtils.isSquareAttacked(board, new Square(0,5), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(0,5), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(0,6), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(0,6), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(0,7), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttacked(board, new Square(0,7), Colour.BLACK));
+
+        /*****************************************************************************************/
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(1,0), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttacked(board, new Square(1,0), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(1,1), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttacked(board, new Square(1,1), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(1,2), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttacked(board, new Square(1,2), Colour.BLACK));
+
+        assertTrue(BoardUtils.isSquareAttacked(board, new Square(1,3), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttacked(board, new Square(1,3), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(1,4), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttacked(board, new Square(1,4), Colour.BLACK));
+
+        assertTrue(BoardUtils.isSquareAttacked(board, new Square(1,5), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttacked(board, new Square(1,5), Colour.BLACK));
+
+        assertTrue(BoardUtils.isSquareAttacked(board, new Square(1,6), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttacked(board, new Square(1,6), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(1,7), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(1,7), Colour.BLACK));
     }
 }

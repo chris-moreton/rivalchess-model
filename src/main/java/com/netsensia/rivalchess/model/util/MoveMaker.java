@@ -11,6 +11,8 @@ import com.netsensia.rivalchess.model.SquareOccupant;
 
 public class MoveMaker {
 
+    private MoveMaker() {}
+
     public static Board makeMove(final Board board, final Move move) {
         final Board newBoard = Board.copy(board);
 
@@ -18,13 +20,7 @@ public class MoveMaker {
 
         newBoard.setSquareOccupant(move.getTgtBoardRef(), movingPiece);
 
-        if (movingPiece.getPiece() == Piece.PAWN &&
-                Math.abs(move.getTgtBoardRef().getYRank() - move.getSrcBoardRef().getYRank()) == 2) {
-            newBoard.setEnPassantFile(move.getSrcBoardRef().getXFile());
-        } else {
-            newBoard.setEnPassantFile(-1);
-        }
-
+        setEnPassantFile(move, newBoard, movingPiece);
         makeCastleMoves(newBoard, move);
         makePromotionMoves(newBoard, move);
         makeEnPassantMoves(newBoard, move);
@@ -36,7 +32,16 @@ public class MoveMaker {
         return newBoard;
     }
 
-    private static void makeCastleMoves(Board board, Move move) {
+    private static void setEnPassantFile(Move move, Board newBoard, SquareOccupant movingPiece) {
+        if (movingPiece.getPiece() == Piece.PAWN &&
+                Math.abs(move.getTgtBoardRef().getYRank() - move.getSrcBoardRef().getYRank()) == 2) {
+            newBoard.setEnPassantFile(move.getSrcBoardRef().getXFile());
+        } else {
+            newBoard.setEnPassantFile(-1);
+        }
+    }
+
+    private static void makeCastleMoves(final Board board, final Move move) {
 
         if (board.getSquareOccupant(move.getSrcBoardRef()).getPiece() != Piece.KING) {
             return;
@@ -63,9 +68,7 @@ public class MoveMaker {
             return;
         }
 
-        final Colour mover = board.getSideToMove();
-
-        if (move.getSrcBoardRef().getYRank() == PawnMoveHelper.promotionRank(mover)) {
+        if (move.getSrcBoardRef().getYRank() == PawnMoveHelper.promotionRank(board.getSideToMove())) {
             board.setSquareOccupant(move.getTgtBoardRef(), move.getPromotedPiece());
         }
     }

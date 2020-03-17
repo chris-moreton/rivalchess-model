@@ -67,10 +67,10 @@ public class FenUtils {
 
         final String castleFlags = fenStr.substring(fenIndex, fenStr.indexOf(' ', fenIndex));
 
-        board.setQueenSideCastleAvailable(Colour.WHITE,castleFlags.contains("Q"));
-        board.setKingSideCastleAvailable(Colour.WHITE,castleFlags.contains("K"));
-        board.setQueenSideCastleAvailable(Colour.BLACK,castleFlags.contains("q"));
-        board.setKingSideCastleAvailable(Colour.BLACK,castleFlags.contains("k"));
+        board.setQueenSideCastleAvailable(Colour.WHITE, castleFlags.contains("Q"));
+        board.setKingSideCastleAvailable(Colour.WHITE, castleFlags.contains("K"));
+        board.setQueenSideCastleAvailable(Colour.BLACK, castleFlags.contains("q"));
+        board.setKingSideCastleAvailable(Colour.BLACK, castleFlags.contains("k"));
 
         final char enPassantChar = fenStr.charAt(fenIndex + castleFlags.length() + 1);
 
