@@ -8,6 +8,8 @@ import com.netsensia.rivalchess.model.SquareOccupant;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class MoveMakerTest {
 
@@ -57,6 +59,12 @@ public class MoveMakerTest {
         assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(4,7));
         assertEquals(SquareOccupant.WR, newBoard.getSquareOccupant(5,7));
         assertEquals(SquareOccupant.WK, newBoard.getSquareOccupant(6,7));
+
+        assertFalse(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
+
     }
 
     @Test
@@ -77,6 +85,34 @@ public class MoveMakerTest {
         assertEquals(SquareOccupant.WK, newBoard.getSquareOccupant(2,7));
         assertEquals(SquareOccupant.WR, newBoard.getSquareOccupant(3,7));
         assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(4,7));
+
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertFalse(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
+    }
+
+    @Test
+    public void testBlackKingSideCastle() {
+        final Board board = CommonTestUtils.getStartBoard();
+
+        board.setSideToMove(Colour.BLACK);
+
+        board.setSquareOccupant(5, 0, SquareOccupant.NONE);
+        board.setSquareOccupant(6, 0, SquareOccupant.NONE);
+
+        final Board newBoard = MoveMaker.makeMove(
+                board, new Move(4,0,6,0));
+
+        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(4,0));
+        assertEquals(SquareOccupant.BR, newBoard.getSquareOccupant(5,0));
+        assertEquals(SquareOccupant.BK, newBoard.getSquareOccupant(6,0));
+
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertFalse(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
+
     }
 
     @Test
@@ -97,6 +133,11 @@ public class MoveMakerTest {
         assertEquals(SquareOccupant.BK, newBoard.getSquareOccupant(2,0));
         assertEquals(SquareOccupant.BR, newBoard.getSquareOccupant(3,0));
         assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(4,0));
+
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.WHITE));
+        assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
+        assertTrue(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+        assertFalse(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
     }
 
     @Test
@@ -147,5 +188,25 @@ public class MoveMakerTest {
         assertEquals(SquareOccupant.WB, newBoard.getSquareOccupant(6,6));
         assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(4,4));
         assertEquals(Colour.BLACK, newBoard.getSideToMove());
+    }
+
+    @Test
+    public void testSetEnPassantFlag() {
+        final Board board = CommonTestUtils.getStartBoard();
+
+        assertEquals(-1, MoveMaker.makeMove(
+                board, new Move(4,6,4,5)).getEnPassantFile());
+
+        assertEquals(4, MoveMaker.makeMove(
+                board, new Move(4,6,4,4)).getEnPassantFile());
+
+        board.setSideToMove(Colour.BLACK);
+
+        assertEquals(-1, MoveMaker.makeMove(
+                board, new Move(2,1,2,2)).getEnPassantFile());
+
+        assertEquals(2, MoveMaker.makeMove(
+                board, new Move(2,1,2,3)).getEnPassantFile());
+
     }
 }

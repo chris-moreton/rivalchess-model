@@ -12,9 +12,18 @@ import com.netsensia.rivalchess.model.SquareOccupant;
 public class MoveMaker {
 
     public static Board makeMove(final Board board, final Move move) {
-        Board newBoard = Board.copy(board);
+        final Board newBoard = Board.copy(board);
 
-        newBoard.setSquareOccupant(move.getTgtBoardRef(), board.getSquareOccupant(move.getSrcBoardRef()));
+        final SquareOccupant movingPiece = board.getSquareOccupant(move.getSrcBoardRef());
+
+        newBoard.setSquareOccupant(move.getTgtBoardRef(), movingPiece);
+
+        if (movingPiece.getPiece() == Piece.PAWN &&
+                Math.abs(move.getTgtBoardRef().getYRank() - move.getSrcBoardRef().getYRank()) == 2) {
+            newBoard.setEnPassantFile(move.getSrcBoardRef().getXFile());
+        } else {
+            newBoard.setEnPassantFile(-1);
+        }
 
         makeCastleMoves(newBoard, move);
         makePromotionMoves(newBoard, move);
@@ -39,9 +48,11 @@ public class MoveMaker {
             if (move.getTgtBoardRef().equals(CastlingHelper.kingKnightHome(mover))) {
                 board.setSquareOccupant(CastlingHelper.kingBishopHome(mover), SquareOccupant.WR.ofColour(mover));
                 board.setSquareOccupant(CastlingHelper.kingRookHome(mover), SquareOccupant.NONE);
+                board.setKingSideCastleAvailable(mover, false);
             } else if (move.getTgtBoardRef().equals(CastlingHelper.queenBishopHome(mover))) {
                 board.setSquareOccupant(CastlingHelper.queenHome(mover), SquareOccupant.WR.ofColour(mover));
                 board.setSquareOccupant(CastlingHelper.queenRookHome(mover), SquareOccupant.NONE);
+                board.setQueenSideCastleAvailable(mover, false);
             }
         }
     }

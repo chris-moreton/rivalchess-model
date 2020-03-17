@@ -16,7 +16,7 @@ public class Board {
 
     private final Map<Square, SquareOccupant> squareOccupants;
 
-    private int enPassantFile = 0;
+    private int enPassantFile = -1;
 
     private boolean isWhiteKingSideCastleAvailable = true;
     private boolean isWhiteQueenSideCastleAvailable = true;
