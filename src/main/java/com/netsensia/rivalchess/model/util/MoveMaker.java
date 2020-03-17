@@ -25,9 +25,11 @@ public class MoveMaker {
         disableCastleFlags(newBoard, fromSquare, board.getSideToMove());
         disableCastleFlags(newBoard, toSquare, board.getSideToMove().opponent());
 
+        // Todo: this must be called before setSquareOccupant - not safe
         makeEnPassantMoves(newBoard, move);
         setEnPassantFile(move, newBoard, movingPiece);
 
+        // Todo: this relies on makeEnPassantMoves having already been called - not safe
         newBoard.setSquareOccupant(move.getTgtBoardRef(), movingPiece);
 
         makeCastleMoves(newBoard, move);
