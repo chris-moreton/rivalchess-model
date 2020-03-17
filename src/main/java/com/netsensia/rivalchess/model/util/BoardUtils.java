@@ -218,31 +218,32 @@ public class BoardUtils {
     public static List<Move> getCastlingMoves(Board board) {
 
         final List<Move> moves = new ArrayList<>();
+        final Colour colour = board.getSideToMove();
 
-        for (Colour colour : Colour.list()) {
-            if (board.isKingSideCastleAvailable(colour) &&
-                    board.getSquareOccupant(CastlingHelper.kingHome(colour)) == SquareOccupant.WK.ofColour(colour) &&
-                    board.getSquareOccupant(CastlingHelper.kingRookHome(colour)) == SquareOccupant.WR.ofColour(colour) &&
-                    board.getSquareOccupant(CastlingHelper.kingKnightHome(colour)) == SquareOccupant.NONE &&
-                    board.getSquareOccupant(CastlingHelper.kingBishopHome(colour)) == SquareOccupant.NONE &&
-                    !BoardUtils.isSquareAttacked(board, CastlingHelper.kingKnightHome(colour), colour.opponent()) &&
-                    !BoardUtils.isSquareAttacked(board, CastlingHelper.kingBishopHome(colour), colour.opponent())
-            ) {
-                moves.add(new Move(CastlingHelper.kingHome(colour), CastlingHelper.kingKnightHome(colour)));
-            }
+        if (board.isKingSideCastleAvailable(colour) &&
+                board.getSquareOccupant(CastlingHelper.kingHome(colour)) == SquareOccupant.WK.ofColour(colour) &&
+                board.getSquareOccupant(CastlingHelper.kingRookHome(colour)) == SquareOccupant.WR.ofColour(colour) &&
+                board.getSquareOccupant(CastlingHelper.kingKnightHome(colour)) == SquareOccupant.NONE &&
+                board.getSquareOccupant(CastlingHelper.kingBishopHome(colour)) == SquareOccupant.NONE &&
+                !BoardUtils.isSquareAttacked(board, CastlingHelper.kingHome(colour), colour.opponent()) &&
+                !BoardUtils.isSquareAttacked(board, CastlingHelper.kingKnightHome(colour), colour.opponent()) &&
+                !BoardUtils.isSquareAttacked(board, CastlingHelper.kingBishopHome(colour), colour.opponent())
+        ) {
+            moves.add(new Move(CastlingHelper.kingHome(colour), CastlingHelper.kingKnightHome(colour)));
+        }
 
-            if (board.isQueenSideCastleAvailable(colour) &&
-                    board.getSquareOccupant(CastlingHelper.kingHome(colour)) == SquareOccupant.WK.ofColour(colour) &&
-                    board.getSquareOccupant(CastlingHelper.queenRookHome(colour)) == SquareOccupant.WR.ofColour(colour) &&
-                    board.getSquareOccupant(CastlingHelper.queenHome(colour)) == SquareOccupant.NONE &&
-                    board.getSquareOccupant(CastlingHelper.queenKnightHome(colour)) == SquareOccupant.NONE &&
-                    board.getSquareOccupant(CastlingHelper.queenBishopHome(colour)) == SquareOccupant.NONE &&
-                    !BoardUtils.isSquareAttacked(board, CastlingHelper.queenBishopHome(colour), colour.opponent()) &&
-                    !BoardUtils.isSquareAttacked(board, CastlingHelper.queenHome(colour), colour.opponent())
+        if (board.isQueenSideCastleAvailable(colour) &&
+                board.getSquareOccupant(CastlingHelper.kingHome(colour)) == SquareOccupant.WK.ofColour(colour) &&
+                board.getSquareOccupant(CastlingHelper.queenRookHome(colour)) == SquareOccupant.WR.ofColour(colour) &&
+                board.getSquareOccupant(CastlingHelper.queenHome(colour)) == SquareOccupant.NONE &&
+                board.getSquareOccupant(CastlingHelper.queenKnightHome(colour)) == SquareOccupant.NONE &&
+                board.getSquareOccupant(CastlingHelper.queenBishopHome(colour)) == SquareOccupant.NONE &&
+                !BoardUtils.isSquareAttacked(board, CastlingHelper.kingHome(colour), colour.opponent()) &&
+                !BoardUtils.isSquareAttacked(board, CastlingHelper.queenBishopHome(colour), colour.opponent()) &&
+                !BoardUtils.isSquareAttacked(board, CastlingHelper.queenHome(colour), colour.opponent())
 
-            ) {
-                moves.add(new Move(CastlingHelper.kingHome(colour), CastlingHelper.queenBishopHome(colour)));
-            }
+        ) {
+            moves.add(new Move(CastlingHelper.kingHome(colour), CastlingHelper.queenBishopHome(colour)));
         }
 
         return moves;
@@ -264,10 +265,17 @@ public class BoardUtils {
 
     public static boolean isSquareAttacked(final Board board, final Square square, final Colour byColour) {
 
-        final Board newBoard = Board.copy(board);
+        final Board newBoard = Board.copy(board)
+                ;
+        newBoard.setKingSideCastleAvailable(Colour.WHITE, false);
+        newBoard.setKingSideCastleAvailable(Colour.BLACK, false);
+        newBoard.setQueenSideCastleAvailable(Colour.WHITE, false);
+        newBoard.setQueenSideCastleAvailable(Colour.BLACK, false);
 
-        // put something there to capture
-        newBoard.setSquareOccupant(square, SquareOccupant.BR.ofColour(byColour.opponent()));
+        if (newBoard.getSquareOccupant(square) == SquareOccupant.NONE) {
+            // put something there to capture
+            newBoard.setSquareOccupant(square, SquareOccupant.BR.ofColour(byColour.opponent()));
+        }
 
         newBoard.setSideToMove(byColour);
 
@@ -306,13 +314,7 @@ public class BoardUtils {
                     final Board newBoard = MoveMaker.makeMove(board, m);
                     // If it were still my move, would I be in check?
                     newBoard.setSideToMove(newBoard.getSideToMove().opponent());
-                    boolean ok;
-                    try {
-                        ok = !BoardUtils.isCheck(newBoard);
-                    } catch (Exception e) {
-                        return false;
-                    }
-                    return ok;
+                    return !BoardUtils.isCheck(newBoard);
                 })
                 .collect(Collectors.toList());
     }

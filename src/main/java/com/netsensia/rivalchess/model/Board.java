@@ -47,16 +47,18 @@ public class Board {
 
         for (int x=0; x<8; x++) {
             for (int y=0; y<8; y++) {
-                newBoard.setSquareOccupant(x, y, board.getSquareOccupant(x, y));
+                newBoard.setSquareOccupant(x, y, board.getSquareOccupant(x,y));
             }
         }
 
         newBoard.setSideToMove(board.getSideToMove());
         newBoard.setEnPassantFile(board.getEnPassantFile());
+
         newBoard.setKingSideCastleAvailable(Colour.WHITE, board.isKingSideCastleAvailable(Colour.WHITE));
         newBoard.setKingSideCastleAvailable(Colour.BLACK, board.isKingSideCastleAvailable(Colour.BLACK));
-        newBoard.setQueenSideCastleAvailable(Colour.WHITE, board.isKingSideCastleAvailable(Colour.WHITE));
-        newBoard.setQueenSideCastleAvailable(Colour.BLACK, board.isKingSideCastleAvailable(Colour.BLACK));
+        newBoard.setQueenSideCastleAvailable(Colour.WHITE, board.isQueenSideCastleAvailable(Colour.WHITE));
+        newBoard.setQueenSideCastleAvailable(Colour.BLACK, board.isQueenSideCastleAvailable(Colour.BLACK));
+
         newBoard.setHalfMoveCount(board.getHalfMoveCount());
 
         return newBoard;

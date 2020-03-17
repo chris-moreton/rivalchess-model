@@ -73,6 +73,8 @@ public class BoardTest {
     @Test
     public void testEquality() {
         Board board = CommonTestUtils.getStartBoard();
+        board.setQueenSideCastleAvailable(Colour.BLACK, false);
+
         Board boardCopy = Board.copy(board);
         assertTrue(board.equals(boardCopy));
         assertTrue(boardCopy.equals(board));

@@ -104,8 +104,14 @@ public class PerftTest {
         }
         fr.close();
     }
+
     @Test
     public void epdPerftSuite() throws IOException, InvalidMoveException {
+        epdPerftSuiteToDepth(3);
+        epdPerftSuiteToDepth(2);
         epdPerftSuiteToDepth(1);
+        epdPerftSuiteToDepth(4);
+        epdPerftSuiteToDepth(5);
+        epdPerftSuiteToDepth(6);
     }
 }
