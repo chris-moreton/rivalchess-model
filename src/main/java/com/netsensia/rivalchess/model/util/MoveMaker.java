@@ -14,6 +14,7 @@ public class MoveMaker {
     private MoveMaker() {}
 
     public static Board makeMove(final Board board, final Move move) {
+
         final Board newBoard = Board.copy(board);
 
         final Square fromSquare = move.getSrcBoardRef();
@@ -24,12 +25,13 @@ public class MoveMaker {
         disableCastleFlags(newBoard, fromSquare, board.getSideToMove());
         disableCastleFlags(newBoard, toSquare, board.getSideToMove().opponent());
 
+        makeEnPassantMoves(newBoard, move);
+        setEnPassantFile(move, newBoard, movingPiece);
+
         newBoard.setSquareOccupant(move.getTgtBoardRef(), movingPiece);
 
-        setEnPassantFile(move, newBoard, movingPiece);
         makeCastleMoves(newBoard, move);
         makePromotionMoves(newBoard, move);
-        makeEnPassantMoves(newBoard, move);
 
         newBoard.setSquareOccupant(move.getSrcBoardRef(), SquareOccupant.NONE);
 
@@ -91,20 +93,27 @@ public class MoveMaker {
     }
 
     private static void makeEnPassantMoves(Board board, Move move) {
+
         if (board.getSquareOccupant(move.getSrcBoardRef()).getPiece() != Piece.PAWN) {
+            return;
+        }
+
+        if (move.getSrcBoardRef().getXFile() == move.getTgtBoardRef().getXFile()) {
+            return;
+        }
+
+        if (board.getSquareOccupant(move.getTgtBoardRef()) != SquareOccupant.NONE) {
             return;
         }
 
         final Colour mover = board.getSideToMove();
 
-        if (move.getSrcBoardRef().getYRank() == PawnMoveHelper.enPassantFromRank(mover)) {
-            final Square targetSquare = move.getTgtBoardRef();
-            board.setSquareOccupant(
-                    new Square(
-                            targetSquare.getXFile(),
-                            targetSquare.getYRank() + PawnMoveHelper.advanceDirection(mover.opponent())),
-                    SquareOccupant.NONE);
-        }
+        final Square targetSquare = move.getTgtBoardRef();
+        board.setSquareOccupant(
+                new Square(
+                        targetSquare.getXFile(),
+                        targetSquare.getYRank() + PawnMoveHelper.advanceDirection(mover.opponent())),
+                SquareOccupant.NONE);
 
     }
 }

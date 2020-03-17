@@ -7,6 +7,8 @@ import com.netsensia.rivalchess.model.Move;
 import com.netsensia.rivalchess.model.SquareOccupant;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -363,5 +365,14 @@ public class MoveMakerTest {
         assertFalse(newBoard.isKingSideCastleAvailable(Colour.WHITE));
         assertTrue(newBoard.isQueenSideCastleAvailable(Colour.BLACK));
         assertTrue(newBoard.isQueenSideCastleAvailable(Colour.WHITE));
+    }
+
+    @Test
+    public void enPassantCaptureDisappearingKing() {
+        final Board board = Board.fromFen("8/7p/p5pb/4k3/P1pPn3/8/P5PP/1rB2RK1 b - d3 0 28");
+        assertEquals(SquareOccupant.BK, board.getSquareOccupant(4,3));
+
+        Board newBoard = MoveMaker.makeMove(board, new Move(2,5,3,5));
+        assertEquals(SquareOccupant.BK, newBoard.getSquareOccupant(4,3));
     }
 }

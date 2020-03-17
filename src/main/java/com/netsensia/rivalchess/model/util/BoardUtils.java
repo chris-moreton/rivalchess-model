@@ -287,6 +287,17 @@ public class BoardUtils {
         return !captureMoves.isEmpty();
     }
 
+    public static boolean isMoveLeavesMoverInCheck(final Board board, final Move move) {
+        final Board newBoard = MoveMaker.makeMove(board, move);
+        // If it were still my move, would I be in check?
+        newBoard.setSideToMove(newBoard.getSideToMove().opponent());
+        try {
+            return isCheck(newBoard);
+        } catch (Exception e) {
+            throw new RuntimeException("After making trial move " + move + ", I caught " + e.getMessage());
+        }
+    }
+
     public static boolean isCheck(final Board board) {
 
         final List<Square> squares = BoardUtils.getSquaresWithOccupant(
@@ -294,14 +305,15 @@ public class BoardUtils {
 
         if (squares.isEmpty()) {
             throw new RuntimeException(
-                    "Given a board with no " + board.getSideToMove() + " king on it.");
+                    "Given a board with no " + board.getSideToMove() + " king on it.\n" + board);
         }
 
         final Square ourKingSquare = squares.get(0);
 
         return BoardUtils.isSquareAttacked(
                 board,
-                ourKingSquare, board.getSideToMove().opponent());
+                ourKingSquare,
+                board.getSideToMove().opponent());
 
     }
 
@@ -309,12 +321,7 @@ public class BoardUtils {
         final List<Move> moves = getAllMovesWithoutRemovingChecks(board);
 
         return moves.stream()
-                .filter(m -> {
-                    final Board newBoard = MoveMaker.makeMove(board, m);
-                    // If it were still my move, would I be in check?
-                    newBoard.setSideToMove(newBoard.getSideToMove().opponent());
-                    return !BoardUtils.isCheck(newBoard);
-                })
+                .filter(m -> !BoardUtils.isMoveLeavesMoverInCheck(board, m))
                 .collect(Collectors.toList());
     }
 }

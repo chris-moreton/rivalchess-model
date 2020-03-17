@@ -235,6 +235,8 @@ public class BoardUtilsTest {
     public void testBlackKingSideCastling() {
         final Board board = CommonTestUtils.getStartBoard();
 
+        board.setSideToMove(Colour.BLACK);
+
         board.setKingSideCastleAvailable(Colour.WHITE, true);
         board.setKingSideCastleAvailable(Colour.BLACK, true);
         board.setQueenSideCastleAvailable(Colour.WHITE, true);
@@ -244,6 +246,7 @@ public class BoardUtilsTest {
         assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
 
         board.setSquareOccupant(6, 0, SquareOccupant.NONE);
+
         assertEquals(new ArrayList<>(Arrays.asList(
                 new Move(new Square(4,0), new Square(6,0))
         )), BoardUtils.getCastlingMoves(board));
@@ -259,6 +262,8 @@ public class BoardUtilsTest {
     @Test
     public void testBlackQueenSideCastling() {
         final Board board = CommonTestUtils.getStartBoard();
+
+        board.setSideToMove(Colour.BLACK);
 
         board.setKingSideCastleAvailable(Colour.WHITE, true);
         board.setKingSideCastleAvailable(Colour.BLACK, true);
@@ -613,5 +618,31 @@ public class BoardUtilsTest {
 
         assertFalse(BoardUtils.isSquareAttacked(board, new Square(1,7), Colour.WHITE));
         assertFalse(BoardUtils.isSquareAttacked(board, new Square(1,7), Colour.BLACK));
+
+        /*****************************************************************************************/
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(2,0), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(2,0), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(2,1), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(2,1), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(2,2), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(2,2), Colour.BLACK));
+
+        assertTrue(BoardUtils.isSquareAttacked(board, new Square(2,3), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttacked(board, new Square(2,3), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(2,4), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(2,4), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(2,5), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttacked(board, new Square(2,5), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(2,6), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(2,6), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttacked(board, new Square(2,7), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttacked(board, new Square(2,7), Colour.BLACK));
     }
 }

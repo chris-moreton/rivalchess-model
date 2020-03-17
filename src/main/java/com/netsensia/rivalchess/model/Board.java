@@ -84,14 +84,6 @@ public class Board {
         setSquareOccupant(new Square(xFile, yRank), squareOccupant);
     }
 
-    private int getBoardArrayIndex(Square square) {
-        return getBoardArrayIndex(square.getXFile(), square.getYRank());
-    }
-
-    private int getBoardArrayIndex(int xFile, int yRank) {
-        return (NUM_FILES * yRank) + xFile;
-    }
-
     public int getNumXFiles() {
         return NUM_FILES;
     }
@@ -182,8 +174,13 @@ public class Board {
     }
 
     @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    @Override
     public String toString() {
-        StringBuffer s = new StringBuffer();
+        StringBuilder s = new StringBuilder();
         for (int y=0; y<8; y++) {
             for (int x=0; x<8; x++) {
                 s.append(getSquareOccupant(x,y).toChar());
