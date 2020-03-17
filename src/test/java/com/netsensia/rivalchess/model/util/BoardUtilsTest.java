@@ -437,6 +437,35 @@ public class BoardUtilsTest {
     }
 
     @Test
+    public void getWhitePawnMovesWhenJumpLandingSquareIsBlocked() {
+        final Board board = CommonTestUtils.getStartBoard();
+
+        board.setSquareOccupant(4,4,SquareOccupant.BP);
+        board.setSquareOccupant(3,6,SquareOccupant.NONE);
+        board.setSquareOccupant(2,6,SquareOccupant.NONE);
+        board.setSquareOccupant(1,6,SquareOccupant.NONE);
+        board.setSquareOccupant(0,6,SquareOccupant.NONE);
+
+        final List<Move> actualMoves = BoardUtils.getPawnMoves(board);
+
+        final List<Move> expectedMoves =
+                new ArrayList<>(Arrays.asList(
+                        new Move(new Square(4,6), new Square(4,5)),
+                        new Move(new Square(5,6), new Square(5,5)),
+                        new Move(new Square(5,6), new Square(5,4)),
+                        new Move(new Square(6,6), new Square(6,5)),
+                        new Move(new Square(6,6), new Square(6,4)),
+                        new Move(new Square(7,6), new Square(7,5)),
+                        new Move(new Square(7,6), new Square(7,4))
+                        ));
+
+        Collections.sort(expectedMoves);
+        Collections.sort(actualMoves);
+
+        assertEquals(expectedMoves, actualMoves);
+    }
+
+    @Test
     public void getBlackPawnMoves() {
         final Board board = CommonTestUtils.getStartBoard();
 

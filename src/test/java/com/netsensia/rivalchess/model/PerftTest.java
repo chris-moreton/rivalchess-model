@@ -35,7 +35,10 @@ public class PerftTest {
         return nodes;
     }
 
-    private void assertPerftScore(String fen, int depth, int expectedScore) throws IllegalFenException, InvalidMoveException {
+    private void assertPerftScore(
+            final String fen,
+            final int depth,
+            final int expectedScore) throws IllegalFenException, InvalidMoveException {
 
         Board board = Board.fromFen(fen);
 
@@ -103,7 +106,6 @@ public class PerftTest {
     }
     @Test
     public void epdPerftSuite() throws IOException, InvalidMoveException {
-
         epdPerftSuiteToDepth(1);
     }
 }
