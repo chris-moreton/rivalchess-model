@@ -292,6 +292,11 @@ public class BoardUtils {
         final List<Square> squares = BoardUtils.getSquaresWithOccupant(
                 board, SquareOccupant.WK.ofColour(board.getSideToMove()));
 
+        if (squares.isEmpty()) {
+            throw new RuntimeException(
+                    "Given a board with no " + board.getSideToMove() + " king on it.");
+        }
+
         final Square ourKingSquare = squares.get(0);
 
         return BoardUtils.isSquareAttacked(

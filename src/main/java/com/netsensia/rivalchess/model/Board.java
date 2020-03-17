@@ -181,4 +181,30 @@ public class Board {
         return false;
     }
 
+    @Override
+    public String toString() {
+        StringBuffer s = new StringBuffer();
+        for (int y=0; y<8; y++) {
+            for (int x=0; x<8; x++) {
+                s.append(getSquareOccupant(x,y).toChar());
+            }
+            s.append("\n");
+        }
+        s.append("\n");
+        s.append("Side to move: " + sideToMove);
+        s.append("\n");
+
+        s.append("Castle privileges: " +
+                isWhiteKingSideCastleAvailable +
+                isWhiteQueenSideCastleAvailable +
+                isBlackKingSideCastleAvailable +
+                isBlackQueenSideCastleAvailable);
+        s.append("\n");
+        s.append("En passant file: " + enPassantFile);
+        s.append("\n");
+        s.append("Half move count: " + halfMoveCount);
+
+        return s.toString();
+    }
+
 }

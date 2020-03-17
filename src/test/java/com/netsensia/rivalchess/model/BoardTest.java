@@ -83,4 +83,23 @@ public class BoardTest {
         assertFalse(board.equals(boardCopy));
         assertFalse(boardCopy.equals(board));
     }
+
+    @Test
+    public void testToString() {
+        final String expected = "rnbqkbnr\n" +
+                "pppppppp\n" +
+                "--------\n" +
+                "--------\n" +
+                "--------\n" +
+                "--------\n" +
+                "PPPPPPPP\n" +
+                "RNBQKBNR\n" +
+                "\n" +
+                "Side to move: WHITE\n" +
+                "Castle privileges: truetruetruetrue\n" +
+                "En passant file: -1\n" +
+                "Half move count: 0";
+        final Board board = CommonTestUtils.getStartBoard();
+        assertEquals(expected, board.toString());
+    }
 }
