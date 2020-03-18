@@ -89,15 +89,18 @@ public class PerftTest {
         String line;
 
         while ((line = br.readLine()) != null) {
+
             if (!line.trim().equals("")) {
-                final String[] parts = line.split(";");
+                final String[] parts = line.trim().split(";");
                 final String fen = parts[0];
                 final int availableDepths = parts.length - 1;
                 if (atDepth <= availableDepths) {
-                    final String[] nodeCountSplit = parts[atDepth].split(" ");
+                    final String[] nodeCountSplit = parts[atDepth].trim().split(" ");
                     final int depth = Integer.valueOf(nodeCountSplit[0].trim().replace("D", ""));
                     final int nodeCount = Integer.valueOf(nodeCountSplit[1]);
-                    System.out.println("Testing " + fen + " for " + nodeCount + " nodes at depth " + depth);
+                    if (LOGGER.isInfoEnabled()) {
+                        LOGGER.info("Testing " + fen + " for " + nodeCount + " nodes at depth " + depth);
+                    }
                     assertPerftScore(fen, depth, nodeCount);
                 }
             }
@@ -107,11 +110,13 @@ public class PerftTest {
 
     @Test
     public void epdPerftSuite() throws IOException, InvalidMoveException {
-        epdPerftSuiteToDepth(3);
-        epdPerftSuiteToDepth(2);
         epdPerftSuiteToDepth(1);
+        epdPerftSuiteToDepth(2);
+        epdPerftSuiteToDepth(3);
         epdPerftSuiteToDepth(4);
         epdPerftSuiteToDepth(5);
         epdPerftSuiteToDepth(6);
+        epdPerftSuiteToDepth(7);
+
     }
 }
