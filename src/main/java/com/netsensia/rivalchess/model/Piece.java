@@ -1,5 +1,7 @@
 package com.netsensia.rivalchess.model;
 
+import com.netsensia.rivalchess.model.exception.BadPieceConversionException;
+
 public enum Piece {
     NONE (0),
     PAWN  (1),
@@ -29,7 +31,7 @@ public enum Piece {
             case QUEEN: return colour == Colour.WHITE ? SquareOccupant.WQ : SquareOccupant.BQ;
             case KING: return colour == Colour.WHITE ? SquareOccupant.WK : SquareOccupant.BK;
             default:
-                throw new RuntimeException("Can't create squareOccupant from " + this + " and " + colour);
+                throw new BadPieceConversionException("Can't create squareOccupant from " + this + " and " + colour);
         }
     }
 

@@ -15,7 +15,7 @@ public class FenUtils {
         return FEN_START_POS;
     }
 
-    public static Board getBoardModel(String fenStr) throws IllegalFenException {
+    public static Board getBoardModel(String fenStr) {
 
         final Board board = new Board();
 
@@ -52,18 +52,11 @@ public class FenUtils {
 
         final char fenToken = fenStr.charAt(fenIndex++);
 
-        if (fenToken != 'w' && fenToken != 'b') {
-            throw new IllegalFenException("Illegal mover in FEN");
-        }
+        verifyMoverChar(fenToken);
 
         board.setSideToMove(fenToken == 'w' ? Colour.WHITE : Colour.BLACK);
 
         fenIndex++;
-
-        board.setQueenSideCastleAvailable(Colour.WHITE,false);
-        board.setKingSideCastleAvailable(Colour.WHITE,false);
-        board.setQueenSideCastleAvailable(Colour.BLACK,false);
-        board.setKingSideCastleAvailable(Colour.BLACK,false);
 
         final String castleFlags = fenStr.substring(fenIndex, fenStr.indexOf(' ', fenIndex));
 
@@ -77,6 +70,12 @@ public class FenUtils {
         board.setEnPassantFile(enPassantChar != '-' ? enPassantChar - 97 : -1);
 
         return board;
+    }
+
+    private static void verifyMoverChar(char fenToken) {
+        if (fenToken != 'w' && fenToken != 'b') {
+            throw new IllegalFenException("Illegal mover in FEN");
+        }
     }
 
     private static int setPiece(Board board, int boardArrayIndex, char fenToken) {
@@ -95,7 +94,7 @@ public class FenUtils {
         return boardArrayIndex;
     }
 
-    public static String invertFen(String fen) throws IllegalFenException {
+    public static String invertFen(String fen) {
         fen = fen.trim();
 
         fen = fen.replace(" b ", " . ");
@@ -151,7 +150,7 @@ public class FenUtils {
         return newFenBuilder.toString();
     }
 
-    private static String invertSquare(final String square) throws IllegalFenException {
+    private static String invertSquare(final String square) {
         if (square.equals("-")) {
             return square;
         }

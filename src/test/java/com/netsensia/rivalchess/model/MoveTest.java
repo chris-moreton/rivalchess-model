@@ -63,11 +63,6 @@ public class MoveTest {
     }
 
     @Test
-    public void testGetPromotedPiece() {
-        final Move move1 = new Move(3,1,4,2);
-    }
-
-    @Test
     public void testFromAlgebraic() {
         final Move move1 = Move.fromAlgebraic("a2a3");
         assertEquals(SquareOccupant.NONE, move1.getPromotedPiece());

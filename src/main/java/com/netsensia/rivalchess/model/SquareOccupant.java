@@ -1,5 +1,7 @@
 package com.netsensia.rivalchess.model;
 
+import com.netsensia.rivalchess.model.exception.EnumConversionException;
+
 public enum SquareOccupant {
     NONE(-1),
     WP(0),
@@ -47,7 +49,7 @@ public enum SquareOccupant {
 
     public Colour getColour() {
         if (index == SquareOccupant.NONE.getIndex()) {
-            throw new RuntimeException("Can't get piece colour of an empty square");
+            throw new EnumConversionException("Can't get piece colour of an empty square");
         }
 
         return index <= SquareOccupant.WR.getIndex() ? Colour.WHITE : Colour.BLACK;
@@ -76,7 +78,7 @@ public enum SquareOccupant {
             case BQ:
                 return Piece.QUEEN;
             default:
-                throw new RuntimeException("Invalid SquareOccupant");
+                throw new EnumConversionException("Invalid SquareOccupant");
         }
     }
 
@@ -109,7 +111,7 @@ public enum SquareOccupant {
             case BQ:
                 return 'q';
             default:
-                throw new RuntimeException("Invalid SquareOccupant");
+                throw new EnumConversionException("Invalid SquareOccupant");
         }
     }
 

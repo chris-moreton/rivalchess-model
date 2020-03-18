@@ -1,17 +1,19 @@
 package com.netsensia.rivalchess.model;
 
+import com.netsensia.rivalchess.model.exception.InvalidSimpleAlgebraicMoveException;
+
 public class Move implements Comparable {
-    final private int srcXFile;
-    final private int srcYRank;
+    private final int srcXFile;
+    private final int srcYRank;
 
-    final private int tgtXFile;
-    final private int tgtYRank;
+    private final int tgtXFile;
+    private final int tgtYRank;
 
-    final private int numFiles;
+    private final int numFiles;
 
-    final static private int DEFAULT_FILE_COUNT = 8;
+    private static final int DEFAULT_FILE_COUNT = 8;
 
-    final private SquareOccupant promotedPiece;
+    private final SquareOccupant promotedPiece;
 
     public Move(
             final Square srcBoardRef,
@@ -76,7 +78,7 @@ public class Move implements Comparable {
     public static Move fromAlgebraic(String algebraic) {
 
         if (algebraic.length() < 4 || algebraic.length() > 5) {
-            throw new RuntimeException("Algebraic move must be four or five characters");
+            throw new InvalidSimpleAlgebraicMoveException("Algebraic move must be four or five characters");
         }
 
         final Square from = Square.fromAlgebraic(algebraic.substring(0, 2));
@@ -121,6 +123,11 @@ public class Move implements Comparable {
                     && move.getPromotedPiece() == this.getPromotedPiece());
             }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
     }
 
     @Override

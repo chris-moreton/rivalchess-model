@@ -1,6 +1,7 @@
 package com.netsensia.rivalchess.model.helper;
 
 import com.netsensia.rivalchess.model.Piece;
+import com.netsensia.rivalchess.model.exception.MoveGenerationException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +51,7 @@ public enum SliderDirection {
                         SliderDirection.N, SliderDirection.W, SliderDirection.S, SliderDirection.E
                 ));
             default:
-                throw new RuntimeException("Can't get directions for a non-sliding piece");
+                throw new MoveGenerationException("Can't get directions for a non-sliding piece");
         }
     }
 }

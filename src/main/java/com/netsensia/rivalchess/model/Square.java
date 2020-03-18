@@ -1,5 +1,7 @@
 package com.netsensia.rivalchess.model;
 
+import com.netsensia.rivalchess.model.exception.InvalidAlgebraicSquareException;
+
 public class Square implements Comparable {
     private int xFile;
 	private int yRank;
@@ -14,7 +16,7 @@ public class Square implements Comparable {
 
     public static Square fromAlgebraic(String algebraic, int boardRanks) {
         if (algebraic.length() != 2) {
-            throw new RuntimeException("Invalid algebraic square " + algebraic);
+            throw new InvalidAlgebraicSquareException("Invalid algebraic square " + algebraic);
         }
         final int x = algebraic.toCharArray()[0] - 97;
         final int y = boardRanks - (algebraic.toCharArray()[1] - 48);
