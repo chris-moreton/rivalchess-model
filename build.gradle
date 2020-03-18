@@ -8,6 +8,7 @@ plugins {
     id 'java'
     id 'maven'
     id 'signing'
+    id "org.sonarqube" version "2.8"
 }
 
 group = "com.netsensia.rivalchess"
@@ -102,5 +103,14 @@ task createProperties(dependsOn: processResources) {
             p['version'] = project.version.toString()
             p.store w, null
         }
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "chris-moreton_rivalchess-model"
+        property "sonar.organization", "aca26fcd4934a63f04e0c5b7af37da3002eaa877"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.login", "96ef15ed3d6f241e70f5ddbbb4954907c5eeca32"
     }
 }

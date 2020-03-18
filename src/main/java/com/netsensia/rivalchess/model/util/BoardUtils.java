@@ -1,6 +1,7 @@
 package com.netsensia.rivalchess.model.util;
 
 import com.netsensia.rivalchess.model.Board;
+import com.netsensia.rivalchess.model.exception.InvalidBoardException;
 import com.netsensia.rivalchess.model.helper.CastlingHelper;
 import com.netsensia.rivalchess.model.Colour;
 import com.netsensia.rivalchess.model.helper.KnightDirection;
@@ -24,7 +25,7 @@ public class BoardUtils {
 
     private BoardUtils() {}
 
-    public static List<Square> getSquaresWithOccupant(Board board, SquareOccupant squareOccupant) {
+    public static List<Square> getSquaresWithOccupant(final Board board, final SquareOccupant squareOccupant) {
         return board.squareOccupantStream()
                 .filter(e -> e.getValue() == squareOccupant)
                 .map(Map.Entry::getKey).collect(Collectors.toList());
@@ -32,11 +33,11 @@ public class BoardUtils {
 
     public static List<Move> getSliderMoves(final Board board, final Piece piece) {
 
-        List<Square> fromSquares = getSquaresWithOccupant(board, piece.toSquareOccupant(board.getSideToMove()));
+        final List<Square> fromSquares = getSquaresWithOccupant(board, piece.toSquareOccupant(board.getSideToMove()));
 
         final List<Move> moves = new ArrayList<>();
 
-        for (Square fromSquare : fromSquares) {
+        for (final Square fromSquare : fromSquares) {
             for (SliderDirection sliderDirection : SliderDirection.getDirectionsForPiece(piece)) {
                 moves.addAll(
                         getDirectionalSquaresFromSquare(fromSquare, sliderDirection, board)
@@ -49,7 +50,7 @@ public class BoardUtils {
         return moves;
     }
 
-    public static boolean directionIsValid(Square square, SliderDirection direction) {
+    public static boolean directionIsValid(final Square square, final SliderDirection direction) {
         return isValidRankFileBoardReference(square.getXFile() + direction.getXIncrement()) &&
                 isValidRankFileBoardReference(square.getYRank() + direction.getYIncrement());
     }
@@ -81,13 +82,13 @@ public class BoardUtils {
         return tail;
     }
 
-    public static List<Move> getKnightMoves(Board board) {
+    public static List<Move> getKnightMoves(final Board board) {
         final List<Move> moves = new ArrayList<>();
 
-        List<Square> fromSquares = getSquaresWithOccupant(board, Piece.KNIGHT.toSquareOccupant(board.getSideToMove()));
+        final List<Square> fromSquares = getSquaresWithOccupant(board, Piece.KNIGHT.toSquareOccupant(board.getSideToMove()));
 
-        for (Square fromSquare : fromSquares) {
-            for (KnightDirection knightDirection : KnightDirection.values()) {
+        for (final Square fromSquare : fromSquares) {
+            for (final KnightDirection knightDirection : KnightDirection.values()) {
 
                 final int newX = fromSquare.getXFile() + knightDirection.getXIncrement();
                 final int newY = fromSquare.getYRank() + knightDirection.getYIncrement();
@@ -106,7 +107,7 @@ public class BoardUtils {
         return moves;
     }
 
-    public static List<Move> getPawnMoves(Board board) {
+    public static List<Move> getPawnMoves(final Board board) {
         final List<Move> moves = new ArrayList<>();
         final Colour mover = board.getSideToMove();
 
@@ -142,7 +143,11 @@ public class BoardUtils {
         return moves;
     }
 
-    private static List<Move> getAllPromotionOptionsForMove(Colour mover, Square fromSquare, Square toSquare) {
+    private static List<Move> getAllPromotionOptionsForMove(
+            final Colour mover,
+            final Square fromSquare,
+            final Square toSquare) {
+
         List<Move> moves = new ArrayList<>();
 
         moves.add(new Move(fromSquare, toSquare, SquareOccupant.WQ.ofColour(mover)));
@@ -153,7 +158,10 @@ public class BoardUtils {
         return moves;
     }
 
-    private static List<Move> getPawnCaptures(Board board, Colour mover, Square fromSquare) {
+    private static List<Move> getPawnCaptures(
+            final Board board,
+            final Colour mover,
+            final Square fromSquare) {
 
         final List<Move> moves = new ArrayList<>();
 
@@ -163,7 +171,11 @@ public class BoardUtils {
         return moves;
     }
 
-    private static List<Move> getPawnCapturesInDirection(Board board, Colour mover, Square fromSquare, SliderDirection captureDirection) {
+    private static List<Move> getPawnCapturesInDirection(
+            final Board board,
+            final Colour mover,
+            final Square fromSquare,
+            final SliderDirection captureDirection) {
 
         final List<Move> moves = new ArrayList<>();
 
@@ -215,7 +227,7 @@ public class BoardUtils {
         return moves;
     }
 
-    public static List<Move> getCastlingMoves(Board board) {
+    public static List<Move> getCastlingMoves(final Board board) {
 
         final List<Move> moves = new ArrayList<>();
         final Colour colour = board.getSideToMove();
@@ -293,8 +305,8 @@ public class BoardUtils {
         newBoard.setSideToMove(newBoard.getSideToMove().opponent());
         try {
             return isCheck(newBoard);
-        } catch (Exception e) {
-            throw new RuntimeException("After making trial move " + move + ", I caught " + e.getMessage());
+        } catch (InvalidBoardException e) {
+            throw new InvalidBoardException("After making trial move " + move + ", I caught " + e.getMessage());
         }
     }
 
@@ -304,7 +316,7 @@ public class BoardUtils {
                 board, SquareOccupant.WK.ofColour(board.getSideToMove()));
 
         if (squares.isEmpty()) {
-            throw new RuntimeException(
+            throw new InvalidBoardException(
                     "Given a board with no " + board.getSideToMove() + " king on it.\n" + board);
         }
 

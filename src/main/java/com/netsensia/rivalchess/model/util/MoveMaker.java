@@ -25,16 +25,12 @@ public class MoveMaker {
         disableCastleFlags(newBoard, fromSquare, board.getSideToMove());
         disableCastleFlags(newBoard, toSquare, board.getSideToMove().opponent());
 
-        // Todo: this must be called before setSquareOccupant - not safe
         makeEnPassantMoves(newBoard, move);
         setEnPassantFile(move, newBoard, movingPiece);
-
-        // Todo: this relies on makeEnPassantMoves having already been called - not safe
-        newBoard.setSquareOccupant(move.getTgtBoardRef(), movingPiece);
-
         makeCastleMoves(newBoard, move);
-        makePromotionMoves(newBoard, move);
 
+        newBoard.setSquareOccupant(move.getTgtBoardRef(), movingPiece);
+        makePromotionMoves(newBoard, move);
         newBoard.setSquareOccupant(move.getSrcBoardRef(), SquareOccupant.NONE);
 
         newBoard.setSideToMove(board.getSideToMove().opponent());
@@ -42,7 +38,11 @@ public class MoveMaker {
         return newBoard;
     }
 
-    private static void disableCastleFlags(Board board, Square square, Colour colour) {
+    private static void disableCastleFlags(
+            final Board board,
+            final Square square,
+            final Colour colour) {
+
         if (square.equals(CastlingHelper.kingHome(colour))) {
             board.setKingSideCastleAvailable(colour, false);
             board.setQueenSideCastleAvailable(colour, false);
@@ -55,7 +55,11 @@ public class MoveMaker {
         }
     }
 
-    private static void setEnPassantFile(Move move, Board newBoard, SquareOccupant movingPiece) {
+    private static void setEnPassantFile(
+            final Move move,
+            final Board newBoard,
+            final SquareOccupant movingPiece) {
+
         if (movingPiece.getPiece() == Piece.PAWN &&
                 Math.abs(move.getTgtBoardRef().getYRank() - move.getSrcBoardRef().getYRank()) == 2) {
             newBoard.setEnPassantFile(move.getSrcBoardRef().getXFile());
@@ -83,7 +87,9 @@ public class MoveMaker {
         }
     }
 
-    private static void makePromotionMoves(Board board, Move move) {
+    private static void makePromotionMoves(
+            final Board board,
+            final Move move) {
 
         if (board.getSquareOccupant(move.getSrcBoardRef()).getPiece() != Piece.PAWN) {
             return;
@@ -94,7 +100,9 @@ public class MoveMaker {
         }
     }
 
-    private static void makeEnPassantMoves(Board board, Move move) {
+    private static void makeEnPassantMoves(
+            final Board board,
+            final Move move) {
 
         if (board.getSquareOccupant(move.getSrcBoardRef()).getPiece() != Piece.PAWN) {
             return;
