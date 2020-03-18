@@ -5,17 +5,17 @@ Chess board utilities.
 
 Some examples are shown below but you can discover the rest of the API easily enough.
 
-#### Creating a Board
+#### Managing a Chess Board
 
     Board board = Board.fromFen("6k1/6p1/1p2q2p/1p5P/1P3RP1/2PK1B2/1r2N3/8 b - g3 5 56");
     
-    SquareOccupant = board.getSquareOccupant(Square.E2);
+    // Place a white rook on E2
     board.setSquareOccupant(Square.E2, SquareOccupant.WR);
     
-    boolean isCheck = board.isCheck();
-    Colour mover = board.getSideToMove();
+    SquareOccupant squareOccupant = board.getSquareOccupant(Square.E2);
+    Piece piece = squareOccupant.getPiece(); // == Piece.ROOK
     
-    boolean canCastle = board.isKingSideCastleAvailable(Colour.WHITE);
+    squareOccupant.WB.ofColour(Colour.BLACK); // == squareOccupant.BB
     
 #### Making a Move
 
@@ -27,5 +27,14 @@ Some examples are shown below but you can discover the rest of the API easily en
 #### Get Legal Moves
 
     List<Move> legalMoves = board.getLegalMoves();
+    
+#### Some Other Things
+
+    boolean isCheck = board.isCheck();
+    Colour mover = board.getSideToMove();
+    
+    Colour opponent = mover.opponent();
+    
+    boolean canCastle = board.isKingSideCastleAvailable(Colour.WHITE);
 
 
