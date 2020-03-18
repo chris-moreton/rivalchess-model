@@ -67,7 +67,7 @@ public class BoardUtils {
             return new ArrayList<>();
         }
 
-        final Square head = new Square(nextX, nextY);
+        final Square head = Square.fromCoords(nextX, nextY);
         final SquareOccupant squareOccupant = board.getSquareOccupant(head);
 
         if (squareOccupant != SquareOccupant.NONE) {
@@ -94,7 +94,7 @@ public class BoardUtils {
                 final int newY = fromSquare.getYRank() + knightDirection.getYIncrement();
 
                 if (isValidSquareReference(newX, newY)) {
-                    final Square targetSquare = new Square(newX, newY);
+                    final Square targetSquare = Square.fromCoords(newX, newY);
 
                     final SquareOccupant capturePiece = board.getSquareOccupant(targetSquare);
                     if (capturePiece == SquareOccupant.NONE || capturePiece.getColour() != board.getSideToMove()) {
@@ -116,7 +116,7 @@ public class BoardUtils {
 
         for (final Square fromSquare : fromSquares) {
             final Square oneSquareForward =
-                    new Square(fromSquare.getXFile(),
+                    Square.fromCoords(fromSquare.getXFile(),
                             fromSquare.getYRank() + PawnMoveHelper.advanceDirection(mover));
 
             if (board.getSquareOccupant(oneSquareForward) == SquareOccupant.NONE) {
@@ -129,7 +129,7 @@ public class BoardUtils {
 
                 if (fromSquare.getYRank() == PawnMoveHelper.homeRank(mover)) {
                     final Square twoSquaresForward =
-                            new Square(fromSquare.getXFile(),
+                            Square.fromCoords(fromSquare.getXFile(),
                                     PawnMoveHelper.homeRank(mover) + PawnMoveHelper.advanceDirection(mover) * 2);
                     if (board.getSquareOccupant(twoSquaresForward) == SquareOccupant.NONE) {
                         moves.add(new Move(fromSquare, twoSquaresForward));
@@ -183,7 +183,7 @@ public class BoardUtils {
         final int captureY = fromSquare.getYRank() + PawnMoveHelper.advanceDirection(mover);
 
         if (isValidSquareReference(captureX, captureY)) {
-            final Square captureSquare = new Square(captureX, captureY);
+            final Square captureSquare = Square.fromCoords(captureX, captureY);
 
             if (board.getSquareOccupant(captureSquare) == SquareOccupant.NONE) {
                 if (board.getEnPassantFile() == captureSquare.getXFile() &&
@@ -213,7 +213,7 @@ public class BoardUtils {
             final int newY = fromSquare.getYRank() + sliderDirection.getYIncrement();
 
             if (isValidSquareReference(newX, newY)) {
-                final Square targetSquare = new Square(newX, newY);
+                final Square targetSquare = Square.fromCoords(newX, newY);
 
                 final SquareOccupant capturePiece = board.getSquareOccupant(targetSquare);
                 if (capturePiece == SquareOccupant.NONE || capturePiece.getColour() != board.getSideToMove()) {

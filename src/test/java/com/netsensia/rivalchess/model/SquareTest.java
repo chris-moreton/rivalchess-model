@@ -10,7 +10,7 @@ public class SquareTest {
 
     @Test
     public void testConstructorAndGettersAndSetters() {
-        Square br = new Square(1,2);
+        Square br = Square.fromCoords(1,2);
 
         assertEquals(1, br.getXFile());
         assertEquals(2, br.getYRank());
@@ -18,9 +18,9 @@ public class SquareTest {
 
     @Test
     public void testEquals() {
-        Square br1 = new Square(1, 2);
-        Square br2 = new Square(2, 1);
-        Square br3 = new Square(1, 2);
+        Square br1 = Square.fromCoords(1, 2);
+        Square br2 = Square.fromCoords(2, 1);
+        Square br3 = Square.fromCoords(1, 2);
 
         Object o = new Object();
 
@@ -38,13 +38,13 @@ public class SquareTest {
 
     @Test
     public void testGetAlgebraicXFile() {
-        Square br1 = new Square(1, 2);
+        Square br1 = Square.fromCoords(1, 2);
         assertEquals('b', br1.getAlgebraicXFile());
     }
 
     @Test
     public void testGetAlgebraicYRank() {
-        Square br1 = new Square(1, 2);
+        Square br1 = Square.fromCoords(1, 2);
         assertEquals('6', br1.getAlgebraicYRank(8));
     }
 

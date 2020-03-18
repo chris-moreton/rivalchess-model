@@ -28,13 +28,11 @@ public class Board {
 
     public Board() {
         squareOccupants = new HashMap<>();
-        for (int x=0; x<8; x++) {
-            for (int y=0; y<8; y++) {
-                squareOccupants.put(
-                        new Square(x,y),
-                        SquareOccupant.NONE
-                );
-            }
+        for (Square square : Square.values()) {
+            squareOccupants.put(
+                    square,
+                    SquareOccupant.NONE
+            );
         }
     }
 
@@ -65,20 +63,12 @@ public class Board {
         return MoveMaker.makeMove(board, move);
     }
 
-    public SquareOccupant getSquareOccupant(Square boardRef) {
-        return squareOccupants.get(boardRef);
+    public SquareOccupant getSquareOccupant(Square square) {
+        return squareOccupants.get(square);
     }
 
-    public SquareOccupant getSquareOccupant(int xFile, int yRank) {
-        return getSquareOccupant(new Square(xFile, yRank));
-    }
-
-    public void setSquareOccupant(Square boardRef, SquareOccupant squareOccupant) {
-        squareOccupants.put(boardRef, squareOccupant);
-    }
-
-    public void setSquareOccupant(int xFile, int yRank, SquareOccupant squareOccupant) {
-        setSquareOccupant(new Square(xFile, yRank), squareOccupant);
+    public void setSquareOccupant(Square square, SquareOccupant squareOccupant) {
+        squareOccupants.put(square, squareOccupant);
     }
 
     public int getNumXFiles() {
@@ -150,15 +140,7 @@ public class Board {
         if (o instanceof Board) {
             Board bo = (Board) o;
 
-            for (int x=0; x<8; x++) {
-                for (int y=0; y<8; y++) {
-                    if (!this.getSquareOccupant(x,y).equals(bo.getSquareOccupant(x,y))) {
-                        return false;
-                    }
-                }
-            }
-
-            return this.getHalfMoveCount() == bo.getHalfMoveCount() &&
+            return this.squareOccupants.equals(((Board) o).getSquareOccupants()) &&
                     this.getEnPassantFile() == bo.getEnPassantFile() &&
                     this.getSideToMove() == bo.getSideToMove() &&
                     this.isKingSideCastleAvailable(Colour.WHITE) == bo.isKingSideCastleAvailable(Colour.WHITE) &&
@@ -178,15 +160,8 @@ public class Board {
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
-        for (int y=0; y<8; y++) {
-            for (int x=0; x<8; x++) {
-                s.append(getSquareOccupant(x,y).toChar());
-            }
-            s.append("\n");
-        }
-        s.append("\n");
-        s.append("Side to move: " + sideToMove);
-        s.append("\n");
+
+        s.append(squareOccupants);
 
         s.append("Castle privileges: " +
                 isWhiteKingSideCastleAvailable +

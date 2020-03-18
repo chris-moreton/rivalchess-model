@@ -120,7 +120,7 @@ public class MoveMaker {
 
         final Square targetSquare = move.getTgtBoardRef();
         board.setSquareOccupant(
-                new Square(
+                Square.fromCoords(
                         targetSquare.getXFile(),
                         targetSquare.getYRank() + PawnMoveHelper.advanceDirection(mover.opponent())),
                 SquareOccupant.NONE);

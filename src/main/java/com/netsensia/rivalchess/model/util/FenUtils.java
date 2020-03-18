@@ -1,6 +1,7 @@
 package com.netsensia.rivalchess.model.util;
 
 import com.netsensia.rivalchess.model.Colour;
+import com.netsensia.rivalchess.model.Square;
 import com.netsensia.rivalchess.model.exception.IllegalFenException;
 import com.netsensia.rivalchess.model.Board;
 import com.netsensia.rivalchess.model.SquareOccupant;
@@ -82,7 +83,7 @@ public class FenUtils {
         final int targetXFile = boardArrayIndex % board.getNumXFiles();
         final int targetYRank = boardArrayIndex / board.getNumXFiles();
 
-        board.setSquareOccupant(targetXFile, targetYRank, SquareOccupant.fromChar(fenToken));
+        board.setSquareOccupant(Square.fromCoords(targetXFile, targetYRank), SquareOccupant.fromChar(fenToken));
         boardArrayIndex++;
         return boardArrayIndex;
     }

@@ -20,8 +20,8 @@ public class MoveTest {
 
     @Test
     public void testConstructFromSquareRefs() {
-        final Square square1 = new Square(3,1);
-        final Square square2 = new Square(4, 2);
+        final Square square1 = Square.fromCoords(3,1);
+        final Square square2 = Square.fromCoords(4, 2);
         final Move move1 = new Move(square1, square2);
 
         assertEquals(3, move1.getSrcBoardRef().getXFile());

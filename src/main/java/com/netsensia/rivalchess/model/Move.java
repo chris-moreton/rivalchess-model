@@ -93,11 +93,11 @@ public class Move implements Comparable {
     }
 
     public Square getSrcBoardRef() {
-        return new Square(srcXFile, srcYRank);
+        return Square.fromCoords(srcXFile, srcYRank);
     }
 
     public Square getTgtBoardRef() {
-        return new Square(tgtXFile, tgtYRank);
+        return Square.fromCoords(tgtXFile, tgtYRank);
     }
 
     public SquareOccupant getPromotedPiece() {

@@ -16,23 +16,23 @@ public class FenUtilsTest {
 
         Board board = FenUtils.getBoardModel("6k1/6p1/1p2q2p/1p5P/1P3RP1/2PK1B2/1r2N3/8 b - g3 5 56");
 
-        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(new Square(0,0)));
-        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(new Square(0,1)));
-        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(new Square(0,2)));
-        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(new Square(0,3)));
-        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(new Square(0,4)));
-        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(new Square(0,5)));
-        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(new Square(0,6)));
-        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(new Square(0,7)));
+        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(Square.fromCoords(0,0)));
+        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(Square.fromCoords(0,1)));
+        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(Square.fromCoords(0,2)));
+        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(Square.fromCoords(0,3)));
+        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(Square.fromCoords(0,4)));
+        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(Square.fromCoords(0,5)));
+        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(Square.fromCoords(0,6)));
+        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(Square.fromCoords(0,7)));
 
-        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(new Square(1,7)));
-        assertEquals(SquareOccupant.BR, board.getSquareOccupant(new Square(1,6)));
-        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(new Square(1,5)));
-        assertEquals(SquareOccupant.WP, board.getSquareOccupant(new Square(1,4)));
-        assertEquals(SquareOccupant.BP, board.getSquareOccupant(new Square(1,3)));
-        assertEquals(SquareOccupant.BP, board.getSquareOccupant(new Square(1,2)));
-        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(new Square(1,1)));
-        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(new Square(1,0)));
+        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(Square.fromCoords(1,7)));
+        assertEquals(SquareOccupant.BR, board.getSquareOccupant(Square.fromCoords(1,6)));
+        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(Square.fromCoords(1,5)));
+        assertEquals(SquareOccupant.WP, board.getSquareOccupant(Square.fromCoords(1,4)));
+        assertEquals(SquareOccupant.BP, board.getSquareOccupant(Square.fromCoords(1,3)));
+        assertEquals(SquareOccupant.BP, board.getSquareOccupant(Square.fromCoords(1,2)));
+        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(Square.fromCoords(1,1)));
+        assertEquals(SquareOccupant.NONE, board.getSquareOccupant(Square.fromCoords(1,0)));
 
         assertEquals(Colour.BLACK, board.getSideToMove());
         assertEquals(6, board.getEnPassantFile());

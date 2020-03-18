@@ -4,6 +4,7 @@ import com.netsensia.rivalchess.model.Board;
 import com.netsensia.rivalchess.model.Colour;
 import com.netsensia.rivalchess.model.CommonTestUtils;
 import com.netsensia.rivalchess.model.Move;
+import com.netsensia.rivalchess.model.Square;
 import com.netsensia.rivalchess.model.SquareOccupant;
 import org.junit.Test;
 
@@ -21,13 +22,13 @@ public class MoveMakerTest {
 
         board.setSideToMove(Colour.WHITE);
 
-        board.setSquareOccupant(1, 1, SquareOccupant.WP);
+        board.setSquareOccupant(Square.fromCoords(1, 1), SquareOccupant.WP);
 
         final Board newBoard = MoveMaker.makeMove(
                 board, new Move(1,1,0,0, SquareOccupant.WB));
 
-        assertEquals(SquareOccupant.WB, newBoard.getSquareOccupant(0,0));
-        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(1,1));
+        assertEquals(SquareOccupant.WB, newBoard.getSquareOccupant(Square.fromCoords(0,0)));
+        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(Square.fromCoords(1,1)));
     }
 
     @Test
@@ -36,14 +37,14 @@ public class MoveMakerTest {
 
         board.setSideToMove(Colour.BLACK);
 
-        board.setSquareOccupant(1, 6, SquareOccupant.BP);
-        board.setSquareOccupant(1, 7, SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(1, 6), SquareOccupant.BP);
+        board.setSquareOccupant(Square.fromCoords(1, 7), SquareOccupant.NONE);
 
         final Board newBoard = MoveMaker.makeMove(
                 board, new Move(1,6,1,7, SquareOccupant.BQ));
 
-        assertEquals(SquareOccupant.BQ, newBoard.getSquareOccupant(1,7));
-        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(1,6));
+        assertEquals(SquareOccupant.BQ, newBoard.getSquareOccupant(Square.fromCoords(1,7)));
+        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(Square.fromCoords(1,6)));
     }
 
     @Test
@@ -52,15 +53,15 @@ public class MoveMakerTest {
 
         board.setSideToMove(Colour.WHITE);
 
-        board.setSquareOccupant(5, 7, SquareOccupant.NONE);
-        board.setSquareOccupant(6, 7, SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(5, 7), SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(6, 7), SquareOccupant.NONE);
 
         final Board newBoard = MoveMaker.makeMove(
                 board, new Move(4,7,6,7));
 
-        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(4,7));
-        assertEquals(SquareOccupant.WR, newBoard.getSquareOccupant(5,7));
-        assertEquals(SquareOccupant.WK, newBoard.getSquareOccupant(6,7));
+        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(Square.fromCoords(4,7)));
+        assertEquals(SquareOccupant.WR, newBoard.getSquareOccupant(Square.fromCoords(5,7)));
+        assertEquals(SquareOccupant.WK, newBoard.getSquareOccupant(Square.fromCoords(6,7)));
 
         assertFalse(newBoard.isKingSideCastleAvailable(Colour.WHITE));
         assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
@@ -75,18 +76,18 @@ public class MoveMakerTest {
 
         board.setSideToMove(Colour.WHITE);
 
-        board.setSquareOccupant(3, 7, SquareOccupant.NONE);
-        board.setSquareOccupant(2, 7, SquareOccupant.NONE);
-        board.setSquareOccupant(1, 7, SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(3, 7), SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(2, 7), SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(1, 7), SquareOccupant.NONE);
 
         final Board newBoard = MoveMaker.makeMove(
                 board, new Move(4,7,2,7));
 
-        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(0,7));
-        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(1,7));
-        assertEquals(SquareOccupant.WK, newBoard.getSquareOccupant(2,7));
-        assertEquals(SquareOccupant.WR, newBoard.getSquareOccupant(3,7));
-        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(4,7));
+        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(Square.fromCoords(0,7)));
+        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(Square.fromCoords(1,7)));
+        assertEquals(SquareOccupant.WK, newBoard.getSquareOccupant(Square.fromCoords(2,7)));
+        assertEquals(SquareOccupant.WR, newBoard.getSquareOccupant(Square.fromCoords(3,7)));
+        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(Square.fromCoords(4,7)));
 
         assertFalse(newBoard.isKingSideCastleAvailable(Colour.WHITE));
         assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
@@ -100,15 +101,15 @@ public class MoveMakerTest {
 
         board.setSideToMove(Colour.BLACK);
 
-        board.setSquareOccupant(5, 0, SquareOccupant.NONE);
-        board.setSquareOccupant(6, 0, SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(5, 0), SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(6, 0), SquareOccupant.NONE);
 
         final Board newBoard = MoveMaker.makeMove(
                 board, new Move(4,0,6,0));
 
-        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(4,0));
-        assertEquals(SquareOccupant.BR, newBoard.getSquareOccupant(5,0));
-        assertEquals(SquareOccupant.BK, newBoard.getSquareOccupant(6,0));
+        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(Square.fromCoords(4,0)));
+        assertEquals(SquareOccupant.BR, newBoard.getSquareOccupant(Square.fromCoords(5,0)));
+        assertEquals(SquareOccupant.BK, newBoard.getSquareOccupant(Square.fromCoords(6,0)));
 
         assertTrue(newBoard.isKingSideCastleAvailable(Colour.WHITE));
         assertFalse(newBoard.isKingSideCastleAvailable(Colour.BLACK));
@@ -123,18 +124,18 @@ public class MoveMakerTest {
 
         board.setSideToMove(Colour.BLACK);
 
-        board.setSquareOccupant(3, 0, SquareOccupant.NONE);
-        board.setSquareOccupant(2, 0, SquareOccupant.NONE);
-        board.setSquareOccupant(1, 0, SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(3, 0), SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(2, 0), SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(1, 0), SquareOccupant.NONE);
 
         final Board newBoard = MoveMaker.makeMove(
                 board, new Move(4,0,2,0));
 
-        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(0,0));
-        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(1,0));
-        assertEquals(SquareOccupant.BK, newBoard.getSquareOccupant(2,0));
-        assertEquals(SquareOccupant.BR, newBoard.getSquareOccupant(3,0));
-        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(4,0));
+        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(Square.fromCoords(0,0)));
+        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(Square.fromCoords(1,0)));
+        assertEquals(SquareOccupant.BK, newBoard.getSquareOccupant(Square.fromCoords(2,0)));
+        assertEquals(SquareOccupant.BR, newBoard.getSquareOccupant(Square.fromCoords(3,0)));
+        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(Square.fromCoords(4,0)));
 
         assertTrue(newBoard.isKingSideCastleAvailable(Colour.WHITE));
         assertFalse(newBoard.isKingSideCastleAvailable(Colour.BLACK));
@@ -148,15 +149,15 @@ public class MoveMakerTest {
 
         board.setSideToMove(Colour.WHITE);
 
-        board.setSquareOccupant(4, 3, SquareOccupant.WP);
-        board.setSquareOccupant(3, 3, SquareOccupant.BP);
+        board.setSquareOccupant(Square.fromCoords(4, 3), SquareOccupant.WP);
+        board.setSquareOccupant(Square.fromCoords(3, 3), SquareOccupant.BP);
 
         final Board newBoard = MoveMaker.makeMove(
                 board, new Move(4,3,3,2));
 
-        assertEquals(SquareOccupant.WP, newBoard.getSquareOccupant(3,2));
-        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(4,3));
-        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(3,3));
+        assertEquals(SquareOccupant.WP, newBoard.getSquareOccupant(Square.fromCoords(3,2)));
+        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(Square.fromCoords(4,3)));
+        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(Square.fromCoords(3,3)));
     }
 
     @Test
@@ -165,15 +166,15 @@ public class MoveMakerTest {
 
         board.setSideToMove(Colour.BLACK);
 
-        board.setSquareOccupant(4, 4, SquareOccupant.WP);
-        board.setSquareOccupant(3, 4, SquareOccupant.BP);
+        board.setSquareOccupant(Square.fromCoords(4, 4), SquareOccupant.WP);
+        board.setSquareOccupant(Square.fromCoords(3, 4), SquareOccupant.BP);
 
         final Board newBoard = MoveMaker.makeMove(
                 board, new Move(3,4,4,5));
 
-        assertEquals(SquareOccupant.BP, newBoard.getSquareOccupant(4,5));
-        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(3,4));
-        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(4,4));
+        assertEquals(SquareOccupant.BP, newBoard.getSquareOccupant(Square.fromCoords(4,5)));
+        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(Square.fromCoords(3,4)));
+        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(Square.fromCoords(4,4)));
     }
 
     @Test
@@ -182,13 +183,13 @@ public class MoveMakerTest {
 
         board.setSideToMove(Colour.WHITE);
 
-        board.setSquareOccupant(4, 4, SquareOccupant.WB);
+        board.setSquareOccupant(Square.fromCoords(4, 4), SquareOccupant.WB);
 
         final Board newBoard = MoveMaker.makeMove(
                 board, new Move(4,4,6,6));
 
-        assertEquals(SquareOccupant.WB, newBoard.getSquareOccupant(6,6));
-        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(4,4));
+        assertEquals(SquareOccupant.WB, newBoard.getSquareOccupant(Square.fromCoords(6,6)));
+        assertEquals(SquareOccupant.NONE, newBoard.getSquareOccupant(Square.fromCoords(4,4)));
         assertEquals(Colour.BLACK, newBoard.getSideToMove());
     }
 
@@ -215,12 +216,12 @@ public class MoveMakerTest {
     @Test
     public void testCastlingThroughCheck() {
         final Board board = CommonTestUtils.getStartBoard();
-        board.setSquareOccupant(6,6, SquareOccupant.NONE);
-        board.setSquareOccupant(6,7, SquareOccupant.NONE);
-        board.setSquareOccupant(5,7, SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(6,6), SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(6,7), SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(5,7), SquareOccupant.NONE);
 
         assertEquals(20, BoardUtils.getLegalMoves(board).size());
-        board.setSquareOccupant(7,5, SquareOccupant.BB);
+        board.setSquareOccupant(Square.fromCoords(7,5), SquareOccupant.BB);
         // two kings moves and two pawn moves restricted
         assertEquals(16, BoardUtils.getLegalMoves(board).size());
     }
@@ -228,11 +229,11 @@ public class MoveMakerTest {
     @Test
     public void testDisableCastleFlagsForWhiteCastling() {
         final Board board = CommonTestUtils.getStartBoard();
-        board.setSquareOccupant(6,7, SquareOccupant.NONE);
-        board.setSquareOccupant(5,7, SquareOccupant.NONE);
-        board.setSquareOccupant(1,7, SquareOccupant.NONE);
-        board.setSquareOccupant(2,7, SquareOccupant.NONE);
-        board.setSquareOccupant(3,7, SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(6,7), SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(5,7), SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(1,7), SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(2,7), SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(3,7), SquareOccupant.NONE);
 
         assertTrue(board.isKingSideCastleAvailable(Colour.WHITE));
         assertTrue(board.isKingSideCastleAvailable(Colour.BLACK));
@@ -273,11 +274,11 @@ public class MoveMakerTest {
         final Board board = CommonTestUtils.getStartBoard();
         board.setSideToMove(Colour.BLACK);
 
-        board.setSquareOccupant(6,0, SquareOccupant.NONE);
-        board.setSquareOccupant(5,0, SquareOccupant.NONE);
-        board.setSquareOccupant(1,0, SquareOccupant.NONE);
-        board.setSquareOccupant(2,0, SquareOccupant.NONE);
-        board.setSquareOccupant(3,0, SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(6,0), SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(5,0), SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(1,0), SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(2,0), SquareOccupant.NONE);
+        board.setSquareOccupant(Square.fromCoords(3,0), SquareOccupant.NONE);
 
         assertTrue(board.isKingSideCastleAvailable(Colour.BLACK));
         assertTrue(board.isKingSideCastleAvailable(Colour.WHITE));
@@ -317,7 +318,7 @@ public class MoveMakerTest {
     public void testDisableCastleFlagsWhenBlackQueenRookCaptured() {
         final Board board = CommonTestUtils.getStartBoard();
 
-        board.setSquareOccupant(0,1, SquareOccupant.WR);
+        board.setSquareOccupant(Square.fromCoords(0,1), SquareOccupant.WR);
         Board newBoard = MoveMaker.makeMove(board, new Move(0,1,0,0));
 
         assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
@@ -330,7 +331,7 @@ public class MoveMakerTest {
     public void testDisableCastleFlagsWhenBlackKingRookCaptured() {
         final Board board = CommonTestUtils.getStartBoard();
 
-        board.setSquareOccupant(7,1, SquareOccupant.WR);
+        board.setSquareOccupant(Square.fromCoords(7,1), SquareOccupant.WR);
         Board newBoard = MoveMaker.makeMove(board, new Move(7,1,7,0));
 
         assertFalse(newBoard.isKingSideCastleAvailable(Colour.BLACK));
@@ -344,7 +345,7 @@ public class MoveMakerTest {
         final Board board = CommonTestUtils.getStartBoard();
         board.setSideToMove(Colour.BLACK);
 
-        board.setSquareOccupant(0,6, SquareOccupant.WR);
+        board.setSquareOccupant(Square.fromCoords(0,6), SquareOccupant.WR);
         Board newBoard = MoveMaker.makeMove(board, new Move(0,6,0,7));
 
         assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
@@ -358,7 +359,7 @@ public class MoveMakerTest {
         final Board board = CommonTestUtils.getStartBoard();
         board.setSideToMove(Colour.BLACK);
 
-        board.setSquareOccupant(7,6, SquareOccupant.WR);
+        board.setSquareOccupant(Square.fromCoords(7,6), SquareOccupant.WR);
         Board newBoard = MoveMaker.makeMove(board, new Move(7,6,7,7));
 
         assertTrue(newBoard.isKingSideCastleAvailable(Colour.BLACK));
@@ -370,9 +371,9 @@ public class MoveMakerTest {
     @Test
     public void enPassantCaptureDisappearingKing() {
         final Board board = Board.fromFen("8/7p/p5pb/4k3/P1pPn3/8/P5PP/1rB2RK1 b - d3 0 28");
-        assertEquals(SquareOccupant.BK, board.getSquareOccupant(4,3));
+        assertEquals(SquareOccupant.BK, board.getSquareOccupant(Square.fromCoords(4,3)));
 
         Board newBoard = MoveMaker.makeMove(board, new Move(2,5,3,5));
-        assertEquals(SquareOccupant.BK, newBoard.getSquareOccupant(4,3));
+        assertEquals(SquareOccupant.BK, newBoard.getSquareOccupant(Square.fromCoords(4,3)));
     }
 }

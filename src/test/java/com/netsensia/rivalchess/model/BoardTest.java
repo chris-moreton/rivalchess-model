@@ -17,8 +17,8 @@ public class BoardTest {
     @Test
     public void testSetSquareOccupant() {
         Board board = new Board();
-        board.setSquareOccupant(new Square(1,7), SquareOccupant.BB);
-        assertEquals(SquareOccupant.BB, board.getSquareOccupant(1, 7));
+        board.setSquareOccupant(Square.fromCoords(1,7), SquareOccupant.BB);
+        assertEquals(SquareOccupant.BB, board.getSquareOccupant(Square.fromCoords(1, 7)));
     }
 
     @Test
@@ -26,8 +26,8 @@ public class BoardTest {
 
         final List<Square> expectedSquares =
                 new ArrayList<>(Arrays.asList(
-                        new Square(6, 0),
-                        new Square(1,0)
+                        Square.fromCoords(6, 0),
+                        Square.fromCoords(1,0)
                 ));
 
         Collections.sort(expectedSquares);
