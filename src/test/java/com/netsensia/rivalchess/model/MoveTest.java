@@ -67,9 +67,9 @@ public class MoveTest {
         final Move move1 = Move.fromAlgebraic("a2a3");
         assertEquals(SquareOccupant.NONE, move1.getPromotedPiece());
         assertEquals('a', move1.getSrcBoardRef().getAlgebraicXFile());
-        assertEquals('2', move1.getSrcBoardRef().getAlgebraicYRank(8));
+        assertEquals('2', move1.getSrcBoardRef().getAlgebraicYRank());
         assertEquals('a', move1.getTgtBoardRef().getAlgebraicXFile());
-        assertEquals('3', move1.getTgtBoardRef().getAlgebraicYRank(8));
+        assertEquals('3', move1.getTgtBoardRef().getAlgebraicYRank());
 
     }
 }

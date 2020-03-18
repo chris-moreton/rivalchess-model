@@ -9,10 +9,6 @@ public class Move implements Comparable {
     private final int tgtXFile;
     private final int tgtYRank;
 
-    private final int numFiles;
-
-    private static final int DEFAULT_FILE_COUNT = 8;
-
     private final SquareOccupant promotedPiece;
 
     public Move(
@@ -40,15 +36,17 @@ public class Move implements Comparable {
                 promotionPiece);
     }
 
+    @Deprecated
     public Move(
             final int srcXFile,
             final int srcYRank,
             final int tgtXFile,
             final int tgtYRank
     ) {
-        this(srcXFile, srcYRank, tgtXFile, tgtYRank, SquareOccupant.NONE, DEFAULT_FILE_COUNT);
+        this(srcXFile, srcYRank, tgtXFile, tgtYRank, SquareOccupant.NONE);
     }
 
+    @Deprecated
     public Move(
             final int srcXFile,
             final int srcYRank,
@@ -56,18 +54,6 @@ public class Move implements Comparable {
             final int tgtYRank,
             final SquareOccupant promotionPiece
     ) {
-        this(srcXFile, srcYRank, tgtXFile, tgtYRank, promotionPiece, DEFAULT_FILE_COUNT);
-    }
-
-    public Move(
-            final int srcXFile,
-            final int srcYRank,
-            final int tgtXFile,
-            final int tgtYRank,
-            final SquareOccupant promotionPiece,
-            final int numFiles
-    ) {
-        this.numFiles = numFiles;
         this.srcXFile = srcXFile;
         this.srcYRank = srcYRank;
         this.tgtXFile = tgtXFile;
@@ -107,8 +93,8 @@ public class Move implements Comparable {
     @Override
     public String toString() {
         return
-                this.getSrcBoardRef().getAlgebraic(numFiles) +
-                        this.getTgtBoardRef().getAlgebraic(numFiles) +
+                this.getSrcBoardRef().getAlgebraic() +
+                        this.getTgtBoardRef().getAlgebraic() +
                         (promotedPiece == SquareOccupant.NONE
                                 ? ""
                                 : promotedPiece.toChar());

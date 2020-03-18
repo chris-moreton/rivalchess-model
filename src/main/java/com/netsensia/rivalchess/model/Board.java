@@ -140,9 +140,15 @@ public class Board {
         if (o instanceof Board) {
             Board bo = (Board) o;
 
-            return this.squareOccupants.equals(((Board) o).getSquareOccupants()) &&
-                    this.getEnPassantFile() == bo.getEnPassantFile() &&
+            for (Square square : Square.values()) {
+                if (getSquareOccupant(square) != bo.getSquareOccupant(square)) {
+                    return false;
+                }
+            }
+
+            return  this.getEnPassantFile() == bo.getEnPassantFile() &&
                     this.getSideToMove() == bo.getSideToMove() &&
+                    this.getHalfMoveCount() == bo.getHalfMoveCount() &&
                     this.isKingSideCastleAvailable(Colour.WHITE) == bo.isKingSideCastleAvailable(Colour.WHITE) &&
                     this.isKingSideCastleAvailable(Colour.BLACK) == bo.isKingSideCastleAvailable(Colour.BLACK) &&
                     this.isQueenSideCastleAvailable(Colour.WHITE) == bo.isQueenSideCastleAvailable(Colour.WHITE) &&

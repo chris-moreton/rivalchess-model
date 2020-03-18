@@ -26,14 +26,17 @@ public class BoardTest {
 
         final List<Square> expectedSquares =
                 new ArrayList<>(Arrays.asList(
-                        Square.fromCoords(6, 0),
-                        Square.fromCoords(1,0)
+                        Square.fromCoords(1,0),
+                        Square.fromCoords(6, 0)
                 ));
 
-        Collections.sort(expectedSquares);
+        final List<Square> actualSquares = BoardUtils.getSquaresWithOccupant(
+                CommonTestUtils.getStartBoard(), SquareOccupant.BN);
 
-        assertEquals(expectedSquares, BoardUtils.getSquaresWithOccupant(
-                CommonTestUtils.getStartBoard(), SquareOccupant.BN));
+        Collections.sort(expectedSquares);
+        Collections.sort(actualSquares);
+
+        assertEquals(expectedSquares, actualSquares);
     }
 
     @Test
@@ -84,22 +87,4 @@ public class BoardTest {
         assertFalse(boardCopy.equals(board));
     }
 
-    @Test
-    public void testToString() {
-        final String expected = "rnbqkbnr\n" +
-                "pppppppp\n" +
-                "--------\n" +
-                "--------\n" +
-                "--------\n" +
-                "--------\n" +
-                "PPPPPPPP\n" +
-                "RNBQKBNR\n" +
-                "\n" +
-                "Side to move: WHITE\n" +
-                "Castle privileges: truetruetruetrue\n" +
-                "En passant file: -1\n" +
-                "Half move count: 0";
-        final Board board = CommonTestUtils.getStartBoard();
-        assertEquals(expected, board.toString());
-    }
 }

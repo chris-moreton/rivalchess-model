@@ -45,7 +45,7 @@ public class SquareTest {
     @Test
     public void testGetAlgebraicYRank() {
         Square br1 = Square.fromCoords(1, 2);
-        assertEquals('6', br1.getAlgebraicYRank(8));
+        assertEquals('6', br1.getAlgebraicYRank());
     }
 
     @Test
@@ -54,6 +54,6 @@ public class SquareTest {
         assertEquals(1, square.getXFile());
         assertEquals(2, square.getYRank());
         assertEquals('b', square.getAlgebraicXFile());
-        assertEquals('6', square.getAlgebraicYRank(8));
+        assertEquals('6', square.getAlgebraicYRank());
     }
 }

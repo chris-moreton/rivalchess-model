@@ -54,15 +54,11 @@ public enum Square {
     }
 
     public char getAlgebraicYRank() {
-        return getAlgebraicYRank(8);
+        return Character.forDigit((8 - this.getYRank()), 10);
     }
 
-    public char getAlgebraicYRank(int boardRanks) {
-        return Character.forDigit((boardRanks - this.getYRank()), 10);
-    }
-
-    public String getAlgebraic(int boardFiles) {
-        return "" + this.getAlgebraicXFile() + getAlgebraicYRank(boardFiles);
+    public String getAlgebraic() {
+        return "" + this.getAlgebraicXFile() + getAlgebraicYRank();
     }
 
 }
