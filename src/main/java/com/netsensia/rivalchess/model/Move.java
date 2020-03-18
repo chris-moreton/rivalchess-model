@@ -61,7 +61,7 @@ public class Move implements Comparable {
         this.promotedPiece = promotionPiece;
     }
 
-    public static Move fromAlgebraic(String algebraic) {
+    public Move(String algebraic) {
 
         if (algebraic.length() < 4 || algebraic.length() > 5) {
             throw new InvalidSimpleAlgebraicMoveException("Algebraic move must be four or five characters");
@@ -75,7 +75,11 @@ public class Move implements Comparable {
                 ? SquareOccupant.fromChar(algebraic.toCharArray()[4])
                 : SquareOccupant.NONE;
 
-        return new Move(from, to, promotionPiece);
+        this.srcXFile = from.getXFile();
+        this.srcYRank = from.getYRank();
+        this.tgtXFile = to.getXFile();
+        this.tgtYRank = to.getYRank();
+        this.promotedPiece = promotionPiece;
     }
 
     public Square getSrcBoardRef() {

@@ -36,7 +36,7 @@ public class Board {
         }
     }
 
-    public static Board fromFen(String fen) {
+    public static Board fromFen(final String fen) {
         return FenUtils.getBoardModel(fen);
     }
 
@@ -133,6 +133,10 @@ public class Board {
 
     public List<Move> getLegalMoves() {
         return BoardUtils.getLegalMoves(this);
+    }
+
+    public boolean isCheck() {
+        return BoardUtils.isCheck(this);
     }
 
     @Override

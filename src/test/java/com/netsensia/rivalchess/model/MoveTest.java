@@ -2,6 +2,8 @@ package com.netsensia.rivalchess.model;
 
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -40,6 +42,7 @@ public class MoveTest {
 
         final Move move3 = new Move(0,1,1,0, SquareOccupant.WQ);
         assertEquals("a7b8Q", move3.toString());
+
     }
 
     @Test
@@ -64,12 +67,11 @@ public class MoveTest {
 
     @Test
     public void testFromAlgebraic() {
-        final Move move1 = Move.fromAlgebraic("a2a3");
+        final Move move1 = new Move("a2a3");
         assertEquals(SquareOccupant.NONE, move1.getPromotedPiece());
         assertEquals('a', move1.getSrcBoardRef().getAlgebraicXFile());
         assertEquals('2', move1.getSrcBoardRef().getAlgebraicYRank());
         assertEquals('a', move1.getTgtBoardRef().getAlgebraicXFile());
         assertEquals('3', move1.getTgtBoardRef().getAlgebraicYRank());
-
     }
 }
