@@ -42,26 +42,23 @@ public class Board {
         return FenUtils.getBoardModel(fen);
     }
 
-    public static Board copy(final Board board) {
-        Board newBoard = new Board();
+    public Map<Square, SquareOccupant> getSquareOccupants() {
+        return new HashMap<>(squareOccupants);
+    }
 
-        for (int x=0; x<8; x++) {
-            for (int y=0; y<8; y++) {
-                newBoard.setSquareOccupant(x, y, board.getSquareOccupant(x,y));
-            }
-        }
+    public Board(final Board board) {
 
-        newBoard.setSideToMove(board.getSideToMove());
-        newBoard.setEnPassantFile(board.getEnPassantFile());
+        squareOccupants = board.getSquareOccupants();
 
-        newBoard.setKingSideCastleAvailable(Colour.WHITE, board.isKingSideCastleAvailable(Colour.WHITE));
-        newBoard.setKingSideCastleAvailable(Colour.BLACK, board.isKingSideCastleAvailable(Colour.BLACK));
-        newBoard.setQueenSideCastleAvailable(Colour.WHITE, board.isQueenSideCastleAvailable(Colour.WHITE));
-        newBoard.setQueenSideCastleAvailable(Colour.BLACK, board.isQueenSideCastleAvailable(Colour.BLACK));
+        setSideToMove(board.getSideToMove());
+        setEnPassantFile(board.getEnPassantFile());
 
-        newBoard.setHalfMoveCount(board.getHalfMoveCount());
+        setKingSideCastleAvailable(Colour.WHITE, board.isKingSideCastleAvailable(Colour.WHITE));
+        setKingSideCastleAvailable(Colour.BLACK, board.isKingSideCastleAvailable(Colour.BLACK));
+        setQueenSideCastleAvailable(Colour.WHITE, board.isQueenSideCastleAvailable(Colour.WHITE));
+        setQueenSideCastleAvailable(Colour.BLACK, board.isQueenSideCastleAvailable(Colour.BLACK));
 
-        return newBoard;
+        setHalfMoveCount(board.getHalfMoveCount());
     }
 
     public static Board fromMove(final Board board, final Move move) {

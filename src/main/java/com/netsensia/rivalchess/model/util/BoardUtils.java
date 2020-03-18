@@ -277,7 +277,7 @@ public class BoardUtils {
 
     public static boolean isSquareAttacked(final Board board, final Square square, final Colour byColour) {
 
-        final Board newBoard = Board.copy(board);
+        final Board newBoard = new Board(board);
 
         newBoard.setKingSideCastleAvailable(Colour.WHITE, false);
         newBoard.setKingSideCastleAvailable(Colour.BLACK, false);

@@ -15,7 +15,7 @@ public class MoveMaker {
 
     public static Board makeMove(final Board board, final Move move) {
 
-        final Board newBoard = Board.copy(board);
+        final Board newBoard = new Board(board);
 
         final Square fromSquare = move.getSrcBoardRef();
         final Square toSquare = move.getTgtBoardRef();
