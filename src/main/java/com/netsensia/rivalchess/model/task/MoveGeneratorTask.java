@@ -3,7 +3,6 @@ package com.netsensia.rivalchess.model.task;
 import com.netsensia.rivalchess.model.Board;
 import com.netsensia.rivalchess.model.Move;
 import com.netsensia.rivalchess.model.Piece;
-import com.netsensia.rivalchess.model.exception.EnumConversionException;
 import com.netsensia.rivalchess.model.exception.EnumSwitchException;
 import com.netsensia.rivalchess.model.util.BoardUtils;
 
@@ -21,7 +20,7 @@ public class MoveGeneratorTask implements Callable<List<Move>> {
     }
 
     @Override
-    public List<Move> call() throws Exception {
+    public List<Move> call() {
         switch (piece) {
             case PAWN:
                 return BoardUtils.getPawnMoves(board);

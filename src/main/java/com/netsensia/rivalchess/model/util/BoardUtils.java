@@ -273,32 +273,41 @@ public class BoardUtils {
     }
 
     public static List<Move> getAllMovesWithoutRemovingChecks(final Board board) {
-        try {
-            ExecutorService executor = Executors.newFixedThreadPool(6);
 
-            Collection<Callable<List<Move>>> tasks = new ArrayList<>();
+        final List<Move> moves = new ArrayList<>();
 
-            tasks.add(new MoveGeneratorTask(board, Piece.PAWN));
-            tasks.add(new MoveGeneratorTask(board, Piece.KNIGHT));
-            tasks.add(new MoveGeneratorTask(board, Piece.QUEEN));
-            tasks.add(new MoveGeneratorTask(board, Piece.ROOK));
-            tasks.add(new MoveGeneratorTask(board, Piece.BISHOP));
-            tasks.add(new MoveGeneratorTask(board, Piece.KING));
+        moves.addAll(BoardUtils.getPawnMoves(board));
+        moves.addAll(BoardUtils.getKnightMoves(board));
+        moves.addAll(BoardUtils.getKingMoves(board));
+        moves.addAll(BoardUtils.getSliderMoves(board, Piece.QUEEN));
+        moves.addAll(BoardUtils.getSliderMoves(board, Piece.BISHOP));
+        moves.addAll(BoardUtils.getSliderMoves(board, Piece.ROOK));
 
-            List<Future<List<Move>>> results = executor.invokeAll(tasks);
+//        try {
+//            final ExecutorService executor = Executors.newCachedThreadPool();
+//
+//            final Collection<Callable<List<Move>>> tasks = new ArrayList<>();
+//
+//            tasks.add(new MoveGeneratorTask(board, Piece.KING));
+//            tasks.add(new MoveGeneratorTask(board, Piece.KNIGHT));
+//            tasks.add(new MoveGeneratorTask(board, Piece.PAWN));
+//            tasks.add(new MoveGeneratorTask(board, Piece.QUEEN));
+//            tasks.add(new MoveGeneratorTask(board, Piece.ROOK));
+//            tasks.add(new MoveGeneratorTask(board, Piece.BISHOP));
+//
+//            final List<Future<List<Move>>> results = executor.invokeAll(tasks);
+//
+//            for(Future<List<Move>> result : results){
+//                moves.addAll(result.get());
+//            }
+//
+//            executor.shutdown();
+//
+//        } catch (ExecutionException | InterruptedException e) {
+//            throw new ParallelProcessingException(e.toString());
+//        }
 
-            List<Move> moves = new ArrayList<>();
-
-            for(Future<List<Move>> result : results){
-                final List<Move> singlePieceMoves = result.get();
-                moves.addAll(singlePieceMoves);
-            }
-            executor.shutdown();
-
-            return moves;
-        } catch (ExecutionException | InterruptedException e) {
-            throw new ParallelProcessingException(e.toString());
-        }
+        return moves;
     }
 
     public static boolean isSquareAttackedBy(final Board board, final Square square, final Colour byColour) {

@@ -31,20 +31,19 @@ The Board class is immutable. This allows for some parallel stream processing wh
 When a move is made, you get a new Board.
 
 Some ways to make a move.
-    
-    List<Move> legalMoves = board.getLegalMoves();
-    if (!legalMoves.empty()) {
-        Board newBoard = Board.fromMove(board, legalMoves.get(0));
-    }
-    
-Or
-  
-    Board newBoard = Board.fromMove(board, Move(Square.E2, Square.E4));
-
-Or
-
-    Board newBoard = Board.fromMove(board, new Move("e7f8Q"));
-        
+```   
+List<Move> legalMoves = board.getLegalMoves();
+if (!legalMoves.empty()) {
+    Board newBoard = Board.fromMove(board, legalMoves.get(0));
+}
+```  
+``` 
+Board newBoard = Board.fromMove(board, Move(Square.E2, Square.E4));
+``` 
+``` 
+Board newBoard = Board.fromMove(board, new Move("e7f8Q"));
+``` 
+       
 If you want to change a Board's state without making a move, you need to use a builder.
 
     // Create a builder with the current board as a base
