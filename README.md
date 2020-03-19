@@ -45,7 +45,7 @@ Or
 
     Board newBoard = Board.fromMove(board, new Move("e7f8Q"));
         
-Or you can create a new one using the builder.
+If you want to change a Board's state without making a move, you need to use a builder.
 
     // Create a builder with the current board as a base
     Board.BoardBuilder boardBuilder = new Board.BoardBuilder(board);
