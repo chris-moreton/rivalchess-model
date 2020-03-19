@@ -56,6 +56,12 @@ If you want to change a Board's state without making a move, you need to use a b
     // Create new board
     Board newBoard = boardBuilder.build();
     
+    // Or do it all in one
+    Board newBoard = new Board.BoardBuilder(board)
+            .withSquareOccupant(Square.E2, SquareOccupant.NONE)
+            .withSquareOccupant(Square.E4, SquareOccupant.WP)
+            .build()
+            
     SquareOccupant squareOccupant = newBoard.getSquareOccupant(Square.E4);
     Piece piece = squareOccupant.getPiece(); // == Piece.PAWN
             
