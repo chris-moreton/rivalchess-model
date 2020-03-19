@@ -2,6 +2,7 @@ package com.netsensia.rivalchess.model.util;
 
 import com.netsensia.rivalchess.model.Board;
 import com.netsensia.rivalchess.model.exception.InvalidBoardException;
+import com.netsensia.rivalchess.model.exception.ParallelProcessingException;
 import com.netsensia.rivalchess.model.helper.CastlingHelper;
 import com.netsensia.rivalchess.model.Colour;
 import com.netsensia.rivalchess.model.helper.KnightDirection;
@@ -11,13 +12,19 @@ import com.netsensia.rivalchess.model.helper.SliderDirection;
 import com.netsensia.rivalchess.model.Piece;
 import com.netsensia.rivalchess.model.Square;
 import com.netsensia.rivalchess.model.SquareOccupant;
+import com.netsensia.rivalchess.model.task.MoveGeneratorTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.netsensia.rivalchess.model.util.CommonUtils.isValidRankFileBoardReference;
 import static com.netsensia.rivalchess.model.util.CommonUtils.isValidSquareReference;
@@ -266,23 +273,32 @@ public class BoardUtils {
     }
 
     public static List<Move> getAllMovesWithoutRemovingChecks(final Board board) {
-        List<Move> moves = new ArrayList<>();
+        try {
+            ExecutorService executor = Executors.newFixedThreadPool(6);
 
-        moves.addAll(getPawnMoves(board));
+            Collection<Callable<List<Move>>> tasks = new ArrayList<>();
 
-        List<List<Move>> sliderMoves =
-                Stream.of(Piece.QUEEN, Piece.BISHOP, Piece.ROOK)
-                        .parallel()
-                        .map(p -> getSliderMoves(board, p))
-                        .collect(Collectors.toList());
+            tasks.add(new MoveGeneratorTask(board, Piece.PAWN));
+            tasks.add(new MoveGeneratorTask(board, Piece.KNIGHT));
+            tasks.add(new MoveGeneratorTask(board, Piece.QUEEN));
+            tasks.add(new MoveGeneratorTask(board, Piece.ROOK));
+            tasks.add(new MoveGeneratorTask(board, Piece.BISHOP));
+            tasks.add(new MoveGeneratorTask(board, Piece.KING));
 
-        moves.addAll(sliderMoves.stream().flatMap(List::stream).collect(Collectors.toList()));
+            List<Future<List<Move>>> results = executor.invokeAll(tasks);
 
-        moves.addAll(getKnightMoves(board));
-        moves.addAll(getKingMoves(board));
+            List<Move> moves = new ArrayList<>();
 
-        return moves;
+            for(Future<List<Move>> result : results){
+                final List<Move> singlePieceMoves = result.get();
+                moves.addAll(singlePieceMoves);
+            }
+            executor.shutdown();
 
+            return moves;
+        } catch (ExecutionException | InterruptedException e) {
+            throw new ParallelProcessingException(e.toString());
+        }
     }
 
     public static boolean isSquareAttackedBy(final Board board, final Square square, final Colour byColour) {
@@ -307,6 +323,7 @@ public class BoardUtils {
                 moveList.stream().filter(m -> m.getTgtBoardRef().equals(square)).collect(Collectors.toList());
 
         return !captureMoves.isEmpty();
+
     }
 
     public static boolean isMoveLeavesMoverInCheck(final Board board, final Move move) {
