@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.netsensia.rivalchess.model.util.CommonUtils.isValidRankFileBoardReference;
 import static com.netsensia.rivalchess.model.util.CommonUtils.isValidSquareReference;
@@ -237,9 +238,9 @@ public class BoardUtils {
                 board.getSquareOccupant(CastlingHelper.kingRookHome(colour)) == SquareOccupant.WR.ofColour(colour) &&
                 board.getSquareOccupant(CastlingHelper.kingKnightHome(colour)) == SquareOccupant.NONE &&
                 board.getSquareOccupant(CastlingHelper.kingBishopHome(colour)) == SquareOccupant.NONE &&
-                !BoardUtils.isSquareAttacked(board, CastlingHelper.kingHome(colour), colour.opponent()) &&
-                !BoardUtils.isSquareAttacked(board, CastlingHelper.kingKnightHome(colour), colour.opponent()) &&
-                !BoardUtils.isSquareAttacked(board, CastlingHelper.kingBishopHome(colour), colour.opponent())
+                !BoardUtils.isSquareAttackedBy(board, CastlingHelper.kingHome(colour), colour.opponent()) &&
+                !BoardUtils.isSquareAttackedBy(board, CastlingHelper.kingKnightHome(colour), colour.opponent()) &&
+                !BoardUtils.isSquareAttackedBy(board, CastlingHelper.kingBishopHome(colour), colour.opponent())
         ) {
             moves.add(new Move(CastlingHelper.kingHome(colour), CastlingHelper.kingKnightHome(colour)));
         }
@@ -250,9 +251,9 @@ public class BoardUtils {
                 board.getSquareOccupant(CastlingHelper.queenHome(colour)) == SquareOccupant.NONE &&
                 board.getSquareOccupant(CastlingHelper.queenKnightHome(colour)) == SquareOccupant.NONE &&
                 board.getSquareOccupant(CastlingHelper.queenBishopHome(colour)) == SquareOccupant.NONE &&
-                !BoardUtils.isSquareAttacked(board, CastlingHelper.kingHome(colour), colour.opponent()) &&
-                !BoardUtils.isSquareAttacked(board, CastlingHelper.queenBishopHome(colour), colour.opponent()) &&
-                !BoardUtils.isSquareAttacked(board, CastlingHelper.queenHome(colour), colour.opponent())
+                !BoardUtils.isSquareAttackedBy(board, CastlingHelper.kingHome(colour), colour.opponent()) &&
+                !BoardUtils.isSquareAttackedBy(board, CastlingHelper.queenBishopHome(colour), colour.opponent()) &&
+                !BoardUtils.isSquareAttackedBy(board, CastlingHelper.queenHome(colour), colour.opponent())
 
         ) {
             moves.add(new Move(CastlingHelper.kingHome(colour), CastlingHelper.queenBishopHome(colour)));
@@ -265,9 +266,17 @@ public class BoardUtils {
         List<Move> moves = new ArrayList<>();
 
         moves.addAll(getPawnMoves(board));
-        moves.addAll(getSliderMoves(board, Piece.QUEEN));
-        moves.addAll(getSliderMoves(board, Piece.BISHOP));
-        moves.addAll(getSliderMoves(board, Piece.ROOK));
+
+        List<List<Move>> sliderMoves =
+                Stream.of(Piece.QUEEN, Piece.BISHOP, Piece.ROOK)
+                        .map(p -> getSliderMoves(board, p))
+                        .collect(Collectors.toList());
+
+        moves.addAll(sliderMoves
+                        .parallelStream()
+                        .flatMap(List::parallelStream)
+                        .collect(Collectors.toList()));
+
         moves.addAll(getKnightMoves(board));
         moves.addAll(getKingMoves(board));
 
@@ -275,7 +284,7 @@ public class BoardUtils {
 
     }
 
-    public static boolean isSquareAttacked(final Board board, final Square square, final Colour byColour) {
+    public static boolean isSquareAttackedBy(final Board board, final Square square, final Colour byColour) {
 
         final Board newBoard = new Board(board);
 
@@ -322,7 +331,7 @@ public class BoardUtils {
 
         final Square ourKingSquare = squares.get(0);
 
-        return BoardUtils.isSquareAttacked(
+        return BoardUtils.isSquareAttackedBy(
                 board,
                 ourKingSquare,
                 board.getSideToMove().opponent());

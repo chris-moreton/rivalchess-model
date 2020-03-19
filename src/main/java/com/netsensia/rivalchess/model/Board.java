@@ -139,6 +139,14 @@ public class Board {
         return BoardUtils.isCheck(this);
     }
 
+    public List<Square> getSquaresWithOccupant(final SquareOccupant squareOccupant) {
+        return BoardUtils.getSquaresWithOccupant(this, squareOccupant);
+    }
+
+    public boolean isSquareAttackedBy(final Square square, final Colour byColour) {
+        return BoardUtils.isSquareAttackedBy(this, square, byColour);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o instanceof Board) {

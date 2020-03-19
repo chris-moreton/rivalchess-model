@@ -35,8 +35,6 @@ Some examples are shown below but you can discover the rest of the API easily en
     
     squareOccupant.WB.ofColour(Colour.BLACK); // == squareOccupant.BB
     
-    List<Square> blackKnightSquares = BoardUtils.getSquaresWithOccupant(board, SquareOccupant.BN);
-
 #### Making a Move
 
     Move move = new Move(Square.E2, Square.E4);
@@ -57,3 +55,6 @@ Some examples are shown below but you can discover the rest of the API easily en
     
     boolean canCastle = board.isKingSideCastleAvailable(Colour.WHITE);
 
+    List<Square> blackKnightSquares = board.getSquaresWithOccupant(SquareOccupant.BN);
+
+    boolean isSquareAttacked = board.isSquareAttackedBy(Square.A7, Colour.BLACK)

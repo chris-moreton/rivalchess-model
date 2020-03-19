@@ -569,80 +569,80 @@ public class BoardUtilsTest {
     public void testIsSquareAttacked() {
         final Board board = Board.fromFen("8/7p/p5pb/4k3/P1pPn3/8/P5PP/1rB2RK1 b - d3 0 28");
 
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(0,0), Colour.WHITE));
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(0,0), Colour.BLACK));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(0,0), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(0,0), Colour.BLACK));
 
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(0,1), Colour.WHITE));
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(0,1), Colour.BLACK));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(0,1), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(0,1), Colour.BLACK));
 
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(0,2), Colour.WHITE));
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(0,2), Colour.BLACK));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(0,2), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(0,2), Colour.BLACK));
 
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(0,3), Colour.WHITE));
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(0,3), Colour.BLACK));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(0,3), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(0,3), Colour.BLACK));
 
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(0,4), Colour.WHITE));
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(0,4), Colour.BLACK));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(0,4), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(0,4), Colour.BLACK));
 
-        assertTrue(BoardUtils.isSquareAttacked(board, Square.fromCoords(0,5), Colour.WHITE));
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(0,5), Colour.BLACK));
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(0,5), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(0,5), Colour.BLACK));
 
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(0,6), Colour.WHITE));
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(0,6), Colour.BLACK));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(0,6), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(0,6), Colour.BLACK));
 
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(0,7), Colour.WHITE));
-        assertTrue(BoardUtils.isSquareAttacked(board, Square.fromCoords(0,7), Colour.BLACK));
-
-        /*****************************************************************************************/
-
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(1,0), Colour.WHITE));
-        assertTrue(BoardUtils.isSquareAttacked(board, Square.fromCoords(1,0), Colour.BLACK));
-
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(1,1), Colour.WHITE));
-        assertTrue(BoardUtils.isSquareAttacked(board, Square.fromCoords(1,1), Colour.BLACK));
-
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(1,2), Colour.WHITE));
-        assertTrue(BoardUtils.isSquareAttacked(board, Square.fromCoords(1,2), Colour.BLACK));
-
-        assertTrue(BoardUtils.isSquareAttacked(board, Square.fromCoords(1,3), Colour.WHITE));
-        assertTrue(BoardUtils.isSquareAttacked(board, Square.fromCoords(1,3), Colour.BLACK));
-
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(1,4), Colour.WHITE));
-        assertTrue(BoardUtils.isSquareAttacked(board, Square.fromCoords(1,4), Colour.BLACK));
-
-        assertTrue(BoardUtils.isSquareAttacked(board, Square.fromCoords(1,5), Colour.WHITE));
-        assertTrue(BoardUtils.isSquareAttacked(board, Square.fromCoords(1,5), Colour.BLACK));
-
-        assertTrue(BoardUtils.isSquareAttacked(board, Square.fromCoords(1,6), Colour.WHITE));
-        assertTrue(BoardUtils.isSquareAttacked(board, Square.fromCoords(1,6), Colour.BLACK));
-
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(1,7), Colour.WHITE));
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(1,7), Colour.BLACK));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(0,7), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(0,7), Colour.BLACK));
 
         /*****************************************************************************************/
 
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(2,0), Colour.WHITE));
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(2,0), Colour.BLACK));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(1,0), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(1,0), Colour.BLACK));
 
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(2,1), Colour.WHITE));
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(2,1), Colour.BLACK));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(1,1), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(1,1), Colour.BLACK));
 
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(2,2), Colour.WHITE));
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(2,2), Colour.BLACK));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(1,2), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(1,2), Colour.BLACK));
 
-        assertTrue(BoardUtils.isSquareAttacked(board, Square.fromCoords(2,3), Colour.WHITE));
-        assertTrue(BoardUtils.isSquareAttacked(board, Square.fromCoords(2,3), Colour.BLACK));
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(1,3), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(1,3), Colour.BLACK));
 
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(2,4), Colour.WHITE));
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(2,4), Colour.BLACK));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(1,4), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(1,4), Colour.BLACK));
 
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(2,5), Colour.WHITE));
-        assertTrue(BoardUtils.isSquareAttacked(board, Square.fromCoords(2,5), Colour.BLACK));
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(1,5), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(1,5), Colour.BLACK));
 
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(2,6), Colour.WHITE));
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(2,6), Colour.BLACK));
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(1,6), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(1,6), Colour.BLACK));
 
-        assertFalse(BoardUtils.isSquareAttacked(board, Square.fromCoords(2,7), Colour.WHITE));
-        assertTrue(BoardUtils.isSquareAttacked(board, Square.fromCoords(2,7), Colour.BLACK));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(1,7), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(1,7), Colour.BLACK));
+
+        /*****************************************************************************************/
+
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,0), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,0), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,1), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,1), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,2), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,2), Colour.BLACK));
+
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,3), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,3), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,4), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,4), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,5), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,5), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,6), Colour.WHITE));
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,6), Colour.BLACK));
+
+        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,7), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,7), Colour.BLACK));
     }
 }
