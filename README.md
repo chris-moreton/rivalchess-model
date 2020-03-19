@@ -54,7 +54,7 @@ If you want to change a Board's state without making a move, you need to use a b
     boardBuilder.withSquareOccupant(Square.E2, SquareOccupant.NONE);
     boardBuilder.withSquareOccupant(Square.E4, SquareOccupant.WP);
     
-    // Create new baord
+    // Create new board
     Board newBoard = boardBuilder.build();
     
     SquareOccupant squareOccupant = newBoard.getSquareOccupant(Square.E4);
