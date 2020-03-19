@@ -28,8 +28,25 @@ Some examples are shown below but you can discover the rest of the API easily en
     Board board = Board.fromFen("6k1/6p1/1p2q2p/1p5P/1P3RP1/2PK1B2/1r2N3/8 b - g3 5 56");
     
 The Board class is immutable. This allows for some parallel stream processing when generating moves.
-To modify a Board, create a new one using the builder.
+When a move is made, you get a new Board.
+
+Some ways to make a move.
     
+    List<Move> legalMoves = board.getLegalMoves();
+    if (!legalMoves.empty()) {
+        Board newBoard = Board.fromMove(board, legalMoves.get(0));
+    }
+    
+Or
+  
+    Board newBoard = Board.fromMove(board, Move(Square.E2, Square.E4));
+
+Or
+
+    Board newBoard = Board.fromMove(board, new Move("e7f8Q"));
+        
+Or you can create a new one using the builder.
+
     // Create a builder with the current board as a base
     Board.BoardBuilder boardBuilder = new Board.BoardBuilder(board);
     
@@ -42,16 +59,7 @@ To modify a Board, create a new one using the builder.
     
     SquareOccupant squareOccupant = newBoard.getSquareOccupant(Square.E4);
     Piece piece = squareOccupant.getPiece(); // == Piece.PAWN
-        
-Or, get a new Board by making a move.
-
-    Board newBoard = Board.fromMove(board, Move(Square.E2, Square.E4));
-    Board newBoard = Board.fromMove(board, new Move("e7f8Q"));
-    
-#### Get Legal Moves
-
-    List<Move> legalMoves = board.getLegalMoves();
-    
+            
 #### Some Other Things
 
     boolean isCheck = board.isCheck();
