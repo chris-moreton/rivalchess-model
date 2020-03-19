@@ -1,4 +1,4 @@
-package com.netsensia.rivalchess.model.util;
+package com.netsensia.rivalchess.model;
 
 import org.junit.Test;
 

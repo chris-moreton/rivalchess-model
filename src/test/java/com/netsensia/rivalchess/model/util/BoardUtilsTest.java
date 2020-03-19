@@ -2,7 +2,6 @@ package com.netsensia.rivalchess.model.util;
 
 import com.netsensia.rivalchess.model.Board;
 import com.netsensia.rivalchess.model.Colour;
-import com.netsensia.rivalchess.model.CommonTestUtils;
 import com.netsensia.rivalchess.model.Move;
 import com.netsensia.rivalchess.model.helper.SliderDirection;
 import com.netsensia.rivalchess.model.Piece;

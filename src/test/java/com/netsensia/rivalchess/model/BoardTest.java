@@ -1,6 +1,7 @@
 package com.netsensia.rivalchess.model;
 
 import com.netsensia.rivalchess.model.util.BoardUtils;
+import com.netsensia.rivalchess.model.util.CommonTestUtils;
 import org.junit.Test;
 
 import java.util.ArrayList;

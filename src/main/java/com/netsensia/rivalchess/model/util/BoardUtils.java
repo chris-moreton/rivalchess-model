@@ -33,7 +33,9 @@ public class BoardUtils {
 
     private BoardUtils() {}
 
-    public static List<Square> getSquaresWithOccupant(final Board board, final SquareOccupant squareOccupant) {
+    public static List<Square> getSquaresWithOccupant(
+            final Board board, final SquareOccupant squareOccupant) {
+
         return board.squareOccupantStream()
                 .filter(e -> e.getValue() == squareOccupant)
                 .map(Map.Entry::getKey)

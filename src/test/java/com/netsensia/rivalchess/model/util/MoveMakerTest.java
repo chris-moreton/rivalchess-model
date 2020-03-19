@@ -2,13 +2,10 @@ package com.netsensia.rivalchess.model.util;
 
 import com.netsensia.rivalchess.model.Board;
 import com.netsensia.rivalchess.model.Colour;
-import com.netsensia.rivalchess.model.CommonTestUtils;
 import com.netsensia.rivalchess.model.Move;
 import com.netsensia.rivalchess.model.Square;
 import com.netsensia.rivalchess.model.SquareOccupant;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

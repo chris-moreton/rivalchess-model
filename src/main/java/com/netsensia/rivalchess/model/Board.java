@@ -4,6 +4,7 @@ import com.netsensia.rivalchess.model.util.BoardUtils;
 import com.netsensia.rivalchess.model.util.FenUtils;
 import com.netsensia.rivalchess.model.util.MoveMaker;
 
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
 @SuppressWarnings("java:S1319")
 public class Board {
 
-    private final EnumMap<Square, SquareOccupant> squareOccupants;
+    private final Map<Square, SquareOccupant> squareOccupants;
 
     private final int enPassantFile;
 
@@ -25,7 +26,7 @@ public class Board {
     private final Colour sideToMove;
 
     public Board(final BoardBuilder builder) {
-        this.squareOccupants = builder.squareOccupants.clone();
+        this.squareOccupants = new EnumMap<>(builder.squareOccupants);
         this.enPassantFile = builder.enPassantFile;
         this.isWhiteQueenSideCastleAvailable = builder.isWhiteQueenSideCastleAvailable;
         this.isBlackQueenSideCastleAvailable = builder.isBlackQueenSideCastleAvailable;
@@ -39,13 +40,13 @@ public class Board {
         return FenUtils.getBoardModel(fen);
     }
 
-    public EnumMap<Square, SquareOccupant> getSquareOccupants() {
-        return squareOccupants.clone();
+    public Map<Square, SquareOccupant> getSquareOccupants() {
+        return new EnumMap<>(squareOccupants);
     }
 
     public Board(final Board board) {
 
-        squareOccupants = board.getSquareOccupants();
+        squareOccupants = new EnumMap<>(board.getSquareOccupants());
 
         this.sideToMove = board.getSideToMove();
         this.enPassantFile = board.getEnPassantFile();
@@ -186,7 +187,7 @@ public class Board {
         }
 
         public BoardBuilder(final Board board) {
-            squareOccupants = board.getSquareOccupants();
+            squareOccupants = new EnumMap<>(board.getSquareOccupants());
             enPassantFile = board.getEnPassantFile();
             isWhiteKingSideCastleAvailable = board.isKingSideCastleAvailable(Colour.WHITE);
             isBlackKingSideCastleAvailable = board.isKingSideCastleAvailable(Colour.BLACK);

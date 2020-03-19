@@ -1,4 +1,9 @@
-package com.netsensia.rivalchess.model;
+package com.netsensia.rivalchess.model.util;
+
+import com.netsensia.rivalchess.model.Board;
+import com.netsensia.rivalchess.model.Colour;
+import com.netsensia.rivalchess.model.Square;
+import com.netsensia.rivalchess.model.SquareOccupant;
 
 public class CommonTestUtils {
     public static Board getStartBoard() {
