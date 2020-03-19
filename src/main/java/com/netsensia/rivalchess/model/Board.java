@@ -11,9 +11,6 @@ import java.util.stream.Stream;
 
 public class Board {
 
-	private static final int NUM_FILES = 8;
-    private static final int NUM_RANKS = 8;
-
     private final Map<Square, SquareOccupant> squareOccupants;
 
     private final int enPassantFile;

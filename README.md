@@ -27,20 +27,21 @@ Some examples are shown below but you can discover the rest of the API easily en
 
     Board board = Board.fromFen("6k1/6p1/1p2q2p/1p5P/1P3RP1/2PK1B2/1r2N3/8 b - g3 5 56");
     
-    // Place a white rook on E2
-    board.setSquareOccupant(Square.E2, SquareOccupant.WR);
-    
-    SquareOccupant squareOccupant = board.getSquareOccupant(Square.E2);
-    Piece piece = squareOccupant.getPiece(); // == Piece.ROOK
-    
-    squareOccupant.WB.ofColour(Colour.BLACK); // == squareOccupant.BB
-    
-#### Making a Move
+The Board class is immutable. This allows for some parallel stream processing when generating moves.
+To modify a Board, create a new one using the builder.
 
-    Move move = new Move(Square.E2, Square.E4);
-    Board newBoard = Board.fromMove(board, move);
+    // Place a white rook on E2
+    Board.BoardBuilder boardBuilder = new Board.BoardBuilder(board);
+    boardBuilder.withSquareOccupant(Square.E2, SquareOccupant.NONE);
+    boardBuilder.withSquareOccupant(Square.E4, SquareOccupant.WP);
     
-    Board anotherNewBoard = Board.fromMove(board, new Move("e7f8Q"));
+    SquareOccupant squareOccupant = board.getSquareOccupant(Square.E4);
+    Piece piece = squareOccupant.getPiece(); // == Piece.PAWN
+        
+Or, get a new Board by making a move.
+
+    Board newBoard = Board.fromMove(board, Move(Square.E2, Square.E4));
+    Board newBoard = Board.fromMove(board, new Move("e7f8Q"));
     
 #### Get Legal Moves
 
@@ -58,3 +59,5 @@ Some examples are shown below but you can discover the rest of the API easily en
     List<Square> blackKnightSquares = board.getSquaresWithOccupant(SquareOccupant.BN);
 
     boolean isSquareAttacked = board.isSquareAttackedBy(Square.A7, Colour.BLACK)
+    
+    squareOccupant.WB.ofColour(Colour.BLACK); // == squareOccupant.BB
