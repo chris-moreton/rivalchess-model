@@ -276,7 +276,7 @@ public class BoardUtils {
                         .map(p -> getSliderMoves(board, p))
                         .collect(Collectors.toList());
 
-        moves.addAll(sliderMoves.stream().flatMap(List::parallelStream).collect(Collectors.toList()));
+        moves.addAll(sliderMoves.stream().flatMap(List::stream).collect(Collectors.toList()));
 
         moves.addAll(getKnightMoves(board));
         moves.addAll(getKingMoves(board));
