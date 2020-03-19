@@ -29,13 +29,18 @@ Some examples are shown below but you can discover the rest of the API easily en
     
 The Board class is immutable. This allows for some parallel stream processing when generating moves.
 To modify a Board, create a new one using the builder.
-
-    // Place a white pawn on E4
+    
+    // Create a builder with the current board as a base
     Board.BoardBuilder boardBuilder = new Board.BoardBuilder(board);
+    
+    // Modify state as required
     boardBuilder.withSquareOccupant(Square.E2, SquareOccupant.NONE);
     boardBuilder.withSquareOccupant(Square.E4, SquareOccupant.WP);
     
-    SquareOccupant squareOccupant = board.getSquareOccupant(Square.E4);
+    // Create new baord
+    Board newBoard = boardBuilder.build();
+    
+    SquareOccupant squareOccupant = newBoard.getSquareOccupant(Square.E4);
     Piece piece = squareOccupant.getPiece(); // == Piece.PAWN
         
 Or, get a new Board by making a move.
