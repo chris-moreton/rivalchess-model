@@ -22,8 +22,8 @@ public class MoveMaker {
 
         final SquareOccupant movingPiece = board.getSquareOccupant(fromSquare);
 
-        disableCastleFlags(board, newBoardBuilder, fromSquare, board.getSideToMove());
-        disableCastleFlags(board, newBoardBuilder, toSquare, board.getSideToMove().opponent());
+        disableCastleFlags(newBoardBuilder, fromSquare, board.getSideToMove());
+        disableCastleFlags(newBoardBuilder, toSquare, board.getSideToMove().opponent());
 
         makeEnPassantMoves(board, newBoardBuilder, move);
         setEnPassantFile(move, newBoardBuilder, movingPiece);
@@ -39,7 +39,6 @@ public class MoveMaker {
     }
 
     private static void disableCastleFlags(
-            final Board board,
             final Board.BoardBuilder boardBuilder,
             final Square square,
             final Colour colour) {

@@ -4,14 +4,14 @@ import com.netsensia.rivalchess.model.util.BoardUtils;
 import com.netsensia.rivalchess.model.util.FenUtils;
 import com.netsensia.rivalchess.model.util.MoveMaker;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 public class Board {
 
-    private final Map<Square, SquareOccupant> squareOccupants;
+    private final EnumMap<Square, SquareOccupant> squareOccupants;
 
     private final int enPassantFile;
 
@@ -24,7 +24,7 @@ public class Board {
     private final Colour sideToMove;
 
     public Board(final BoardBuilder builder) {
-        this.squareOccupants = new HashMap<>(builder.squareOccupants);
+        this.squareOccupants = builder.squareOccupants.clone();
         this.enPassantFile = builder.enPassantFile;
         this.isWhiteQueenSideCastleAvailable = builder.isWhiteQueenSideCastleAvailable;
         this.isBlackQueenSideCastleAvailable = builder.isBlackQueenSideCastleAvailable;
@@ -38,8 +38,8 @@ public class Board {
         return FenUtils.getBoardModel(fen);
     }
 
-    public Map<Square, SquareOccupant> getSquareOccupants() {
-        return new HashMap<>(squareOccupants);
+    public EnumMap<Square, SquareOccupant> getSquareOccupants() {
+        return squareOccupants.clone();
     }
 
     public Board(final Board board) {
@@ -154,7 +154,7 @@ public class Board {
 
     public static class BoardBuilder
     {
-        private Map<Square, SquareOccupant> squareOccupants;
+        private EnumMap<Square, SquareOccupant> squareOccupants;
 
         private int enPassantFile;
 
@@ -175,7 +175,7 @@ public class Board {
             halfMoveCount = 0;
             sideToMove = Colour.WHITE;
 
-            squareOccupants = new HashMap<>();
+            squareOccupants = new EnumMap<>(Square.class);
             for (Square square : Square.values()) {
                 squareOccupants.put(
                         square,
@@ -185,19 +185,14 @@ public class Board {
         }
 
         public BoardBuilder(final Board board) {
-            this.squareOccupants = new HashMap<>(board.getSquareOccupants());
-            this.enPassantFile = board.getEnPassantFile();
-            this.isWhiteKingSideCastleAvailable = board.isKingSideCastleAvailable(Colour.WHITE);
-            this.isBlackKingSideCastleAvailable = board.isKingSideCastleAvailable(Colour.BLACK);
-            this.isWhiteQueenSideCastleAvailable = board.isQueenSideCastleAvailable(Colour.WHITE);
-            this.isBlackQueenSideCastleAvailable = board.isQueenSideCastleAvailable(Colour.BLACK);
-            this.halfMoveCount = board.getHalfMoveCount();
-            this.sideToMove = board.getSideToMove();
-        }
-
-        public BoardBuilder withSquareOccupants(final Map<Square, SquareOccupant> squareOccupants) {
-            this.squareOccupants = new HashMap<>(squareOccupants);
-            return this;
+            squareOccupants = board.getSquareOccupants();
+            enPassantFile = board.getEnPassantFile();
+            isWhiteKingSideCastleAvailable = board.isKingSideCastleAvailable(Colour.WHITE);
+            isBlackKingSideCastleAvailable = board.isKingSideCastleAvailable(Colour.BLACK);
+            isWhiteQueenSideCastleAvailable = board.isQueenSideCastleAvailable(Colour.WHITE);
+            isBlackQueenSideCastleAvailable = board.isQueenSideCastleAvailable(Colour.BLACK);
+            halfMoveCount = board.getHalfMoveCount();
+            sideToMove = board.getSideToMove();
         }
 
         public BoardBuilder withSquareOccupant(final Square square, final SquareOccupant squareOccupant) {
