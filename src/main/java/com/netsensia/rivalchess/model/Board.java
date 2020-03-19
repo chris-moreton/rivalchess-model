@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+@SuppressWarnings("java:S1319")
 public class Board {
 
     private final EnumMap<Square, SquareOccupant> squareOccupants;
