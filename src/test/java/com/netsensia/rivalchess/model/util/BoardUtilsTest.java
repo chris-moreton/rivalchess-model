@@ -21,12 +21,13 @@ public class BoardUtilsTest {
 
     @Test
     public void getBishopMoves() {
-        final Board board = CommonTestUtils.getStartBoard();
-        board.setSideToMove(Colour.BLACK);
-        board.setSquareOccupant(Square.fromCoords(3, 1), SquareOccupant.NONE);
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
+
+        boardBuilder.withSideToMove(Colour.BLACK);
+        boardBuilder.withSquareOccupant(Square.fromCoords(3, 1), SquareOccupant.NONE);
 
         final List<Move> actualMoves =
-                BoardUtils.getSliderMoves(board, Piece.BISHOP);
+                BoardUtils.getSliderMoves(boardBuilder.build(), Piece.BISHOP);
 
         final List<Move> expectedMoves =
                 new ArrayList<>(Arrays.asList(
@@ -45,11 +46,12 @@ public class BoardUtilsTest {
 
     @Test
     public void getRookMoves() {
-        final Board board = CommonTestUtils.getStartBoard();
-        board.setSquareOccupant(Square.fromCoords(4, 4), SquareOccupant.WR);
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
+
+        boardBuilder.withSquareOccupant(Square.fromCoords(4, 4), SquareOccupant.WR);
 
         final List<Move> actualMoves =
-                BoardUtils.getSliderMoves(board, Piece.ROOK);
+                BoardUtils.getSliderMoves(boardBuilder.build(), Piece.ROOK);
 
         final List<Move> expectedMoves =
                 new ArrayList<>(Arrays.asList(
@@ -70,18 +72,16 @@ public class BoardUtilsTest {
         Collections.sort(actualMoves);
 
         assertEquals(expectedMoves, actualMoves);
-
-        board.setSideToMove(Colour.BLACK);
     }
 
     @Test
     public void getRookMovesWhenNoMovesAvailable() {
-        final Board board = CommonTestUtils.getStartBoard();
-        board.setSideToMove(Colour.BLACK);
-        board.setSquareOccupant(Square.fromCoords(4, 4), SquareOccupant.WR);
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
+        boardBuilder.withSideToMove(Colour.BLACK);
+        boardBuilder.withSquareOccupant(Square.fromCoords(4, 4), SquareOccupant.WR);
 
         final List<Move> actualMoves =
-                BoardUtils.getSliderMoves(board, Piece.ROOK);
+                BoardUtils.getSliderMoves(boardBuilder.build(), Piece.ROOK);
 
         final List<Move> expectedMoves =
                 new ArrayList<>(Arrays.asList());
@@ -95,11 +95,11 @@ public class BoardUtilsTest {
 
     @Test
     public void getQueenMoves() {
-        final Board board = CommonTestUtils.getStartBoard();
-        board.setSquareOccupant(Square.fromCoords(4, 4), SquareOccupant.WQ);
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
+        boardBuilder.withSquareOccupant(Square.fromCoords(4, 4), SquareOccupant.WQ);
 
         final List<Move> actualMoves =
-                BoardUtils.getSliderMoves(board, Piece.QUEEN);
+                BoardUtils.getSliderMoves(boardBuilder.build(), Piece.QUEEN);
 
         final List<Move> expectedMoves =
                 new ArrayList<>(Arrays.asList(
@@ -133,14 +133,14 @@ public class BoardUtilsTest {
 
     @Test
     public void getKingMoves() {
-        final Board board = CommonTestUtils.getStartBoard();
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
 
-        board.setSquareOccupant(Square.fromCoords(4,7), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(5,2), SquareOccupant.WK);
-        board.setSquareOccupant(Square.fromCoords(5,3), SquareOccupant.WB);
-        board.setSquareOccupant(Square.fromCoords(6,2), SquareOccupant.WN);
+        boardBuilder.withSquareOccupant(Square.fromCoords(4,7), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(5,2), SquareOccupant.WK);
+        boardBuilder.withSquareOccupant(Square.fromCoords(5,3), SquareOccupant.WB);
+        boardBuilder.withSquareOccupant(Square.fromCoords(6,2), SquareOccupant.WN);
 
-        final List<Move> actualMoves = BoardUtils.getKingMoves(board);
+        final List<Move> actualMoves = BoardUtils.getKingMoves(boardBuilder.build());
 
         final List<Move> expectedMoves =
                 new ArrayList<>(Arrays.asList(
@@ -161,143 +161,143 @@ public class BoardUtilsTest {
 
     @Test
     public void testNoCastlingAvailable() {
-        final Board board = CommonTestUtils.getStartBoard();
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
 
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
     }
 
     @Test
     public void testCastlingAvailableButBlocked() {
-        final Board board = CommonTestUtils.getStartBoard();
-        board.setKingSideCastleAvailable(Colour.WHITE, true);
-        board.setKingSideCastleAvailable(Colour.BLACK, true);
-        board.setQueenSideCastleAvailable(Colour.WHITE, true);
-        board.setQueenSideCastleAvailable(Colour.BLACK, true);
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
+        boardBuilder.withIsKingSideCastleAvailable(Colour.WHITE, true);
+        boardBuilder.withIsKingSideCastleAvailable(Colour.BLACK, true);
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.WHITE, true);
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.BLACK, true);
 
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
     }
 
     @Test
     public void testWhiteKingSideCastling() {
-        final Board board = CommonTestUtils.getStartBoard();
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
 
-        board.setKingSideCastleAvailable(Colour.WHITE, true);
-        board.setKingSideCastleAvailable(Colour.BLACK, true);
-        board.setQueenSideCastleAvailable(Colour.WHITE, true);
-        board.setQueenSideCastleAvailable(Colour.BLACK, true);
+        boardBuilder.withIsKingSideCastleAvailable(Colour.WHITE, true);
+        boardBuilder.withIsKingSideCastleAvailable(Colour.BLACK, true);
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.WHITE, true);
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.BLACK, true);
 
-        board.setSquareOccupant(Square.fromCoords(5, 7), SquareOccupant.NONE);
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(5, 7), SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
 
-        board.setSquareOccupant(Square.fromCoords(6, 7), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(6, 7), SquareOccupant.NONE);
         assertEquals(new ArrayList<>(Arrays.asList(
                 new Move(Square.fromCoords(4,7), Square.fromCoords(6,7))
-        )), BoardUtils.getCastlingMoves(board));
+        )), BoardUtils.getCastlingMoves(boardBuilder.build()));
 
-        board.setSquareOccupant(Square.fromCoords(7, 7), SquareOccupant.NONE);
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(7, 7), SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
 
-        board.setSquareOccupant(Square.fromCoords(7, 7), SquareOccupant.WR);
-        board.setSquareOccupant(Square.fromCoords(4, 7), SquareOccupant.NONE);
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(7, 7), SquareOccupant.WR);
+        boardBuilder.withSquareOccupant(Square.fromCoords(4, 7), SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
     }
 
     @Test
     public void testWhiteQueenSideCastling() {
-        final Board board = CommonTestUtils.getStartBoard();
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
 
-        board.setKingSideCastleAvailable(Colour.WHITE, true);
-        board.setKingSideCastleAvailable(Colour.BLACK, true);
-        board.setQueenSideCastleAvailable(Colour.WHITE, true);
-        board.setQueenSideCastleAvailable(Colour.BLACK, true);
+        boardBuilder.withIsKingSideCastleAvailable(Colour.WHITE, true);
+        boardBuilder.withIsKingSideCastleAvailable(Colour.BLACK, true);
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.WHITE, true);
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.BLACK, true);
 
-        board.setSquareOccupant(Square.fromCoords(3, 7), SquareOccupant.NONE);
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(3, 7), SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
 
-        board.setSquareOccupant(Square.fromCoords(2, 7), SquareOccupant.NONE);
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(2, 7), SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
 
-        board.setSquareOccupant(Square.fromCoords(1, 7), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(1, 7), SquareOccupant.NONE);
 
         assertEquals(new ArrayList<>(Arrays.asList(
                 new Move(Square.fromCoords(4,7), Square.fromCoords(2,7))
-        )), BoardUtils.getCastlingMoves(board));
+        )), BoardUtils.getCastlingMoves(boardBuilder.build()));
 
-        board.setSquareOccupant(Square.fromCoords(0, 7), SquareOccupant.NONE);
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(0, 7), SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
 
-        board.setSquareOccupant(Square.fromCoords(0, 7), SquareOccupant.WR);
-        board.setSquareOccupant(Square.fromCoords(4, 7), SquareOccupant.NONE);
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(0, 7), SquareOccupant.WR);
+        boardBuilder.withSquareOccupant(Square.fromCoords(4, 7), SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
     }
 
     @Test
     public void testBlackKingSideCastling() {
-        final Board board = CommonTestUtils.getStartBoard();
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
 
-        board.setSideToMove(Colour.BLACK);
+        boardBuilder.withSideToMove(Colour.BLACK);
 
-        board.setKingSideCastleAvailable(Colour.WHITE, true);
-        board.setKingSideCastleAvailable(Colour.BLACK, true);
-        board.setQueenSideCastleAvailable(Colour.WHITE, true);
-        board.setQueenSideCastleAvailable(Colour.BLACK, true);
+        boardBuilder.withIsKingSideCastleAvailable(Colour.WHITE, true);
+        boardBuilder.withIsKingSideCastleAvailable(Colour.BLACK, true);
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.WHITE, true);
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.BLACK, true);
 
-        board.setSquareOccupant(Square.fromCoords(5, 0), SquareOccupant.NONE);
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(5, 0), SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
 
-        board.setSquareOccupant(Square.fromCoords(6, 0), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(6, 0), SquareOccupant.NONE);
 
         assertEquals(new ArrayList<>(Arrays.asList(
                 new Move(Square.fromCoords(4,0), Square.fromCoords(6,0))
-        )), BoardUtils.getCastlingMoves(board));
+        )), BoardUtils.getCastlingMoves(boardBuilder.build()));
 
-        board.setSquareOccupant(Square.fromCoords(7, 0), SquareOccupant.NONE);
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(7, 0), SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
 
-        board.setSquareOccupant(Square.fromCoords(7, 0), SquareOccupant.WR);
-        board.setSquareOccupant(Square.fromCoords(4, 0), SquareOccupant.NONE);
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(7, 0), SquareOccupant.WR);
+        boardBuilder.withSquareOccupant(Square.fromCoords(4, 0), SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
     }
 
     @Test
     public void testBlackQueenSideCastling() {
-        final Board board = CommonTestUtils.getStartBoard();
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
 
-        board.setSideToMove(Colour.BLACK);
+        boardBuilder.withSideToMove(Colour.BLACK);
 
-        board.setKingSideCastleAvailable(Colour.WHITE, true);
-        board.setKingSideCastleAvailable(Colour.BLACK, true);
-        board.setQueenSideCastleAvailable(Colour.WHITE, true);
-        board.setQueenSideCastleAvailable(Colour.BLACK, true);
+        boardBuilder.withIsKingSideCastleAvailable(Colour.WHITE, true);
+        boardBuilder.withIsKingSideCastleAvailable(Colour.BLACK, true);
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.WHITE, true);
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.BLACK, true);
 
-        board.setSquareOccupant(Square.fromCoords(3, 0), SquareOccupant.NONE);
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(3, 0), SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
 
-        board.setSquareOccupant(Square.fromCoords(2, 0), SquareOccupant.NONE);
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(2, 0), SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
 
-        board.setSquareOccupant(Square.fromCoords(1, 0), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(1, 0), SquareOccupant.NONE);
 
         assertEquals(new ArrayList<>(Arrays.asList(
                 new Move(Square.fromCoords(4,0), Square.fromCoords(2,0))
-        )), BoardUtils.getCastlingMoves(board));
+        )), BoardUtils.getCastlingMoves(boardBuilder.build()));
 
-        board.setSquareOccupant(Square.fromCoords(0, 0), SquareOccupant.NONE);
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(0, 0), SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
 
-        board.setSquareOccupant(Square.fromCoords(0, 0), SquareOccupant.WR);
-        board.setSquareOccupant(Square.fromCoords(4, 0), SquareOccupant.NONE);
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(0, 0), SquareOccupant.WR);
+        boardBuilder.withSquareOccupant(Square.fromCoords(4, 0), SquareOccupant.NONE);
+        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
     }
 
     @Test
     public void getKingMovesWhenKingOnAnEdge() {
-        final Board board = CommonTestUtils.getStartBoard();
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
 
-        board.setSquareOccupant(Square.fromCoords(4,7), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(7,2), SquareOccupant.WK);
+        boardBuilder.withSquareOccupant(Square.fromCoords(4,7), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(7,2), SquareOccupant.WK);
 
-        final List<Move> actualMoves = BoardUtils.getKingMoves(board);
+        final List<Move> actualMoves = BoardUtils.getKingMoves(boardBuilder.build());
 
         final List<Move> expectedMoves =
                 new ArrayList<>(Arrays.asList(
@@ -317,9 +317,9 @@ public class BoardUtilsTest {
 
     @Test
     public void getKnightMoves() {
-        final Board board = CommonTestUtils.getStartBoard();
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
 
-        final List<Move> actualMoves = BoardUtils.getKnightMoves(board);
+        final List<Move> actualMoves = BoardUtils.getKnightMoves(boardBuilder.build());
 
         final List<Move> expectedMoves =
                 new ArrayList<>(Arrays.asList(
@@ -338,13 +338,16 @@ public class BoardUtilsTest {
 
     @Test
     public void testGetDirectionalPotentialSquaresFromSquare_shouldIncludeCaptureSquare() {
-        final Board board = new Board();
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder();
 
-        board.setSquareOccupant(Square.fromCoords(5, 6), SquareOccupant.BB);
-        board.setSideToMove(Colour.WHITE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(5, 6), SquareOccupant.BB);
+        boardBuilder.withSideToMove(Colour.WHITE);
 
         final List<Square> actualSquares =
-                BoardUtils.getDirectionalSquaresFromSquare(Square.fromCoords(2,3), SliderDirection.SE, board);
+                BoardUtils.getDirectionalSquaresFromSquare(
+                        Square.fromCoords(2,3),
+                        SliderDirection.SE,
+                        boardBuilder.build());
 
         final List<Square> expectedSquares =
                 new ArrayList<>(Arrays.asList(
@@ -361,13 +364,14 @@ public class BoardUtilsTest {
 
     @Test
     public void testGetDirectionalPotentialSquaresFromSquare_shouldNotCaptureOwnPiece() {
-        final Board board = new Board();
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder();
 
-        board.setSquareOccupant(Square.fromCoords(5, 6), SquareOccupant.BB);
-        board.setSideToMove(Colour.BLACK);
+        boardBuilder.withSquareOccupant(Square.fromCoords(5, 6), SquareOccupant.BB);
+        boardBuilder.withSideToMove(Colour.BLACK);
 
         final List<Square> actualSquares =
-                BoardUtils.getDirectionalSquaresFromSquare(Square.fromCoords(2,3), SliderDirection.SE, board);
+                BoardUtils.getDirectionalSquaresFromSquare(
+                        Square.fromCoords(2,3), SliderDirection.SE, boardBuilder.build());
 
         final List<Square> expectedSquares =
                 new ArrayList<>(Arrays.asList(
@@ -383,38 +387,38 @@ public class BoardUtilsTest {
 
     @Test
     public void getWhitePawnMoves() {
-        final Board board = CommonTestUtils.getStartBoard();
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
 
-        board.setSquareOccupant(Square.fromCoords(1,6), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(1,3), SquareOccupant.WP);
+        boardBuilder.withSquareOccupant(Square.fromCoords(1,6), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(1,3), SquareOccupant.WP);
 
-        board.setSquareOccupant(Square.fromCoords(2,1), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(2,3), SquareOccupant.BP);
+        boardBuilder.withSquareOccupant(Square.fromCoords(2,1), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(2,3), SquareOccupant.BP);
 
-        board.setSquareOccupant(Square.fromCoords(6,1), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(6,2), SquareOccupant.BP);
+        boardBuilder.withSquareOccupant(Square.fromCoords(6,1), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(6,2), SquareOccupant.BP);
 
-        board.setSquareOccupant(Square.fromCoords(6,6), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(6,4), SquareOccupant.WP);
+        boardBuilder.withSquareOccupant(Square.fromCoords(6,6), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(6,4), SquareOccupant.WP);
 
-        board.setSquareOccupant(Square.fromCoords(5,6), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(5,5), SquareOccupant.WP);
+        boardBuilder.withSquareOccupant(Square.fromCoords(5,6), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(5,5), SquareOccupant.WP);
 
-        board.setSquareOccupant(Square.fromCoords(5,0), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(4,4), SquareOccupant.BB);
+        boardBuilder.withSquareOccupant(Square.fromCoords(5,0), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(4,4), SquareOccupant.BB);
 
-        board.setSquareOccupant(Square.fromCoords(3,6), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(4,2), SquareOccupant.WP);
+        boardBuilder.withSquareOccupant(Square.fromCoords(3,6), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(4,2), SquareOccupant.WP);
 
-        board.setSquareOccupant(Square.fromCoords(1,0), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(2,5), SquareOccupant.BN);
+        boardBuilder.withSquareOccupant(Square.fromCoords(1,0), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(2,5), SquareOccupant.BN);
 
-        board.setSquareOccupant(Square.fromCoords(7,6), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(7,1), SquareOccupant.WP);
+        boardBuilder.withSquareOccupant(Square.fromCoords(7,6), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(7,1), SquareOccupant.WP);
 
-        board.setEnPassantFile(2);
+        boardBuilder.withEnPassantFile(2);
 
-        final List<Move> actualMoves = BoardUtils.getPawnMoves(board);
+        final List<Move> actualMoves = BoardUtils.getPawnMoves(boardBuilder.build());
 
         final List<Move> expectedMoves =
                 new ArrayList<>(Arrays.asList(
@@ -443,15 +447,15 @@ public class BoardUtilsTest {
 
     @Test
     public void getWhitePawnMovesWhenJumpLandingSquareIsBlocked() {
-        final Board board = CommonTestUtils.getStartBoard();
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
 
-        board.setSquareOccupant(Square.fromCoords(4,4), SquareOccupant.BP);
-        board.setSquareOccupant(Square.fromCoords(3,6), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(2,6), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(1,6), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(0,6), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(4,4), SquareOccupant.BP);
+        boardBuilder.withSquareOccupant(Square.fromCoords(3,6), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(2,6), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(1,6), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(0,6), SquareOccupant.NONE);
 
-        final List<Move> actualMoves = BoardUtils.getPawnMoves(board);
+        final List<Move> actualMoves = BoardUtils.getPawnMoves(boardBuilder.build());
 
         final List<Move> expectedMoves =
                 new ArrayList<>(Arrays.asList(
@@ -472,42 +476,42 @@ public class BoardUtilsTest {
 
     @Test
     public void getBlackPawnMoves() {
-        final Board board = CommonTestUtils.getStartBoard();
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
 
-        board.setSideToMove(Colour.BLACK);
+        boardBuilder.withSideToMove(Colour.BLACK);
 
-        board.setSquareOccupant(Square.fromCoords(1,6), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(1,3), SquareOccupant.WP);
+        boardBuilder.withSquareOccupant(Square.fromCoords(1,6), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(1,3), SquareOccupant.WP);
 
-        board.setSquareOccupant(Square.fromCoords(2,1), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(2,3), SquareOccupant.BP);
+        boardBuilder.withSquareOccupant(Square.fromCoords(2,1), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(2,3), SquareOccupant.BP);
 
-        board.setSquareOccupant(Square.fromCoords(6,1), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(6,2), SquareOccupant.BP);
+        boardBuilder.withSquareOccupant(Square.fromCoords(6,1), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(6,2), SquareOccupant.BP);
 
-        board.setSquareOccupant(Square.fromCoords(6,6), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(6,4), SquareOccupant.WP);
+        boardBuilder.withSquareOccupant(Square.fromCoords(6,6), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(6,4), SquareOccupant.WP);
 
-        board.setSquareOccupant(Square.fromCoords(5,6), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(5,5), SquareOccupant.WP);
+        boardBuilder.withSquareOccupant(Square.fromCoords(5,6), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(5,5), SquareOccupant.WP);
 
-        board.setSquareOccupant(Square.fromCoords(5,0), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(4,4), SquareOccupant.BB);
+        boardBuilder.withSquareOccupant(Square.fromCoords(5,0), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(4,4), SquareOccupant.BB);
 
-        board.setSquareOccupant(Square.fromCoords(3,6), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(4,2), SquareOccupant.WP);
+        boardBuilder.withSquareOccupant(Square.fromCoords(3,6), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(4,2), SquareOccupant.WP);
 
-        board.setSquareOccupant(Square.fromCoords(1,0), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(2,5), SquareOccupant.BN);
+        boardBuilder.withSquareOccupant(Square.fromCoords(1,0), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(2,5), SquareOccupant.BN);
 
-        board.setSquareOccupant(Square.fromCoords(7,1), SquareOccupant.NONE);
-        board.setSquareOccupant(Square.fromCoords(7,6), SquareOccupant.BP);
+        boardBuilder.withSquareOccupant(Square.fromCoords(7,1), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(7,6), SquareOccupant.BP);
 
-        board.setSquareOccupant(Square.fromCoords(7,7), SquareOccupant.NONE);
+        boardBuilder.withSquareOccupant(Square.fromCoords(7,7), SquareOccupant.NONE);
 
-        board.setEnPassantFile(6);
+        boardBuilder.withEnPassantFile(6);
 
-        final List<Move> actualMoves = BoardUtils.getPawnMoves(board);
+        final List<Move> actualMoves = BoardUtils.getPawnMoves(boardBuilder.build());
 
         final List<Move> expectedMoves =
                 new ArrayList<>(Arrays.asList(
@@ -540,29 +544,29 @@ public class BoardUtilsTest {
 
     @Test
     public void testIsCheck() {
-        final Board board = CommonTestUtils.getStartBoard();
-        assertFalse(BoardUtils.isCheck(board));
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
+        assertFalse(BoardUtils.isCheck(boardBuilder.build()));
 
-        board.setSquareOccupant(Square.fromCoords(4,6), SquareOccupant.BR);
-        assertTrue(BoardUtils.isCheck(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(4,6), SquareOccupant.BR);
+        assertTrue(BoardUtils.isCheck(boardBuilder.build()));
 
-        board.setSquareOccupant(Square.fromCoords(4,6), SquareOccupant.WR);
-        assertFalse(BoardUtils.isCheck(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(4,6), SquareOccupant.WR);
+        assertFalse(BoardUtils.isCheck(boardBuilder.build()));
 
-        board.setSideToMove(Colour.BLACK);
-        assertFalse(BoardUtils.isCheck(board));
+        boardBuilder.withSideToMove(Colour.BLACK);
+        assertFalse(BoardUtils.isCheck(boardBuilder.build()));
 
     }
 
     @Test
     public void testRemoveChecksFromMoves() {
-        final Board board = CommonTestUtils.getStartBoard();
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
 
-        board.setSquareOccupant(Square.fromCoords(7,4), SquareOccupant.BB);
-        assertFalse(BoardUtils.isCheck(board));
+        boardBuilder.withSquareOccupant(Square.fromCoords(7,4), SquareOccupant.BB);
+        assertFalse(BoardUtils.isCheck(boardBuilder.build()));
 
-        assertEquals(19, BoardUtils.getAllMovesWithoutRemovingChecks(board).size());
-        assertEquals(17, BoardUtils.getLegalMoves(board).size());
+        assertEquals(19, BoardUtils.getAllMovesWithoutRemovingChecks(boardBuilder.build()).size());
+        assertEquals(17, BoardUtils.getLegalMoves(boardBuilder.build()).size());
     }
 
     @Test

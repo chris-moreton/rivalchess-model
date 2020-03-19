@@ -29,12 +29,14 @@ public class BoardUtils {
     public static List<Square> getSquaresWithOccupant(final Board board, final SquareOccupant squareOccupant) {
         return board.squareOccupantStream()
                 .filter(e -> e.getValue() == squareOccupant)
-                .map(Map.Entry::getKey).collect(Collectors.toList());
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 
     public static List<Move> getSliderMoves(final Board board, final Piece piece) {
 
-        final List<Square> fromSquares = getSquaresWithOccupant(board, piece.toSquareOccupant(board.getSideToMove()));
+        final List<Square> fromSquares =
+                getSquaresWithOccupant(board, piece.toSquareOccupant(board.getSideToMove()));
 
         final List<Move> moves = new ArrayList<>();
 
@@ -77,7 +79,7 @@ public class BoardUtils {
                     : new ArrayList<>(Arrays.asList(head));
         }
 
-        List<Square> tail = getDirectionalSquaresFromSquare(head, direction, board);
+        final List<Square> tail = getDirectionalSquaresFromSquare(head, direction, board);
         tail.add(head);
 
         return tail;
@@ -86,7 +88,8 @@ public class BoardUtils {
     public static List<Move> getKnightMoves(final Board board) {
         final List<Move> moves = new ArrayList<>();
 
-        final List<Square> fromSquares = getSquaresWithOccupant(board, Piece.KNIGHT.toSquareOccupant(board.getSideToMove()));
+        final List<Square> fromSquares = getSquaresWithOccupant(
+                board, Piece.KNIGHT.toSquareOccupant(board.getSideToMove()));
 
         for (final Square fromSquare : fromSquares) {
             for (final KnightDirection knightDirection : KnightDirection.values()) {
@@ -269,13 +272,11 @@ public class BoardUtils {
 
         List<List<Move>> sliderMoves =
                 Stream.of(Piece.QUEEN, Piece.BISHOP, Piece.ROOK)
+                        .parallel()
                         .map(p -> getSliderMoves(board, p))
                         .collect(Collectors.toList());
 
-        moves.addAll(sliderMoves
-                        .parallelStream()
-                        .flatMap(List::parallelStream)
-                        .collect(Collectors.toList()));
+        moves.addAll(sliderMoves.stream().flatMap(List::parallelStream).collect(Collectors.toList()));
 
         moves.addAll(getKnightMoves(board));
         moves.addAll(getKingMoves(board));
@@ -286,21 +287,21 @@ public class BoardUtils {
 
     public static boolean isSquareAttackedBy(final Board board, final Square square, final Colour byColour) {
 
-        final Board newBoard = new Board(board);
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(board);
 
-        newBoard.setKingSideCastleAvailable(Colour.WHITE, false);
-        newBoard.setKingSideCastleAvailable(Colour.BLACK, false);
-        newBoard.setQueenSideCastleAvailable(Colour.WHITE, false);
-        newBoard.setQueenSideCastleAvailable(Colour.BLACK, false);
+        boardBuilder.withIsKingSideCastleAvailable(Colour.WHITE, false);
+        boardBuilder.withIsKingSideCastleAvailable(Colour.BLACK, false);
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.WHITE, false);
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.BLACK, false);
 
-        if (newBoard.getSquareOccupant(square) == SquareOccupant.NONE) {
+        if (board.getSquareOccupant(square) == SquareOccupant.NONE) {
             // put something there to capture
-            newBoard.setSquareOccupant(square, SquareOccupant.BR.ofColour(byColour.opponent()));
+            boardBuilder.withSquareOccupant(square, SquareOccupant.BR.ofColour(byColour.opponent()));
         }
 
-        newBoard.setSideToMove(byColour);
+        boardBuilder.withSideToMove(byColour);
 
-        final List<Move> moveList = getAllMovesWithoutRemovingChecks(newBoard);
+        final List<Move> moveList = getAllMovesWithoutRemovingChecks(boardBuilder.build());
 
         final List<Move> captureMoves =
                 moveList.stream().filter(m -> m.getTgtBoardRef().equals(square)).collect(Collectors.toList());
@@ -309,11 +310,12 @@ public class BoardUtils {
     }
 
     public static boolean isMoveLeavesMoverInCheck(final Board board, final Move move) {
-        final Board newBoard = MoveMaker.makeMove(board, move);
-        // If it were still my move, would I be in check?
-        newBoard.setSideToMove(newBoard.getSideToMove().opponent());
+        final Board.BoardBuilder boardBuilder =
+                new Board.BoardBuilder(MoveMaker.makeMove(board, move))
+                .withSideToMove(board.getSideToMove());
+
         try {
-            return isCheck(newBoard);
+            return isCheck(boardBuilder.build());
         } catch (InvalidBoardException e) {
             throw new InvalidBoardException("After making trial move " + move + ", I caught " + e.getMessage());
         }

@@ -16,24 +16,25 @@ public class Board {
 
     private final Map<Square, SquareOccupant> squareOccupants;
 
-    private int enPassantFile = -1;
+    private final int enPassantFile;
 
-    private boolean isWhiteKingSideCastleAvailable = true;
-    private boolean isWhiteQueenSideCastleAvailable = true;
-    private boolean isBlackKingSideCastleAvailable = true;
-    private boolean isBlackQueenSideCastleAvailable = true;
+    private final boolean isWhiteKingSideCastleAvailable;
+    private final boolean isWhiteQueenSideCastleAvailable;
+    private final boolean isBlackKingSideCastleAvailable;
+    private final boolean isBlackQueenSideCastleAvailable;
 
-    private int halfMoveCount = 0;
-    private Colour sideToMove;
+    private final int halfMoveCount;
+    private final Colour sideToMove;
 
-    public Board() {
-        squareOccupants = new HashMap<>();
-        for (Square square : Square.values()) {
-            squareOccupants.put(
-                    square,
-                    SquareOccupant.NONE
-            );
-        }
+    public Board(final BoardBuilder builder) {
+        this.squareOccupants = new HashMap<>(builder.squareOccupants);
+        this.enPassantFile = builder.enPassantFile;
+        this.isWhiteQueenSideCastleAvailable = builder.isWhiteQueenSideCastleAvailable;
+        this.isBlackQueenSideCastleAvailable = builder.isBlackQueenSideCastleAvailable;
+        this.isWhiteKingSideCastleAvailable = builder.isWhiteKingSideCastleAvailable;
+        this.isBlackKingSideCastleAvailable = builder.isBlackKingSideCastleAvailable;
+        this.halfMoveCount = builder.halfMoveCount;
+        this.sideToMove = builder.sideToMove;
     }
 
     public static Board fromFen(final String fen) {
@@ -48,15 +49,15 @@ public class Board {
 
         squareOccupants = board.getSquareOccupants();
 
-        setSideToMove(board.getSideToMove());
-        setEnPassantFile(board.getEnPassantFile());
+        this.sideToMove = board.getSideToMove();
+        this.enPassantFile = board.getEnPassantFile();
 
-        setKingSideCastleAvailable(Colour.WHITE, board.isKingSideCastleAvailable(Colour.WHITE));
-        setKingSideCastleAvailable(Colour.BLACK, board.isKingSideCastleAvailable(Colour.BLACK));
-        setQueenSideCastleAvailable(Colour.WHITE, board.isQueenSideCastleAvailable(Colour.WHITE));
-        setQueenSideCastleAvailable(Colour.BLACK, board.isQueenSideCastleAvailable(Colour.BLACK));
+        this.isBlackKingSideCastleAvailable = board.isKingSideCastleAvailable(Colour.BLACK);
+        this.isBlackQueenSideCastleAvailable = board.isQueenSideCastleAvailable(Colour.BLACK);
+        this.isWhiteKingSideCastleAvailable = board.isKingSideCastleAvailable(Colour.WHITE);
+        this.isWhiteQueenSideCastleAvailable = board.isQueenSideCastleAvailable(Colour.WHITE);
 
-        setHalfMoveCount(board.getHalfMoveCount());
+        this.halfMoveCount = board.getHalfMoveCount();
     }
 
     public static Board fromMove(final Board board, final Move move) {
@@ -67,48 +68,16 @@ public class Board {
         return squareOccupants.get(square);
     }
 
-    public void setSquareOccupant(Square square, SquareOccupant squareOccupant) {
-        squareOccupants.put(square, squareOccupant);
-    }
-
-    public int getNumXFiles() {
-        return NUM_FILES;
-    }
-
-    public int getNumYRanks() {
-        return NUM_RANKS;
-    }
-
     public boolean isKingSideCastleAvailable(final Colour colour) {
         return colour == Colour.WHITE ? isWhiteKingSideCastleAvailable : isBlackKingSideCastleAvailable;
-    }
-
-    public void setKingSideCastleAvailable(final Colour colour, final boolean isKingSideCastleAvailable) {
-        if (colour == Colour.WHITE) {
-            isWhiteKingSideCastleAvailable = isKingSideCastleAvailable;
-        } else {
-            isBlackKingSideCastleAvailable = isKingSideCastleAvailable;
-        }
     }
 
     public boolean isQueenSideCastleAvailable(final Colour colour) {
         return colour == Colour.WHITE ? isWhiteQueenSideCastleAvailable : isBlackQueenSideCastleAvailable;
     }
 
-    public void setQueenSideCastleAvailable(final Colour colour, final boolean isQueenSideCastleAvailable) {
-        if (colour == Colour.WHITE) {
-            this.isWhiteQueenSideCastleAvailable = isQueenSideCastleAvailable;
-        } else {
-            this.isBlackQueenSideCastleAvailable = isQueenSideCastleAvailable;
-        }
-    }
-
     public Stream<Map.Entry<Square, SquareOccupant>> squareOccupantStream() {
         return squareOccupants.entrySet().stream();
-    }
-
-    public void setHalfMoveCount(int halfMoveCount) {
-        this.halfMoveCount = halfMoveCount;
     }
 
     public int getHalfMoveCount() {
@@ -119,16 +88,8 @@ public class Board {
         return sideToMove;
     }
 
-    public void setSideToMove(final Colour sideToMove) {
-        this.sideToMove = sideToMove;
-    }
-
     public int getEnPassantFile() {
         return this.enPassantFile;
-    }
-
-    public void setEnPassantFile(final int enPassantFile) {
-        this.enPassantFile = enPassantFile;
     }
 
     public List<Move> getLegalMoves() {
@@ -194,4 +155,115 @@ public class Board {
         return s.toString();
     }
 
+    public static class BoardBuilder
+    {
+        private Map<Square, SquareOccupant> squareOccupants;
+
+        private int enPassantFile;
+
+        private boolean isWhiteKingSideCastleAvailable;
+        private boolean isWhiteQueenSideCastleAvailable;
+        private boolean isBlackKingSideCastleAvailable;
+        private boolean isBlackQueenSideCastleAvailable;
+
+        private int halfMoveCount;
+        private Colour sideToMove;
+
+        public BoardBuilder() {
+            enPassantFile = -1;
+            isBlackQueenSideCastleAvailable = true;
+            isWhiteQueenSideCastleAvailable = true;
+            isWhiteKingSideCastleAvailable = true;
+            isBlackKingSideCastleAvailable = true;
+            halfMoveCount = 0;
+            sideToMove = Colour.WHITE;
+
+            squareOccupants = new HashMap<>();
+            for (Square square : Square.values()) {
+                squareOccupants.put(
+                        square,
+                        SquareOccupant.NONE
+                );
+            }
+        }
+
+        public BoardBuilder(final Board board) {
+            this.squareOccupants = new HashMap<>(board.getSquareOccupants());
+            this.enPassantFile = board.getEnPassantFile();
+            this.isWhiteKingSideCastleAvailable = board.isKingSideCastleAvailable(Colour.WHITE);
+            this.isBlackKingSideCastleAvailable = board.isKingSideCastleAvailable(Colour.BLACK);
+            this.isWhiteQueenSideCastleAvailable = board.isQueenSideCastleAvailable(Colour.WHITE);
+            this.isBlackQueenSideCastleAvailable = board.isQueenSideCastleAvailable(Colour.BLACK);
+            this.halfMoveCount = board.getHalfMoveCount();
+            this.sideToMove = board.getSideToMove();
+        }
+
+        public BoardBuilder withSquareOccupants(final Map<Square, SquareOccupant> squareOccupants) {
+            this.squareOccupants = new HashMap<>(squareOccupants);
+            return this;
+        }
+
+        public BoardBuilder withSquareOccupant(final Square square, final SquareOccupant squareOccupant) {
+            this.squareOccupants.put(square, squareOccupant);
+            return this;
+        }
+
+        public BoardBuilder withEnPassantFile(final int enPassantFile) {
+            this.enPassantFile = enPassantFile;
+            return this;
+        }
+
+        public BoardBuilder withHalfMoveCount(final int halfMoveCount) {
+            this.halfMoveCount = halfMoveCount;
+            return this;
+        }
+
+        public BoardBuilder withSideToMove(final Colour sideToMove) {
+            this.sideToMove = sideToMove;
+            return this;
+        }
+
+        public BoardBuilder withIsWhiteKingSideCastleAvailable(final boolean isWhiteKingSideCastleAvailable) {
+            this.isWhiteKingSideCastleAvailable = isWhiteKingSideCastleAvailable;
+            return this;
+        }
+
+        public BoardBuilder withIsBlackKingSideCastleAvailable(final boolean isBlackKingSideCastleAvailable) {
+            this.isBlackKingSideCastleAvailable = isBlackKingSideCastleAvailable;
+            return this;
+        }
+
+        public BoardBuilder withIsWhiteQueenSideCastleAvailable(final boolean isWhiteQueenSideCastleAvailable) {
+            this.isWhiteQueenSideCastleAvailable = isWhiteQueenSideCastleAvailable;
+            return this;
+        }
+
+        public BoardBuilder withIsBlackQueenSideCastleAvailable(final boolean isBlackQueenSideCastleAvailable) {
+            this.isBlackQueenSideCastleAvailable = isBlackQueenSideCastleAvailable;
+            return this;
+        }
+
+        public BoardBuilder withIsQueenSideCastleAvailable(final Colour colour, final boolean isQueenSideCastleAvailable) {
+            if (colour == Colour.WHITE) {
+                this.isWhiteQueenSideCastleAvailable = isQueenSideCastleAvailable;
+            } else {
+                this.isBlackQueenSideCastleAvailable = isQueenSideCastleAvailable;
+            }
+            return this;
+        }
+
+        public BoardBuilder withIsKingSideCastleAvailable(final Colour colour, final boolean isKingSideCastleAvailable) {
+            if (colour == Colour.WHITE) {
+                this.isWhiteKingSideCastleAvailable = isKingSideCastleAvailable;
+            } else {
+                this.isBlackKingSideCastleAvailable = isKingSideCastleAvailable;
+            }
+            return this;
+        }
+
+        public Board build() {
+            return new Board(this);
+        }
+
+    }
 }

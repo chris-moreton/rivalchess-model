@@ -16,9 +16,9 @@ public class BoardTest {
 
     @Test
     public void testSetSquareOccupant() {
-        Board board = new Board();
-        board.setSquareOccupant(Square.fromCoords(1,7), SquareOccupant.BB);
-        assertEquals(SquareOccupant.BB, board.getSquareOccupant(Square.fromCoords(1, 7)));
+        Board.BoardBuilder boardBuilder = new Board.BoardBuilder();
+        boardBuilder.withSquareOccupant(Square.fromCoords(1,7), SquareOccupant.BB);
+        assertEquals(SquareOccupant.BB, boardBuilder.build().getSquareOccupant(Square.fromCoords(1, 7)));
     }
 
     @Test
@@ -41,50 +41,51 @@ public class BoardTest {
 
     @Test
     public void testCastleFlags() {
-        final Board board = CommonTestUtils.getStartBoard();
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
 
-        assertTrue(board.isKingSideCastleAvailable(Colour.WHITE));
-        assertTrue(board.isKingSideCastleAvailable(Colour.BLACK));
-        assertTrue(board.isQueenSideCastleAvailable(Colour.WHITE));
-        assertTrue(board.isQueenSideCastleAvailable(Colour.BLACK));
+        assertTrue(boardBuilder.build().isKingSideCastleAvailable(Colour.WHITE));
+        assertTrue(boardBuilder.build().isKingSideCastleAvailable(Colour.BLACK));
+        assertTrue(boardBuilder.build().isQueenSideCastleAvailable(Colour.WHITE));
+        assertTrue(boardBuilder.build().isQueenSideCastleAvailable(Colour.BLACK));
 
-        board.setKingSideCastleAvailable(Colour.WHITE, false);
-        assertFalse(board.isKingSideCastleAvailable(Colour.WHITE));
+        boardBuilder.withIsKingSideCastleAvailable(Colour.WHITE, false);
+        assertFalse(boardBuilder.build().isKingSideCastleAvailable(Colour.WHITE));
 
-        board.setKingSideCastleAvailable(Colour.WHITE, true);
-        assertTrue(board.isKingSideCastleAvailable(Colour.WHITE));
+        boardBuilder.withIsKingSideCastleAvailable(Colour.WHITE, true);
+        assertTrue(boardBuilder.build().isKingSideCastleAvailable(Colour.WHITE));
 
-        board.setKingSideCastleAvailable(Colour.BLACK, false);
-        assertFalse(board.isKingSideCastleAvailable(Colour.BLACK));
+        boardBuilder.withIsKingSideCastleAvailable(Colour.BLACK, false);
+        assertFalse(boardBuilder.build().isKingSideCastleAvailable(Colour.BLACK));
 
-        board.setKingSideCastleAvailable(Colour.BLACK, true);
-        assertTrue(board.isKingSideCastleAvailable(Colour.BLACK));
+        boardBuilder.withIsKingSideCastleAvailable(Colour.BLACK, true);
+        assertTrue(boardBuilder.build().isKingSideCastleAvailable(Colour.BLACK));
 
-        board.setQueenSideCastleAvailable(Colour.WHITE, false);
-        assertFalse(board.isQueenSideCastleAvailable(Colour.WHITE));
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.WHITE, false);
+        assertFalse(boardBuilder.build().isQueenSideCastleAvailable(Colour.WHITE));
 
-        board.setQueenSideCastleAvailable(Colour.WHITE, true);
-        assertTrue(board.isQueenSideCastleAvailable(Colour.WHITE));
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.WHITE, true);
+        assertTrue(boardBuilder.build().isQueenSideCastleAvailable(Colour.WHITE));
 
-        board.setQueenSideCastleAvailable(Colour.BLACK, false);
-        assertFalse(board.isQueenSideCastleAvailable(Colour.BLACK));
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.BLACK, false);
+        assertFalse(boardBuilder.build().isQueenSideCastleAvailable(Colour.BLACK));
 
-        board.setQueenSideCastleAvailable(Colour.BLACK, true);
-        assertTrue(board.isQueenSideCastleAvailable(Colour.BLACK));
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.BLACK, true);
+        assertTrue(boardBuilder.build().isQueenSideCastleAvailable(Colour.BLACK));
     }
 
     @Test
     public void testEquality() {
-        Board board = CommonTestUtils.getStartBoard();
-        board.setQueenSideCastleAvailable(Colour.BLACK, false);
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
+        boardBuilder.withIsQueenSideCastleAvailable(Colour.BLACK, false);
 
-        Board boardCopy = new Board(board);
-        assertTrue(board.equals(boardCopy));
-        assertTrue(boardCopy.equals(board));
+        Board.BoardBuilder boardCopyBuilder = new Board.BoardBuilder(boardBuilder.build());
 
-        boardCopy.setHalfMoveCount(3);
-        assertFalse(board.equals(boardCopy));
-        assertFalse(boardCopy.equals(board));
+        assertTrue(boardBuilder.build().equals(boardCopyBuilder.build()));
+        assertTrue(boardCopyBuilder.build().equals(boardBuilder.build()));
+
+        boardCopyBuilder.withHalfMoveCount(3);
+        assertFalse(boardBuilder.build().equals(boardCopyBuilder.build()));
+        assertFalse(boardCopyBuilder.build().equals(boardBuilder.build()));
     }
 
 }

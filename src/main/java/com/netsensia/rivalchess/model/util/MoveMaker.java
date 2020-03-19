@@ -15,60 +15,62 @@ public class MoveMaker {
 
     public static Board makeMove(final Board board, final Move move) {
 
-        final Board newBoard = new Board(board);
+        final Board.BoardBuilder newBoardBuilder = new Board.BoardBuilder(board);
 
         final Square fromSquare = move.getSrcBoardRef();
         final Square toSquare = move.getTgtBoardRef();
 
         final SquareOccupant movingPiece = board.getSquareOccupant(fromSquare);
 
-        disableCastleFlags(newBoard, fromSquare, board.getSideToMove());
-        disableCastleFlags(newBoard, toSquare, board.getSideToMove().opponent());
+        disableCastleFlags(board, newBoardBuilder, fromSquare, board.getSideToMove());
+        disableCastleFlags(board, newBoardBuilder, toSquare, board.getSideToMove().opponent());
 
-        makeEnPassantMoves(newBoard, move);
-        setEnPassantFile(move, newBoard, movingPiece);
-        makeCastleMoves(newBoard, move);
+        makeEnPassantMoves(board, newBoardBuilder, move);
+        setEnPassantFile(move, newBoardBuilder, movingPiece);
+        makeCastleMoves(board, newBoardBuilder, move);
 
-        newBoard.setSquareOccupant(move.getTgtBoardRef(), movingPiece);
-        makePromotionMoves(newBoard, move);
-        newBoard.setSquareOccupant(move.getSrcBoardRef(), SquareOccupant.NONE);
+        newBoardBuilder.withSquareOccupant(move.getTgtBoardRef(), movingPiece);
+        makePromotionMoves(board, newBoardBuilder, move);
+        newBoardBuilder.withSquareOccupant(move.getSrcBoardRef(), SquareOccupant.NONE);
 
-        newBoard.setSideToMove(board.getSideToMove().opponent());
+        newBoardBuilder.withSideToMove(board.getSideToMove().opponent());
 
-        return newBoard;
+        return newBoardBuilder.build();
     }
 
     private static void disableCastleFlags(
             final Board board,
+            final Board.BoardBuilder boardBuilder,
             final Square square,
             final Colour colour) {
 
         if (square.equals(CastlingHelper.kingHome(colour))) {
-            board.setKingSideCastleAvailable(colour, false);
-            board.setQueenSideCastleAvailable(colour, false);
+            boardBuilder.withIsKingSideCastleAvailable(colour, false);
+            boardBuilder.withIsQueenSideCastleAvailable(colour, false);
         }
         if (square.equals(CastlingHelper.queenRookHome(colour))) {
-            board.setQueenSideCastleAvailable(colour, false);
+            boardBuilder.withIsQueenSideCastleAvailable(colour, false);
         }
         if (square.equals(CastlingHelper.kingRookHome(colour))) {
-            board.setKingSideCastleAvailable(colour, false);
+            boardBuilder.withIsKingSideCastleAvailable(colour, false);
         }
     }
 
     private static void setEnPassantFile(
             final Move move,
-            final Board newBoard,
+            final Board.BoardBuilder boardBuilder,
             final SquareOccupant movingPiece) {
 
         if (movingPiece.getPiece() == Piece.PAWN &&
                 Math.abs(move.getTgtBoardRef().getYRank() - move.getSrcBoardRef().getYRank()) == 2) {
-            newBoard.setEnPassantFile(move.getSrcBoardRef().getXFile());
+            boardBuilder.withEnPassantFile(move.getSrcBoardRef().getXFile());
         } else {
-            newBoard.setEnPassantFile(-1);
+            boardBuilder.withEnPassantFile(-1);
         }
     }
 
-    private static void makeCastleMoves(final Board board, final Move move) {
+    private static void makeCastleMoves(
+            final Board board, final Board.BoardBuilder boardBuilder, final Move move) {
 
         if (board.getSquareOccupant(move.getSrcBoardRef()).getPiece() != Piece.KING) {
             return;
@@ -78,17 +80,18 @@ public class MoveMaker {
 
         if (move.getSrcBoardRef().equals(CastlingHelper.kingHome(mover))) {
             if (move.getTgtBoardRef().equals(CastlingHelper.kingKnightHome(mover))) {
-                board.setSquareOccupant(CastlingHelper.kingBishopHome(mover), SquareOccupant.WR.ofColour(mover));
-                board.setSquareOccupant(CastlingHelper.kingRookHome(mover), SquareOccupant.NONE);
+                boardBuilder.withSquareOccupant(CastlingHelper.kingBishopHome(mover), SquareOccupant.WR.ofColour(mover));
+                boardBuilder.withSquareOccupant(CastlingHelper.kingRookHome(mover), SquareOccupant.NONE);
             } else if (move.getTgtBoardRef().equals(CastlingHelper.queenBishopHome(mover))) {
-                board.setSquareOccupant(CastlingHelper.queenHome(mover), SquareOccupant.WR.ofColour(mover));
-                board.setSquareOccupant(CastlingHelper.queenRookHome(mover), SquareOccupant.NONE);
+                boardBuilder.withSquareOccupant(CastlingHelper.queenHome(mover), SquareOccupant.WR.ofColour(mover));
+                boardBuilder.withSquareOccupant(CastlingHelper.queenRookHome(mover), SquareOccupant.NONE);
             }
         }
     }
 
     private static void makePromotionMoves(
             final Board board,
+            final Board.BoardBuilder boardBuilder,
             final Move move) {
 
         if (board.getSquareOccupant(move.getSrcBoardRef()).getPiece() != Piece.PAWN) {
@@ -96,12 +99,13 @@ public class MoveMaker {
         }
 
         if (move.getSrcBoardRef().getYRank() == PawnMoveHelper.promotionRank(board.getSideToMove())) {
-            board.setSquareOccupant(move.getTgtBoardRef(), move.getPromotedPiece());
+            boardBuilder.withSquareOccupant(move.getTgtBoardRef(), move.getPromotedPiece());
         }
     }
 
     private static void makeEnPassantMoves(
             final Board board,
+            final Board.BoardBuilder boardBuilder,
             final Move move) {
 
         if (board.getSquareOccupant(move.getSrcBoardRef()).getPiece() != Piece.PAWN) {
@@ -119,7 +123,7 @@ public class MoveMaker {
         final Colour mover = board.getSideToMove();
 
         final Square targetSquare = move.getTgtBoardRef();
-        board.setSquareOccupant(
+        boardBuilder.withSquareOccupant(
                 Square.fromCoords(
                         targetSquare.getXFile(),
                         targetSquare.getYRank() + PawnMoveHelper.advanceDirection(mover.opponent())),

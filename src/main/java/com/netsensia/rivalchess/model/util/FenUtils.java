@@ -18,7 +18,7 @@ public class FenUtils {
 
     public static Board getBoardModel(String fenStr) {
 
-        final Board board = new Board();
+        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder();
 
         if (fenStr.trim().equals("")) {
             throw new IllegalFenException("Empty FEN");
@@ -31,20 +31,20 @@ public class FenUtils {
             final char fenToken = fenStr.charAt(fenIndex++);
 
             if (fenToken >= '0' && fenToken <= '9') {
-                boardArrayIndex = padBoardWithSpaces(board, boardArrayIndex, fenToken);
+                boardArrayIndex = padBoardWithSpaces(boardBuilder, boardArrayIndex, fenToken);
             } else if (fenToken != '/') {
-                boardArrayIndex = setPiece(board, boardArrayIndex, fenToken);
+                boardArrayIndex = setPiece(boardBuilder, boardArrayIndex, fenToken);
             }
 
             if (fenToken == ' ') {
                 throw new IllegalFenException("Unexpected space character found");
             }
 
-            if (boardArrayIndex == (board.getNumXFiles() * board.getNumYRanks())) {
+            if (boardArrayIndex == 64) {
                 break;
             }
 
-            if (boardArrayIndex > (board.getNumXFiles() * board.getNumYRanks())) {
+            if (boardArrayIndex > 64) {
                 throw new IllegalFenException("Invalid boardArrayIndex");
             }
         }
@@ -55,22 +55,22 @@ public class FenUtils {
 
         verifyMoverChar(fenToken);
 
-        board.setSideToMove(fenToken == 'w' ? Colour.WHITE : Colour.BLACK);
+        boardBuilder.withSideToMove(fenToken == 'w' ? Colour.WHITE : Colour.BLACK);
 
         fenIndex++;
 
         final String castleFlags = fenStr.substring(fenIndex, fenStr.indexOf(' ', fenIndex));
 
-        board.setQueenSideCastleAvailable(Colour.WHITE, castleFlags.contains("Q"));
-        board.setKingSideCastleAvailable(Colour.WHITE, castleFlags.contains("K"));
-        board.setQueenSideCastleAvailable(Colour.BLACK, castleFlags.contains("q"));
-        board.setKingSideCastleAvailable(Colour.BLACK, castleFlags.contains("k"));
+        boardBuilder.withIsWhiteQueenSideCastleAvailable(castleFlags.contains("Q"));
+        boardBuilder.withIsWhiteKingSideCastleAvailable(castleFlags.contains("K"));
+        boardBuilder.withIsBlackQueenSideCastleAvailable(castleFlags.contains("q"));
+        boardBuilder.withIsBlackKingSideCastleAvailable(castleFlags.contains("k"));
 
         final char enPassantChar = fenStr.charAt(fenIndex + castleFlags.length() + 1);
 
-        board.setEnPassantFile(enPassantChar != '-' ? enPassantChar - 97 : -1);
+        boardBuilder.withEnPassantFile(enPassantChar != '-' ? enPassantChar - 97 : -1);
 
-        return board;
+        return boardBuilder.build();
     }
 
     private static void verifyMoverChar(char fenToken) {
@@ -79,18 +79,18 @@ public class FenUtils {
         }
     }
 
-    private static int setPiece(Board board, int boardArrayIndex, char fenToken) {
-        final int targetXFile = boardArrayIndex % board.getNumXFiles();
-        final int targetYRank = boardArrayIndex / board.getNumXFiles();
+    private static int setPiece(Board.BoardBuilder boardBuilder, int boardArrayIndex, char fenToken) {
+        final int targetXFile = boardArrayIndex % 8;
+        final int targetYRank = boardArrayIndex / 8;
 
-        board.setSquareOccupant(Square.fromCoords(targetXFile, targetYRank), SquareOccupant.fromChar(fenToken));
+        boardBuilder.withSquareOccupant(Square.fromCoords(targetXFile, targetYRank), SquareOccupant.fromChar(fenToken));
         boardArrayIndex++;
         return boardArrayIndex;
     }
 
-    private static int padBoardWithSpaces(Board board, int boardArrayIndex, char fenToken) {
+    private static int padBoardWithSpaces(Board.BoardBuilder boardBuilder, int boardArrayIndex, char fenToken) {
         for (int n = 1; n <= Character.digit(fenToken, 10); n++) {
-            boardArrayIndex = setPiece(board, boardArrayIndex, '_');
+            boardArrayIndex = setPiece(boardBuilder, boardArrayIndex, '_');
         }
         return boardArrayIndex;
     }
