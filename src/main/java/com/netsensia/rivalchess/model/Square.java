@@ -23,7 +23,11 @@ public enum Square {
     }
 
     public static Square fromCoords(final int x, final int y) {
-        return Square.valueOf("" + (char) (65 + x) + Character.forDigit((8 - y), 10));
+        return Square.valueOf(getStringFromCoords(x,y));
+    }
+
+    private static String getStringFromCoords(final int x, final int y) {
+        return "" + (char) (65 + x) + (char) (48 + (8 - y));
     }
 
     public static Square fromAlgebraic(String algebraic) {

@@ -56,4 +56,9 @@ public class SquareTest {
         assertEquals('b', square.getAlgebraicXFile());
         assertEquals('6', square.getAlgebraicYRank());
     }
+
+    @Test
+    public void testFromCoords() {
+        assertEquals(Square.E2, Square.fromCoords(4,6));
+    }
 }
