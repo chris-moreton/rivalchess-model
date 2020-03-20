@@ -2,7 +2,6 @@ package com.netsensia.rivalchess.model.util;
 
 import com.netsensia.rivalchess.model.Board;
 import com.netsensia.rivalchess.model.exception.InvalidBoardException;
-import com.netsensia.rivalchess.model.exception.ParallelProcessingException;
 import com.netsensia.rivalchess.model.helper.CastlingHelper;
 import com.netsensia.rivalchess.model.Colour;
 import com.netsensia.rivalchess.model.helper.KnightDirection;
@@ -12,18 +11,10 @@ import com.netsensia.rivalchess.model.helper.SliderDirection;
 import com.netsensia.rivalchess.model.Piece;
 import com.netsensia.rivalchess.model.Square;
 import com.netsensia.rivalchess.model.SquareOccupant;
-import com.netsensia.rivalchess.model.task.MoveGeneratorTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import static com.netsensia.rivalchess.model.util.CommonUtils.isValidRankFileBoardReference;
@@ -33,19 +24,10 @@ public class BoardUtils {
 
     private BoardUtils() {}
 
-    public static List<Square> getSquaresWithOccupant(
-            final Board board, final SquareOccupant squareOccupant) {
-
-        return board.squareOccupantStream()
-                .filter(e -> e.getValue() == squareOccupant)
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-    }
-
     public static List<Move> getSliderMoves(final Board board, final Piece piece) {
 
         final List<Square> fromSquares =
-                getSquaresWithOccupant(board, piece.toSquareOccupant(board.getSideToMove()));
+                board.getSquaresWithOccupant(piece.toSquareOccupant(board.getSideToMove()));
 
         final List<Move> moves = new ArrayList<>();
 
@@ -97,8 +79,8 @@ public class BoardUtils {
     public static List<Move> getKnightMoves(final Board board) {
         final List<Move> moves = new ArrayList<>();
 
-        final List<Square> fromSquares = getSquaresWithOccupant(
-                board, Piece.KNIGHT.toSquareOccupant(board.getSideToMove()));
+        final List<Square> fromSquares = board.getSquaresWithOccupant(
+                Piece.KNIGHT.toSquareOccupant(board.getSideToMove()));
 
         for (final Square fromSquare : fromSquares) {
             for (final KnightDirection knightDirection : KnightDirection.values()) {
@@ -125,7 +107,7 @@ public class BoardUtils {
         final Colour mover = board.getSideToMove();
 
         final List<Square> fromSquares =
-                getSquaresWithOccupant(board, Piece.PAWN.toSquareOccupant(board.getSideToMove()));
+                board.getSquaresWithOccupant(Piece.PAWN.toSquareOccupant(board.getSideToMove()));
 
         for (final Square fromSquare : fromSquares) {
             final Square oneSquareForward =
@@ -217,7 +199,7 @@ public class BoardUtils {
 
     public static List<Move> getKingMoves(final Board board) {
         final Square fromSquare =
-                getSquaresWithOccupant(board, Piece.KING.toSquareOccupant(board.getSideToMove())).get(0);
+                board.getSquaresWithOccupant(Piece.KING.toSquareOccupant(board.getSideToMove())).get(0);
 
         final List<Move> moves = new ArrayList<>();
 
@@ -285,30 +267,6 @@ public class BoardUtils {
         moves.addAll(BoardUtils.getSliderMoves(board, Piece.BISHOP));
         moves.addAll(BoardUtils.getSliderMoves(board, Piece.ROOK));
 
-//        try {
-//            final ExecutorService executor = Executors.newCachedThreadPool();
-//
-//            final Collection<Callable<List<Move>>> tasks = new ArrayList<>();
-//
-//            tasks.add(new MoveGeneratorTask(board, Piece.KING));
-//            tasks.add(new MoveGeneratorTask(board, Piece.KNIGHT));
-//            tasks.add(new MoveGeneratorTask(board, Piece.PAWN));
-//            tasks.add(new MoveGeneratorTask(board, Piece.QUEEN));
-//            tasks.add(new MoveGeneratorTask(board, Piece.ROOK));
-//            tasks.add(new MoveGeneratorTask(board, Piece.BISHOP));
-//
-//            final List<Future<List<Move>>> results = executor.invokeAll(tasks);
-//
-//            for(Future<List<Move>> result : results){
-//                moves.addAll(result.get());
-//            }
-//
-//            executor.shutdown();
-//
-//        } catch (ExecutionException | InterruptedException e) {
-//            throw new ParallelProcessingException(e.toString());
-//        }
-
         return moves;
     }
 
@@ -316,10 +274,7 @@ public class BoardUtils {
 
         final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(board);
 
-        boardBuilder.withIsKingSideCastleAvailable(Colour.WHITE, false);
-        boardBuilder.withIsKingSideCastleAvailable(Colour.BLACK, false);
-        boardBuilder.withIsQueenSideCastleAvailable(Colour.WHITE, false);
-        boardBuilder.withIsQueenSideCastleAvailable(Colour.BLACK, false);
+        boardBuilder.withNoCastleFlags();
 
         if (board.getSquareOccupant(square) == SquareOccupant.NONE) {
             // put something there to capture
@@ -330,11 +285,16 @@ public class BoardUtils {
 
         final List<Move> moveList = getAllMovesWithoutRemovingChecks(boardBuilder.build());
 
-        final List<Move> captureMoves =
-                moveList.stream().filter(m -> m.getTgtBoardRef().equals(square)).collect(Collectors.toList());
+        final List<Move> captureMoves = filterNonCaptures(square, moveList);
 
         return !captureMoves.isEmpty();
 
+    }
+
+    private static List<Move> filterNonCaptures(Square square, List<Move> moveList) {
+        return moveList.stream()
+                .filter(m -> m.getTgtBoardRef().equals(square))
+                .collect(Collectors.toList());
     }
 
     public static boolean isMoveLeavesMoverInCheck(final Board board, final Move move) {
@@ -351,8 +311,8 @@ public class BoardUtils {
 
     public static boolean isCheck(final Board board) {
 
-        final List<Square> squares = BoardUtils.getSquaresWithOccupant(
-                board, SquareOccupant.WK.ofColour(board.getSideToMove()));
+        final List<Square> squares = board.getSquaresWithOccupant(
+                SquareOccupant.WK.ofColour(board.getSideToMove()));
 
         if (squares.isEmpty()) {
             throw new InvalidBoardException(

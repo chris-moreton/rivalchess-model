@@ -17,8 +17,6 @@ import java.util.Objects;
 
 public class PerftTest {
 
-    private static final int MAX_PERFT_DEPTH = 7;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(PerftTest.class);
 
     public static long getPerft(Board board, int depth) throws InvalidMoveException {
@@ -95,6 +93,8 @@ public class PerftTest {
 
         epdPerftSuiteToDepth(atDepth + 1);
     }
+
+    private static final int MAX_PERFT_DEPTH = 4;
 
     @Test
     public void epdPerftSuite() throws IOException, InvalidMoveException {

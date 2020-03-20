@@ -4,7 +4,7 @@ import com.netsensia.rivalchess.model.util.BoardUtils;
 import com.netsensia.rivalchess.model.util.FenUtils;
 import com.netsensia.rivalchess.model.util.MoveMaker;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 public class Board {
 
     private final Map<Square, SquareOccupant> squareOccupants;
+    private final Map<SquareOccupant, List<Square>> occupantSquares;
 
     private final int enPassantFile;
 
@@ -34,6 +35,10 @@ public class Board {
         this.isBlackKingSideCastleAvailable = builder.isBlackKingSideCastleAvailable;
         this.halfMoveCount = builder.halfMoveCount;
         this.sideToMove = builder.sideToMove;
+
+        this.occupantSquares = new EnumMap<>(SquareOccupant.class);
+
+        populateOccupantSquares();
     }
 
     public static Board fromFen(final String fen) {
@@ -57,6 +62,24 @@ public class Board {
         this.isWhiteQueenSideCastleAvailable = board.isQueenSideCastleAvailable(Colour.WHITE);
 
         this.halfMoveCount = board.getHalfMoveCount();
+
+        this.occupantSquares = new EnumMap<>(SquareOccupant.class);
+
+        populateOccupantSquares();
+    }
+
+    private void populateOccupantSquares() {
+
+        for (SquareOccupant so : SquareOccupant.values()) {
+            occupantSquares.put(so, new ArrayList<>());
+        }
+
+        for (Square s : Square.values()) {
+            final SquareOccupant so = squareOccupants.get(s);
+            if (so != SquareOccupant.NONE) {
+                occupantSquares.get(so).add(s);
+            }
+        }
     }
 
     public static Board fromMove(final Board board, final Move move) {
@@ -79,6 +102,10 @@ public class Board {
         return squareOccupants.entrySet().stream();
     }
 
+    public List<Square> getSquaresWithOccupant(SquareOccupant squareOccupant) {
+        return new ArrayList<>(occupantSquares.get(squareOccupant));
+    }
+
     public int getHalfMoveCount() {
         return this.halfMoveCount;
     }
@@ -97,10 +124,6 @@ public class Board {
 
     public boolean isCheck() {
         return BoardUtils.isCheck(this);
-    }
-
-    public List<Square> getSquaresWithOccupant(final SquareOccupant squareOccupant) {
-        return BoardUtils.getSquaresWithOccupant(this, squareOccupant);
     }
 
     public boolean isSquareAttackedBy(final Square square, final Colour byColour) {
@@ -170,10 +193,10 @@ public class Board {
 
         public BoardBuilder() {
             enPassantFile = -1;
-            isBlackQueenSideCastleAvailable = true;
-            isWhiteQueenSideCastleAvailable = true;
-            isWhiteKingSideCastleAvailable = true;
-            isBlackKingSideCastleAvailable = true;
+            isBlackQueenSideCastleAvailable = false;
+            isWhiteQueenSideCastleAvailable = false;
+            isWhiteKingSideCastleAvailable = false;
+            isBlackKingSideCastleAvailable = false;
             halfMoveCount = 0;
             sideToMove = Colour.WHITE;
 
@@ -252,6 +275,14 @@ public class Board {
             } else {
                 this.isBlackKingSideCastleAvailable = isKingSideCastleAvailable;
             }
+            return this;
+        }
+
+        public BoardBuilder withNoCastleFlags() {
+            this.isWhiteQueenSideCastleAvailable = false;
+            this.isBlackQueenSideCastleAvailable = false;
+            this.isWhiteKingSideCastleAvailable = false;
+            this.isBlackKingSideCastleAvailable = false;
             return this;
         }
 

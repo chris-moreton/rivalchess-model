@@ -9,6 +9,11 @@ public class CommonTestUtils {
     public static Board getStartBoard() {
         final Board.BoardBuilder boardBuilder = new Board.BoardBuilder();
 
+        boardBuilder.withIsWhiteQueenSideCastleAvailable(true);
+        boardBuilder.withIsWhiteKingSideCastleAvailable(true);
+        boardBuilder.withIsBlackQueenSideCastleAvailable(true);
+        boardBuilder.withIsBlackKingSideCastleAvailable(true);
+
         boardBuilder.withSquareOccupant(Square.fromCoords(0,0), SquareOccupant.BR);
         boardBuilder.withSquareOccupant(Square.fromCoords(1,0), SquareOccupant.BN);
         boardBuilder.withSquareOccupant(Square.fromCoords(2,0), SquareOccupant.BB);

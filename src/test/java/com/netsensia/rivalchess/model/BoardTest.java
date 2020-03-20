@@ -31,8 +31,8 @@ public class BoardTest {
                         Square.fromCoords(6, 0)
                 ));
 
-        final List<Square> actualSquares = BoardUtils.getSquaresWithOccupant(
-                CommonTestUtils.getStartBoard(), SquareOccupant.BN);
+        final List<Square> actualSquares = CommonTestUtils.getStartBoard().getSquaresWithOccupant(
+                SquareOccupant.BN);
 
         Collections.sort(expectedSquares);
         Collections.sort(actualSquares);
