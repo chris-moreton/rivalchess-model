@@ -78,4 +78,4 @@ If you want to change a Board's state without making a move, you need to use a b
 
     boolean isSquareAttacked = board.isSquareAttackedBy(Square.A7, Colour.BLACK)
     
-    squareOccupant.WB.ofColour(Colour.BLACK); // == squareOccupant.BB
+    squareOccupant.WB.ofColour(Colour.BLACK); // == SquareOccupant.BB
