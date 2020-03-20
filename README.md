@@ -16,12 +16,12 @@ Some examples are shown below but you can discover the rest of the API easily en
     <dependency>
         <groupId>com.netsensia.rivalchess</groupId>
         <artifactId>rivalchess-model</artifactId>
-        <version>5.0.0</version>
+        <version>5.0.3</version>
     </dependency>
     
 #### Gradle
 
-    compile group: 'com.netsensia.rivalchess', name: 'rivalchess-model', version: '5.0.0'
+    compile group: 'com.netsensia.rivalchess', name: 'rivalchess-model', version: '5.0.3'
 
 #### Managing a Chess Board
 
