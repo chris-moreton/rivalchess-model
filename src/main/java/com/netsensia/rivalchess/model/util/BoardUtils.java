@@ -32,7 +32,7 @@ public class BoardUtils {
         final List<Move> moves = new ArrayList<>();
 
         for (final Square fromSquare : fromSquares) {
-            for (SliderDirection sliderDirection : SliderDirection.getDirectionsForPiece(piece)) {
+            for (final SliderDirection sliderDirection : SliderDirection.getDirectionsForPiece(piece)) {
                 moves.addAll(
                         getDirectionalSquaresFromSquare(fromSquare, sliderDirection, board)
                                 .stream()
