@@ -203,7 +203,7 @@ public class BoardUtils {
 
         final List<Move> moves = new ArrayList<>();
 
-        for (SliderDirection sliderDirection : SliderDirection.getDirectionsForPiece(Piece.KING)) {
+        for (final SliderDirection sliderDirection : SliderDirection.getDirectionsForPiece(Piece.KING)) {
             final int newX = fromSquare.getXFile() + sliderDirection.getXIncrement();
             final int newY = fromSquare.getYRank() + sliderDirection.getYIncrement();
 
@@ -272,29 +272,85 @@ public class BoardUtils {
 
     public static boolean isSquareAttackedBy(final Board board, final Square square, final Colour byColour) {
 
-        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(board);
-
-        boardBuilder.withNoCastleFlags();
-
-        if (board.getSquareOccupant(square) == SquareOccupant.NONE) {
-            // put something there to capture
-            boardBuilder.withSquareOccupant(square, SquareOccupant.BR.ofColour(byColour.opponent()));
-        }
-
-        boardBuilder.withSideToMove(byColour);
-
-        final List<Move> moveList = getAllMovesWithoutRemovingChecks(boardBuilder.build());
-
-        final List<Move> captureMoves = filterNonCaptures(square, moveList);
-
-        return !captureMoves.isEmpty();
+        return isSquareAttackedByKing(board, square, byColour) ||
+                isSquareAttackedByKnight(board, square, byColour) ||
+                isSquareAttackedByPawn(board, square, byColour) ||
+                isSquareAttackedByBishopOrQueen(board, square, byColour) ||
+                isSquareAttackedByRookOrQueen(board, square, byColour);
 
     }
 
-    private static List<Move> filterNonCaptures(Square square, List<Move> moveList) {
-        return moveList.stream()
-                .filter(m -> m.getTgtBoardRef().equals(square))
-                .collect(Collectors.toList());
+    private static boolean isSquareAttackedByKing(Board board, Square square, Colour byColour) {
+        for (final SliderDirection sliderDirection : SliderDirection.getDirectionsForPiece(Piece.KING)) {
+            final int newX = square.getXFile() + sliderDirection.getXIncrement();
+            final int newY = square.getYRank() + sliderDirection.getYIncrement();
+            if (isValidSquareReference(newX, newY) &&
+                    board.getSquareOccupant(Square.fromCoords(newX,newY)) == SquareOccupant.WK.ofColour(byColour)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isSquareAttackedByKnight(Board board, Square square, Colour byColour) {
+        for (final KnightDirection knightDirection : KnightDirection.values()) {
+            final int newX = square.getXFile() + knightDirection.getXIncrement();
+            final int newY = square.getYRank() + knightDirection.getYIncrement();
+            if (isValidSquareReference(newX, newY)
+                    && board.getSquareOccupant(Square.fromCoords(newX,newY)) == SquareOccupant.WN.ofColour(byColour)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isSquareAttackedByPawn(Board board, Square square, Colour byColour) {
+        for (SliderDirection captureDirection : Arrays.asList(SliderDirection.E, SliderDirection.W)) {
+            final int newX = square.getXFile() + captureDirection.getXIncrement();
+            final int newY = square.getYRank() + PawnMoveHelper.advanceDirection(byColour.opponent());
+            if (isValidSquareReference(newX, newY)
+                    && board.getSquareOccupant(Square.fromCoords(newX,newY)) == SquareOccupant.WP.ofColour(byColour)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isSquareAttackedByBishopOrQueen(Board board, Square square, Colour byColour) {
+        for (SliderDirection sliderDirection : SliderDirection.getDirectionsForPiece(Piece.BISHOP)) {
+            if (isSquareAttackedBySliderInDirection(board, square, byColour, sliderDirection, Piece.BISHOP)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isSquareAttackedByRookOrQueen(Board board, Square square, Colour byColour) {
+        for (SliderDirection sliderDirection : SliderDirection.getDirectionsForPiece(Piece.ROOK)) {
+            if (isSquareAttackedBySliderInDirection(board, square, byColour, sliderDirection, Piece.ROOK)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isSquareAttackedBySliderInDirection(
+                Board board, Square square, Colour byColour, SliderDirection sliderDirection, Piece piece) {
+
+        final int newX = square.getXFile() + sliderDirection.getXIncrement();
+        final int newY = square.getYRank() + sliderDirection.getYIncrement();
+        if (isValidSquareReference(newX, newY)) {
+            final Square newSquare = Square.fromCoords(newX,newY);
+            final SquareOccupant squareOccupant = board.getSquareOccupant(newSquare);
+            if (squareOccupant == SquareOccupant.NONE) {
+                return isSquareAttackedBySliderInDirection(board, newSquare, byColour, sliderDirection, piece);
+            }
+            if (squareOccupant == piece.toSquareOccupant(byColour) ||
+                    squareOccupant == SquareOccupant.WQ.ofColour(byColour)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean isMoveLeavesMoverInCheck(final Board board, final Move move) {

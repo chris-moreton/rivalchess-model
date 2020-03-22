@@ -645,7 +645,7 @@ public class BoardUtilsTest {
         assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,6), Colour.WHITE));
         assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,6), Colour.BLACK));
 
-        assertFalse(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,7), Colour.WHITE));
+        assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,7), Colour.WHITE));
         assertTrue(BoardUtils.isSquareAttackedBy(board, Square.fromCoords(2,7), Colour.BLACK));
     }
 }

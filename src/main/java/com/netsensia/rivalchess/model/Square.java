@@ -3,9 +3,6 @@ package com.netsensia.rivalchess.model;
 import com.netsensia.rivalchess.model.exception.EnumConversionException;
 import com.netsensia.rivalchess.model.exception.InvalidAlgebraicSquareException;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum Square {
 
     A8 (0,0),B8 (1,0),C8 (2,0),D8 (3,0),E8 (4,0),F8 (5,0),G8 (6,0),H8 (7,0),

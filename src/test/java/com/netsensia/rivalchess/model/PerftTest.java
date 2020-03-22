@@ -59,9 +59,9 @@ public class PerftTest {
         }
     }
 
-    private void epdPerftSuiteToDepth(final int atDepth) throws IOException, InvalidMoveException {
+    private void epdPerftSuiteToDepth(final int atDepth, final int maxDepth) throws IOException, InvalidMoveException {
 
-        if (atDepth > MAX_PERFT_DEPTH) {
+        if (atDepth > maxDepth) {
             return;
         }
 
@@ -91,13 +91,11 @@ public class PerftTest {
         }
         fr.close();
 
-        epdPerftSuiteToDepth(atDepth + 1);
+        epdPerftSuiteToDepth(atDepth + 1, maxDepth);
     }
-
-    private static final int MAX_PERFT_DEPTH = 4;
 
     @Test
     public void epdPerftSuite() throws IOException, InvalidMoveException {
-        epdPerftSuiteToDepth(1);
+        epdPerftSuiteToDepth(1,4);
     }
 }
