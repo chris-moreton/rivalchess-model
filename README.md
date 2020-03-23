@@ -3,6 +3,17 @@ Rival Chess Model
 
 Chess board and move utilities.
 
+I've written some horrific code over the years, a great deal of it involving chess programming. My first chess program was
+Rival for DOS, released in 1994. It was written in C++. How I ever understood what was going on in the code, I do not know.
+
+Next up was Rival for Windows a couple of years later, again in C++ (Borland). Then, Rival for Android was released which
+used the Rival Chess Engine written in Java. At the time, I thought the code was high quality.
+
+It wasn't. [Still isn't](https://github.com/chris-moreton/rivalchess-engine). It's because I didn't care.
+
+This library was built to try to compensate for my coding sins. 
+To provide an expressive library of chess utilities with code that is pretty well written.
+
 ### Installation
 
 #### Maven
