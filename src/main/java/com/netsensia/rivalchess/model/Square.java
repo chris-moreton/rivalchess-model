@@ -2,8 +2,8 @@ package com.netsensia.rivalchess.model;
 
 import com.netsensia.rivalchess.model.exception.EnumConversionException;
 import com.netsensia.rivalchess.model.exception.InvalidAlgebraicSquareException;
+import com.netsensia.rivalchess.model.helper.KnightDirection;
 import com.netsensia.rivalchess.model.helper.SliderDirection;
-import com.netsensia.rivalchess.model.util.BoardUtils;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -24,18 +24,35 @@ public enum Square {
     A1 (0,7),B1 (1,7),C1 (2,7),D1 (3,7),E1 (4,7),F1 (5,7),G1 (6,7),H1 (7,7),
     ;
 
-    private static final Map<Square, List<SliderDirection>> validDirections =
+    private static final Map<Square, List<SliderDirection>> validSliderDirections =
+            new EnumMap<>(Square.class);
+
+    private static final Map<Square, List<KnightDirection>> validKnightDirections =
             new EnumMap<>(Square.class);
 
     static {
         for (Square square : Square.values()) {
-            if (!validDirections.containsKey(square)) {
-                validDirections.put(square, new ArrayList<SliderDirection>());
+            if (!validSliderDirections.containsKey(square)) {
+                validSliderDirections.put(square, new ArrayList<>());
             }
             for (SliderDirection sliderDirection : SliderDirection.values()) {
                 if (directionIsValid(square, sliderDirection)) {
-                    List<SliderDirection> sliderDirectionList = validDirections.get(square);
+                    List<SliderDirection> sliderDirectionList = validSliderDirections.get(square);
                     sliderDirectionList.add(sliderDirection);
+                }
+            }
+        }
+    }
+
+    static {
+        for (Square square : Square.values()) {
+            if (!validKnightDirections.containsKey(square)) {
+                validKnightDirections.put(square, new ArrayList<>());
+            }
+            for (KnightDirection knightDirection : KnightDirection.values()) {
+                if (knightDirectionIsValid(square, knightDirection)) {
+                    List<KnightDirection> knightDirectionList = validKnightDirections.get(square);
+                    knightDirectionList.add(knightDirection);
                 }
             }
         }
@@ -54,8 +71,31 @@ public enum Square {
                 isValidRankFileBoardReference(square.getYRank() + direction.getYIncrement());
     }
 
+    private static boolean knightDirectionIsValid(final Square square, final KnightDirection direction) {
+        return isValidRankFileBoardReference(square.getXFile() + direction.getXIncrement()) &&
+                isValidRankFileBoardReference(square.getYRank() + direction.getYIncrement());
+    }
+
     public boolean isValidDirection(SliderDirection sliderDirection) {
-        return validDirections.get(this).contains(sliderDirection);
+        return validSliderDirections.get(this).contains(sliderDirection);
+    }
+
+    public boolean isValidDirection(KnightDirection knightDirection) {
+        return validKnightDirections.get(this).contains(knightDirection);
+    }
+
+    public Square fromDirection(SliderDirection sliderDirection) {
+        final int newX = getXFile() + sliderDirection.getXIncrement();
+        final int newY = getYRank() + sliderDirection.getYIncrement();
+
+        return Square.fromCoords(newX, newY);
+    }
+
+    public Square fromDirection(KnightDirection knightDirection) {
+        final int newX = getXFile() + knightDirection.getXIncrement();
+        final int newY = getYRank() + knightDirection.getYIncrement();
+
+        return Square.fromCoords(newX, newY);
     }
 
     public static Square fromCoords(final int x, final int y) {

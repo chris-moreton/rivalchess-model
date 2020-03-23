@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-@SuppressWarnings("java:S1319")
 public class Board {
 
     private final Map<Square, SquareOccupant> squareOccupants;
@@ -132,6 +131,7 @@ public class Board {
 
     @Override
     public boolean equals(Object o) {
+
         if (o instanceof Board) {
             Board bo = (Board) o;
 

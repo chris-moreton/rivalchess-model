@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.netsensia.rivalchess.model.util.CommonUtils.isValidRankFileBoardReference;
+import static com.netsensia.rivalchess.model.Colour.WHITE;
 import static com.netsensia.rivalchess.model.util.CommonUtils.isValidSquareReference;
 
 public class BoardUtils {
@@ -49,14 +49,12 @@ public class BoardUtils {
             final SliderDirection direction,
             final Board board) {
 
-        final int nextX = square.getXFile() + direction.getXIncrement();
-        final int nextY = square.getYRank() + direction.getYIncrement();
-
         if (!square.isValidDirection(direction)) {
             return new ArrayList<>();
         }
 
-        final Square head = Square.fromCoords(nextX, nextY);
+        final Square head = square.fromDirection(direction);
+
         final SquareOccupant squareOccupant = board.getSquareOccupant(head);
 
         if (squareOccupant != SquareOccupant.NONE) {
@@ -80,11 +78,8 @@ public class BoardUtils {
         for (final Square fromSquare : fromSquares) {
             for (final KnightDirection knightDirection : KnightDirection.values()) {
 
-                final int newX = fromSquare.getXFile() + knightDirection.getXIncrement();
-                final int newY = fromSquare.getYRank() + knightDirection.getYIncrement();
-
-                if (isValidSquareReference(newX, newY)) {
-                    final Square targetSquare = Square.fromCoords(newX, newY);
+                if (fromSquare.isValidDirection(knightDirection)) {
+                    final Square targetSquare = fromSquare.fromDirection(knightDirection);
 
                     final SquareOccupant capturePiece = board.getSquareOccupant(targetSquare);
                     if (capturePiece == SquareOccupant.NONE || capturePiece.getColour() != board.getSideToMove()) {
@@ -172,7 +167,7 @@ public class BoardUtils {
         final int captureX = fromSquare.getXFile() + captureDirection.getXIncrement();
         final int captureY = fromSquare.getYRank() + PawnMoveHelper.advanceDirection(mover);
 
-        if (isValidSquareReference(captureX, captureY)) {
+        if (fromSquare.isValidDirection(captureDirection)) {
             final Square captureSquare = Square.fromCoords(captureX, captureY);
 
             if (board.getSquareOccupant(captureSquare) == SquareOccupant.NONE) {
@@ -193,17 +188,16 @@ public class BoardUtils {
     }
 
     public static List<Move> getKingMoves(final Board board) {
+
         final Square fromSquare =
                 board.getSquaresWithOccupant(Piece.KING.toSquareOccupant(board.getSideToMove())).get(0);
 
         final List<Move> moves = new ArrayList<>();
 
         for (final SliderDirection sliderDirection : SliderDirection.getDirectionsForPiece(Piece.KING)) {
-            final int newX = fromSquare.getXFile() + sliderDirection.getXIncrement();
-            final int newY = fromSquare.getYRank() + sliderDirection.getYIncrement();
 
-            if (isValidSquareReference(newX, newY)) {
-                final Square targetSquare = Square.fromCoords(newX, newY);
+            if (fromSquare.isValidDirection(sliderDirection)) {
+                final Square targetSquare = fromSquare.fromDirection(sliderDirection);
 
                 final SquareOccupant capturePiece = board.getSquareOccupant(targetSquare);
                 if (capturePiece == SquareOccupant.NONE || capturePiece.getColour() != board.getSideToMove()) {
@@ -277,10 +271,9 @@ public class BoardUtils {
 
     private static boolean isSquareAttackedByKing(Board board, Square square, Colour byColour) {
         for (final SliderDirection sliderDirection : SliderDirection.getDirectionsForPiece(Piece.KING)) {
-            final int newX = square.getXFile() + sliderDirection.getXIncrement();
-            final int newY = square.getYRank() + sliderDirection.getYIncrement();
-            if (isValidSquareReference(newX, newY) &&
-                    board.getSquareOccupant(Square.fromCoords(newX,newY)) == SquareOccupant.WK.ofColour(byColour)) {
+            if (square.isValidDirection(sliderDirection) &&
+                    board.getSquareOccupant(square.fromDirection(sliderDirection)) ==
+                            SquareOccupant.WK.ofColour(byColour)) {
                 return true;
             }
         }
@@ -289,10 +282,9 @@ public class BoardUtils {
 
     private static boolean isSquareAttackedByKnight(Board board, Square square, Colour byColour) {
         for (final KnightDirection knightDirection : KnightDirection.values()) {
-            final int newX = square.getXFile() + knightDirection.getXIncrement();
-            final int newY = square.getYRank() + knightDirection.getYIncrement();
-            if (isValidSquareReference(newX, newY)
-                    && board.getSquareOccupant(Square.fromCoords(newX,newY)) == SquareOccupant.WN.ofColour(byColour)) {
+            if (square.isValidDirection(knightDirection) &&
+                    board.getSquareOccupant(square.fromDirection(knightDirection)) ==
+                            SquareOccupant.WN.ofColour(byColour)) {
                 return true;
             }
         }
@@ -332,11 +324,8 @@ public class BoardUtils {
     private static boolean isSquareAttackedBySliderInDirection(
                 Board board, Square square, Colour byColour, SliderDirection sliderDirection, Piece piece) {
 
-        final int newX = square.getXFile() + sliderDirection.getXIncrement();
-        final int newY = square.getYRank() + sliderDirection.getYIncrement();
-
-        if (isValidSquareReference(newX, newY)) {
-            final Square newSquare = Square.fromCoords(newX,newY);
+        if (square.isValidDirection(sliderDirection)) {
+            final Square newSquare = square.fromDirection(sliderDirection);
             final SquareOccupant squareOccupant = board.getSquareOccupant(newSquare);
             if (squareOccupant == SquareOccupant.NONE) {
                 return isSquareAttackedBySliderInDirection(board, newSquare, byColour, sliderDirection, piece);
