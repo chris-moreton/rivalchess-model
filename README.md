@@ -102,10 +102,11 @@ The Board class is immutable. When a move is made, you get a new Board. To chang
 #### Is Mover In Check?
 
     boolean isCheck = board.isCheck();
-    Colour mover = board.getSideToMove();
-    
+        
 #### Some Other Things
-    
+
+    Colour mover = board.getSideToMove();
+
     Colour opponent = mover.opponent();
     
     boolean canCastle = board.isKingSideCastleAvailable(Colour.WHITE);
