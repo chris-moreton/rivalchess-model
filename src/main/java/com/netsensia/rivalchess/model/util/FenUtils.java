@@ -16,7 +16,7 @@ public class FenUtils {
         return FEN_START_POS;
     }
 
-    public static Board getBoardModel(String fenStr) {
+    public static Board getBoardModel(final String fenStr) {
 
         final Board.BoardBuilder boardBuilder = new Board.BoardBuilder();
 
@@ -84,11 +84,15 @@ public class FenUtils {
         final int targetYRank = boardArrayIndex / 8;
 
         boardBuilder.withSquareOccupant(Square.fromCoords(targetXFile, targetYRank), SquareOccupant.fromChar(fenToken));
-        boardArrayIndex++;
-        return boardArrayIndex;
+
+        return boardArrayIndex+1;
     }
 
-    private static int padBoardWithSpaces(Board.BoardBuilder boardBuilder, int boardArrayIndex, char fenToken) {
+    private static int padBoardWithSpaces(
+            final  Board.BoardBuilder boardBuilder,
+            int boardArrayIndex,
+            final char fenToken
+    ) {
         for (int n = 1; n <= Character.digit(fenToken, 10); n++) {
             boardArrayIndex = setPiece(boardBuilder, boardArrayIndex, '_');
         }
@@ -160,11 +164,11 @@ public class FenUtils {
             throw new IllegalFenException("Invalid square reference " + square);
         }
 
-        char file = square.charAt(0);
-        char rank = square.charAt(1);
+        final char file = square.charAt(0);
+        final char rank = square.charAt(1);
 
-        char newFile = (char)('h' - file + 'a');
-        char newRank = (char)('8' - rank + '1');
+        final char newFile = (char)('h' - file + 'a');
+        final char newRank = (char)('8' - rank + '1');
 
         return String.valueOf(newFile) + newRank;
     }

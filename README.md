@@ -13,7 +13,7 @@ It wasn't. [Still isn't](https://github.com/chris-moreton/rivalchess-engine). It
 
 This library was built to try to compensate for my coding sins. 
 To provide a brutally-tested library of chess utilities with an expressive interface and code that is, more
-often than note, pretty well crafted (although the FenUtils class still needs some TLC).
+often than not, pretty well crafted.
 
 ### Installation
 
