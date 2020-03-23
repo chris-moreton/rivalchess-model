@@ -29,22 +29,44 @@ public enum SquareOccupant {
     }
 
     public SquareOccupant ofColour(Colour colour) {
-        if (this == SquareOccupant.NONE) {
-            return SquareOccupant.NONE;
+        switch (colour) {
+            case WHITE:
+                switch (this) {
+                    case WP:
+                    case BP: return WP;
+                    case WR:
+                    case BR: return WR;
+                    case WQ:
+                    case BQ: return WQ;
+                    case WB:
+                    case BB: return WB;
+                    case WK:
+                    case BK: return WK;
+                    case WN:
+                    case BN: return WN;
+                    default:
+                        return NONE;
+                }
+            case BLACK:
+                switch (this) {
+                    case WP:
+                    case BP: return BP;
+                    case WR:
+                    case BR: return BR;
+                    case WQ:
+                    case BQ: return BQ;
+                    case WB:
+                    case BB: return BB;
+                    case WK:
+                    case BK: return BK;
+                    case WN:
+                    case BN: return BN;
+                    default:
+                        return NONE;
+                }
+            default:
+                throw new EnumConversionException("Invalid colour");
         }
-
-        return colour == Colour.WHITE
-                ? SquareOccupant.fromIndex(index % 6)
-                : SquareOccupant.fromIndex(index % 6 + 6);
-    }
-
-    private static SquareOccupant fromIndex(int index){
-        for(SquareOccupant cp : SquareOccupant.values()){
-            if(cp.index == index) {
-                return cp;
-            }
-        }
-        return SquareOccupant.NONE;
     }
 
     public Colour getColour() {

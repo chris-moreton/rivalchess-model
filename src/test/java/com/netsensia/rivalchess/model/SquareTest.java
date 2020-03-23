@@ -1,10 +1,13 @@
 package com.netsensia.rivalchess.model;
 
 import com.netsensia.rivalchess.model.Square;
+import com.netsensia.rivalchess.model.helper.SliderDirection;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SquareTest {
 
@@ -60,5 +63,17 @@ public class SquareTest {
     @Test
     public void testFromCoords() {
         assertEquals(Square.E2, Square.fromCoords(4,6));
+    }
+
+    @Test
+    public void testIsValidDirection() {
+        assertTrue(Square.A1.isValidDirection(SliderDirection.N));
+        assertTrue(Square.A1.isValidDirection(SliderDirection.NE));
+        assertTrue(Square.A1.isValidDirection(SliderDirection.E));
+        assertFalse(Square.A1.isValidDirection(SliderDirection.SE));
+        assertFalse(Square.A1.isValidDirection(SliderDirection.S));
+        assertFalse(Square.A1.isValidDirection(SliderDirection.SW));
+        assertFalse(Square.A1.isValidDirection(SliderDirection.W));
+        assertFalse(Square.A1.isValidDirection(SliderDirection.NW));
     }
 }

@@ -44,11 +44,6 @@ public class BoardUtils {
         return moves;
     }
 
-    public static boolean directionIsValid(final Square square, final SliderDirection direction) {
-        return isValidRankFileBoardReference(square.getXFile() + direction.getXIncrement()) &&
-                isValidRankFileBoardReference(square.getYRank() + direction.getYIncrement());
-    }
-
     public static List<Square> getDirectionalSquaresFromSquare(
             final Square square,
             final SliderDirection direction,
@@ -57,7 +52,7 @@ public class BoardUtils {
         final int nextX = square.getXFile() + direction.getXIncrement();
         final int nextY = square.getYRank() + direction.getYIncrement();
 
-        if (!directionIsValid(square, direction)) {
+        if (!square.isValidDirection(direction)) {
             return new ArrayList<>();
         }
 
@@ -160,7 +155,7 @@ public class BoardUtils {
 
         final List<Move> moves = new ArrayList<>();
 
-        for (SliderDirection captureDirection : Arrays.asList(SliderDirection.E, SliderDirection.W)) {
+        for (SliderDirection captureDirection : PawnMoveHelper.getCaptureDirections()) {
             moves.addAll(getPawnCapturesInDirection(board, mover, fromSquare, captureDirection));
         }
         return moves;
@@ -305,7 +300,7 @@ public class BoardUtils {
     }
 
     private static boolean isSquareAttackedByPawn(Board board, Square square, Colour byColour) {
-        for (SliderDirection captureDirection : Arrays.asList(SliderDirection.E, SliderDirection.W)) {
+        for (SliderDirection captureDirection : PawnMoveHelper.getCaptureDirections()) {
             final int newX = square.getXFile() + captureDirection.getXIncrement();
             final int newY = square.getYRank() + PawnMoveHelper.advanceDirection(byColour.opponent());
             if (isValidSquareReference(newX, newY)

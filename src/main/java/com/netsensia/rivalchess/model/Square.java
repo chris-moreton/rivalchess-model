@@ -2,6 +2,15 @@ package com.netsensia.rivalchess.model;
 
 import com.netsensia.rivalchess.model.exception.EnumConversionException;
 import com.netsensia.rivalchess.model.exception.InvalidAlgebraicSquareException;
+import com.netsensia.rivalchess.model.helper.SliderDirection;
+import com.netsensia.rivalchess.model.util.BoardUtils;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.netsensia.rivalchess.model.util.CommonUtils.isValidRankFileBoardReference;
 
 public enum Square {
 
@@ -14,13 +23,39 @@ public enum Square {
     A2 (0,6),B2 (1,6),C2 (2,6),D2 (3,6),E2 (4,6),F2 (5,6),G2 (6,6),H2 (7,6),
     A1 (0,7),B1 (1,7),C1 (2,7),D1 (3,7),E1 (4,7),F1 (5,7),G1 (6,7),H1 (7,7),
     ;
-    
+
+    private static final Map<Square, List<SliderDirection>> validDirections =
+            new EnumMap<>(Square.class);
+
+    static {
+        for (Square square : Square.values()) {
+            if (!validDirections.containsKey(square)) {
+                validDirections.put(square, new ArrayList<SliderDirection>());
+            }
+            for (SliderDirection sliderDirection : SliderDirection.values()) {
+                if (directionIsValid(square, sliderDirection)) {
+                    List<SliderDirection> sliderDirectionList = validDirections.get(square);
+                    sliderDirectionList.add(sliderDirection);
+                }
+            }
+        }
+    }
+
     private final int xFile;
 	private final int yRank;
 
     private Square(final int xFile, final int yRank) {
         this.xFile = xFile;
         this.yRank = yRank;
+    }
+
+    private static boolean directionIsValid(final Square square, final SliderDirection direction) {
+        return isValidRankFileBoardReference(square.getXFile() + direction.getXIncrement()) &&
+                isValidRankFileBoardReference(square.getYRank() + direction.getYIncrement());
+    }
+
+    public boolean isValidDirection(SliderDirection sliderDirection) {
+        return validDirections.get(this).contains(sliderDirection);
     }
 
     public static Square fromCoords(final int x, final int y) {

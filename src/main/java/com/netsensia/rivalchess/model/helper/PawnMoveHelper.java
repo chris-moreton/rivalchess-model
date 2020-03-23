@@ -2,9 +2,18 @@ package com.netsensia.rivalchess.model.helper;
 
 import com.netsensia.rivalchess.model.Colour;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class PawnMoveHelper {
 
     private PawnMoveHelper() { }
+
+    private static final List<SliderDirection> captureDirections = Arrays.asList(SliderDirection.E, SliderDirection.W);
+
+    public static final List<SliderDirection> getCaptureDirections() {
+        return captureDirections;
+    }
 
     public static int homeRank(Colour colour) {
         return colour == Colour.WHITE ? 6 : 1;

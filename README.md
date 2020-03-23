@@ -1,15 +1,7 @@
 Rival Chess Model
 =================
 
-Chess board utilities. 
-
-This library was written for use by the [Rival Chess engine](https://github.com/chris-moreton/rivalchess-engine).
-
-These aren't fast enough to be used for generation during search - the Rival engine uses magic bitboards for that.
-
-But these are very useful, brutally tested and provide an expressive interface when speed isn't the primary concern.
-
-Some examples are shown below but you can discover the rest of the API easily enough.
+Chess board and move utilities.
 
 #### Maven
 

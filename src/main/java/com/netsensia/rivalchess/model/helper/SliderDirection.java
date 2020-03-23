@@ -26,6 +26,19 @@ public enum SliderDirection {
         this.yIncrement = yIncrement;
     }
 
+    private static List<SliderDirection> queenDirections = new ArrayList<>(Arrays.asList(
+            SliderDirection.NE, SliderDirection.NW, SliderDirection.SE, SliderDirection.SW,
+            SliderDirection.N, SliderDirection.W, SliderDirection.S, SliderDirection.E
+    ));
+
+    private static List<SliderDirection> rookDirections = new ArrayList<>(Arrays.asList(
+            SliderDirection.N, SliderDirection.W, SliderDirection.S, SliderDirection.E
+    ));
+
+    private static List<SliderDirection> bishopDirections = new ArrayList<>(Arrays.asList(
+            SliderDirection.NE, SliderDirection.NW, SliderDirection.SE, SliderDirection.SW
+    ));
+
     public int getXIncrement() {
         return this.xIncrement;
     }
@@ -38,18 +51,11 @@ public enum SliderDirection {
         switch (piece) {
             case KING:
             case QUEEN:
-                return new ArrayList<>(Arrays.asList(
-                        SliderDirection.NE, SliderDirection.NW, SliderDirection.SE, SliderDirection.SW,
-                        SliderDirection.N, SliderDirection.W, SliderDirection.S, SliderDirection.E
-                ));
+                return queenDirections;
             case BISHOP:
-                return new ArrayList<>(Arrays.asList(
-                        SliderDirection.NE, SliderDirection.NW, SliderDirection.SE, SliderDirection.SW
-                ));
+                return bishopDirections;
             case ROOK:
-                return new ArrayList<>(Arrays.asList(
-                        SliderDirection.N, SliderDirection.W, SliderDirection.S, SliderDirection.E
-                ));
+                return rookDirections;
             default:
                 throw new MoveGenerationException("Can't get directions for a non-sliding piece");
         }
