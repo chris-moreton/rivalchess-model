@@ -43,8 +43,7 @@ Board newBoard = Board.fromMove(board, new Move("e7f8Q"));
 ``` 
 #### Changing Board State
 
-The Board class is immutable. This allows for some parallel stream processing when generating moves.
-When a move is made, you get a new Board. To change a Board's state without making a move, use the builder.
+The Board class is immutable. When a move is made, you get a new Board. To change a Board's state without making a move, use the builder.
 
     // Create a builder with the current board as a base
     Board.BoardBuilder boardBuilder = new Board.BoardBuilder(board);
