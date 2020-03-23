@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "com.netsensia.rivalchess"
-version = '5.0.3'
+version = '5.0.4'
 
 jar.baseName("rivalchess-model")
 

@@ -339,6 +339,7 @@ public class BoardUtils {
 
         final int newX = square.getXFile() + sliderDirection.getXIncrement();
         final int newY = square.getYRank() + sliderDirection.getYIncrement();
+
         if (isValidSquareReference(newX, newY)) {
             final Square newSquare = Square.fromCoords(newX,newY);
             final SquareOccupant squareOccupant = board.getSquareOccupant(newSquare);
