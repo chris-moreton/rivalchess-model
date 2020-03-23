@@ -12,7 +12,8 @@ used the Rival Chess Engine written in Java. At the time, I thought the code was
 It wasn't. [Still isn't](https://github.com/chris-moreton/rivalchess-engine). It's because I didn't care.
 
 This library was built to try to compensate for my coding sins. 
-To provide an expressive library of chess utilities with code that is pretty well written.
+To provide a brutally-tested library of chess utilities with an expressive interface and code that is, more
+often than note, pretty well crafted (although the FenUtils class still needs some TLC).
 
 ### Installation
 
