@@ -3,8 +3,13 @@ Rival Chess Model
 
 Chess board and move utilities.
 
-I've written some horrific code over the years, a great deal of it involving chess programming. My first chess program was
-Rival for DOS, released in 1994. It was written in C++. How I ever understood what was going on in the code, I do not know.
+I've written some horrific code over the years, a great deal of it involving chess programming. 
+
+My first chess program was Rival for DOS, written while listening to Metallica's newly-released Black Album, a few years back in the early nineties.
+It was pretty good and pretty fast, but not very well written. My chess program, that is, not the Black Album.
+ 
+It was written in C++. How I ever understood what was going on in the code, I do not know. I think I was
+smarter back then, but not smart enough to realise how confused I would become by my own code.
 
 Next up was Rival for Windows a couple of years later, again in C++ (Borland). Then, Rival for Android was released which
 used the Rival Chess Engine written in Java. At the time, I thought the code was high quality.
