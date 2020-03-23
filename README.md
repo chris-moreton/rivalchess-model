@@ -25,7 +25,7 @@ Chess board and move utilities.
 List<Move> legalMoves = board.getLegalMoves();
 ```
 
-### Making a Move
+#### Making a Move
 ```
 if (!legalMoves.empty()) {
     Board newBoard = Board.fromMove(board, legalMoves.get(0));
@@ -79,12 +79,12 @@ When a move is made, you get a new Board. To change a Board's state without maki
         ...
     }
         
-##### Is Mover In Check?
+#### Is Mover In Check?
 
     boolean isCheck = board.isCheck();
     Colour mover = board.getSideToMove();
     
-##### Some Other Things
+#### Some Other Things
     
     Colour opponent = mover.opponent();
     
