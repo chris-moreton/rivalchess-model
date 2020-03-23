@@ -3,6 +3,8 @@ Rival Chess Model
 
 Chess board and move utilities.
 
+### Installation
+
 #### Maven
 
     <dependency>
@@ -14,6 +16,8 @@ Chess board and move utilities.
 #### Gradle
 
     compile group: 'com.netsensia.rivalchess', name: 'rivalchess-model', version: '5.1.2'
+
+### Quick Start
 
 #### Creating a Chess Board
 
