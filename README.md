@@ -8,12 +8,12 @@ Chess board and move utilities.
     <dependency>
         <groupId>com.netsensia.rivalchess</groupId>
         <artifactId>rivalchess-model</artifactId>
-        <version>5.1.0</version>
+        <version>5.1.1</version>
     </dependency>
     
 #### Gradle
 
-    compile group: 'com.netsensia.rivalchess', name: 'rivalchess-model', version: '5.1.0'
+    compile group: 'com.netsensia.rivalchess', name: 'rivalchess-model', version: '5.1.1'
 
 #### Creating a Chess Board
 
