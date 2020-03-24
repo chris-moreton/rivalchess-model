@@ -16,87 +16,139 @@ public class FenUtils {
         return FEN_START_POS;
     }
 
-    public static Board getBoardModel(final String fenStr) {
+    public static Board getBoardModel(final String fen) {
+        String[] fenParts = fen.split(" ");
+
+        if (fenParts.length != 6) {
+            throw new IllegalFenException(
+                    "Expected 6 sections to FEN - board, mover, castling, enpassant, half moves and full moves"
+            );
+        }
 
         final Board.BoardBuilder boardBuilder = new Board.BoardBuilder();
 
-        if (fenStr.trim().equals("")) {
-            throw new IllegalFenException("Empty FEN");
-        }
-
-        int fenIndex = 0;
-        int boardArrayIndex = 0;
-
-        for (int i = 0; i < fenStr.length(); i++) {
-            final char fenToken = fenStr.charAt(fenIndex++);
-
-            if (fenToken >= '0' && fenToken <= '9') {
-                boardArrayIndex = padBoardWithSpaces(boardBuilder, boardArrayIndex, fenToken);
-            } else if (fenToken != '/') {
-                boardArrayIndex = setPiece(boardBuilder, boardArrayIndex, fenToken);
-            }
-
-            if (fenToken == ' ') {
-                throw new IllegalFenException("Unexpected space character found");
-            }
-
-            if (boardArrayIndex == 64) {
-                break;
-            }
-
-            if (boardArrayIndex > 64) {
-                throw new IllegalFenException("Invalid boardArrayIndex");
-            }
-        }
-
-        fenIndex++;
-
-        final char fenToken = fenStr.charAt(fenIndex++);
-
-        verifyMoverChar(fenToken);
-
-        boardBuilder.withSideToMove(fenToken == 'w' ? Colour.WHITE : Colour.BLACK);
-
-        fenIndex++;
-
-        final String castleFlags = fenStr.substring(fenIndex, fenStr.indexOf(' ', fenIndex));
-
-        boardBuilder.withIsWhiteQueenSideCastleAvailable(castleFlags.contains("Q"));
-        boardBuilder.withIsWhiteKingSideCastleAvailable(castleFlags.contains("K"));
-        boardBuilder.withIsBlackQueenSideCastleAvailable(castleFlags.contains("q"));
-        boardBuilder.withIsBlackKingSideCastleAvailable(castleFlags.contains("k"));
-
-        final char enPassantChar = fenStr.charAt(fenIndex + castleFlags.length() + 1);
-
-        boardBuilder.withEnPassantFile(enPassantChar != '-' ? enPassantChar - 97 : -1);
+        setBoardParts(boardBuilder, fenParts[0]);
+        setMover(boardBuilder, fenParts[1]);
+        setCastleFlags(boardBuilder, fenParts[2]);
+        setEnPassant(boardBuilder, fenParts[3]);
+        setHalfMoves(boardBuilder, fenParts[4]);
+        setFullMoves(boardBuilder, fenParts[5]);
 
         return boardBuilder.build();
+
     }
 
-    private static void verifyMoverChar(char fenToken) {
-        if (fenToken != 'w' && fenToken != 'b') {
-            throw new IllegalFenException("Illegal mover in FEN");
+    private static void setMover(final Board.BoardBuilder boardBuilder, final String boardPart) {
+        if (boardPart.length() != 1) {
+            throw new IllegalFenException("Unexpected error processing side to move");
+        }
+
+        final char mover = boardPart.toCharArray()[0];
+        switch (mover) {
+            case 'w': boardBuilder.withSideToMove(Colour.WHITE); break;
+            case 'b': boardBuilder.withSideToMove(Colour.BLACK); break;
+            default:
+                throw new IllegalFenException("Invalid side to move: " + mover);
         }
     }
 
-    private static int setPiece(Board.BoardBuilder boardBuilder, int boardArrayIndex, char fenToken) {
-        final int targetXFile = boardArrayIndex % 8;
-        final int targetYRank = boardArrayIndex / 8;
+    private static void setEnPassant(final Board.BoardBuilder boardBuilder, final String boardPart) {
+        if (boardPart.equals("-")) {
+            boardBuilder.withEnPassantFile(-1);
+            return;
+        }
+        if (boardPart.length() != 2) {
+            throw new IllegalFenException("Unexpected error processing en passant part: " + boardPart);
+        }
 
-        boardBuilder.withSquareOccupant(Square.fromCoords(targetXFile, targetYRank), SquareOccupant.fromChar(fenToken));
+        final char enPassantFileAlgebraic = boardPart.toCharArray()[0];
+        if (enPassantFileAlgebraic < 'a' || enPassantFileAlgebraic > 'h') {
+            throw new IllegalFenException("Invalid en passant part: " + boardPart);
+        }
 
-        return boardArrayIndex+1;
+        boardBuilder.withEnPassantFile(enPassantFileAlgebraic - 'a');
     }
 
-    private static int padBoardWithSpaces(
-            final  Board.BoardBuilder boardBuilder,
-            int boardArrayIndex,
-            final char fenToken
-    ) {
-        for (int n = 1; n <= Character.digit(fenToken, 10); n++) {
-            boardArrayIndex = setPiece(boardBuilder, boardArrayIndex, '_');
+    private static void setCastleFlags(final Board.BoardBuilder boardBuilder, final String boardPart) {
+        boardBuilder.withIsWhiteQueenSideCastleAvailable(boardPart.contains("Q"));
+        boardBuilder.withIsWhiteKingSideCastleAvailable(boardPart.contains("K"));
+        boardBuilder.withIsBlackQueenSideCastleAvailable(boardPart.contains("q"));
+        boardBuilder.withIsBlackKingSideCastleAvailable(boardPart.contains("k"));
+    }
+
+    private static void setHalfMoves(final Board.BoardBuilder boardBuilder, final String boardPart) {
+        boardBuilder.withHalfMoveCount(Integer.parseInt(boardPart));
+    }
+
+    private static void setFullMoves(final Board.BoardBuilder boardBuilder, final String boardPart) {
+
+    }
+
+    private static void setBoardParts(final Board.BoardBuilder boardBuilder, final String boardPart) {
+
+        final String[] rankParts = boardPart.split("/");
+
+        if (rankParts.length != 8) {
+            throw new IllegalFenException(
+                    "Expected 8 ranks in board part of FEN - found " + rankParts.length
+            );
         }
-        return boardArrayIndex;
+
+        for (int i=0; i<8; i++) {
+            rankParts[i] = expand(rankParts[i]);
+        }
+
+        getBoardFromRank(boardBuilder, rankParts, 0);
+    }
+
+    private static String expand(String rankPart) {
+        return rankPart
+                .replace("1", "-")
+                .replace("2", "--")
+                .replace("3", "---")
+                .replace("4", "----")
+                .replace("5", "-----")
+                .replace("6", "------")
+                .replace("7", "-------")
+                .replace("8", "--------");
+    }
+
+    private static void getBoardFromRank(
+            final Board.BoardBuilder boardBuilder, final String[] rankParts, final int rank) {
+
+        if (rank < 8) {
+            collectRankParts(boardBuilder, rankParts, 0, rank);
+            getBoardFromRank(boardBuilder, rankParts, rank+1);
+        }
+
+    }
+
+    public static void collectRankParts(
+            final Board.BoardBuilder boardBuilder, final String[] rankParts, final int file, final int rank) {
+
+        if (file == 8) {
+            return;
+        }
+
+        final char piece = rankParts[rank].toCharArray()[file];
+        switch (piece) {
+            case 'p' : boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.BP); break;
+            case 'P' : boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.WP); break;
+            case 'q' : boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.BQ); break;
+            case 'Q' : boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.WQ); break;
+            case 'r' : boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.BR); break;
+            case 'R' : boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.WR); break;
+            case 'b' : boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.BB); break;
+            case 'B' : boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.WB); break;
+            case 'n' : boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.BN); break;
+            case 'N' : boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.WN); break;
+            case 'k' : boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.BK); break;
+            case 'K' : boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.WK); break;
+            case '-' : boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.NONE); break;
+            default:
+                throw new IllegalFenException("Unexpected character in FEN: " + piece);
+        }
+        collectRankParts(boardBuilder, rankParts, file+1, rank);
     }
 
     public static String invertFen(String fen) {
