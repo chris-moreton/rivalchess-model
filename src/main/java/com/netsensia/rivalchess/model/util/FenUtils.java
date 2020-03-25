@@ -17,11 +17,12 @@ public class FenUtils {
     }
 
     public static Board getBoardModel(final String fen) {
-        String[] fenParts = fen.split(" ");
 
-        if (fenParts.length != 6) {
+        final String[] fenParts = fen.split(" ");
+
+        if (fenParts.length < 4) {
             throw new IllegalFenException(
-                    "Expected 6 sections to FEN - board, mover, castling, enpassant, half moves and full moves"
+                    "Expected at least 2 sections to FEN - board and mover"
             );
         }
 
@@ -29,10 +30,10 @@ public class FenUtils {
 
         setBoardParts(boardBuilder, fenParts[0]);
         setMover(boardBuilder, fenParts[1]);
-        setCastleFlags(boardBuilder, fenParts[2]);
-        setEnPassant(boardBuilder, fenParts[3]);
-        setHalfMoves(boardBuilder, fenParts[4]);
-        setFullMoves(boardBuilder, fenParts[5]);
+        setCastleFlags(boardBuilder, fenParts.length > 2 ? fenParts[2] : "kqKQ");
+        setEnPassant(boardBuilder, fenParts.length > 3 ? fenParts[3] : "-");
+        setHalfMoves(boardBuilder, fenParts.length > 4 ? fenParts[4] : "0");
+        setFullMoves(boardBuilder, fenParts.length > 5 ? fenParts[5] : "0");
 
         return boardBuilder.build();
 
@@ -81,7 +82,7 @@ public class FenUtils {
     }
 
     private static void setFullMoves(final Board.BoardBuilder boardBuilder, final String boardPart) {
-
+        boardBuilder.withFullMoveCount(Integer.parseInt(boardPart));
     }
 
     private static void setBoardParts(final Board.BoardBuilder boardBuilder, final String boardPart) {
