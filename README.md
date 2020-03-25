@@ -16,9 +16,11 @@ used the Rival Chess Engine written in Java. At the time, I thought the code was
 
 It wasn't. [Still isn't](https://github.com/chris-moreton/rivalchess-engine). It's because I didn't care.
 
-This library was built to try to compensate for my coding sins. 
-To provide a brutally-tested library of chess utilities with an expressive interface and code that is, more
-often than not, pretty well crafted.
+This is better. It's a brutally-tested library of chess utilities with an expressive interface and code that is reasonably-well
+written.
+
+It's not a fast as the Rival Chess engine's internal move generation and board manipulation routines. Those use magic bitboards and are at least
+20x faster than this library.
 
 ### Installation
 
@@ -27,12 +29,12 @@ often than not, pretty well crafted.
     <dependency>
         <groupId>com.netsensia.rivalchess</groupId>
         <artifactId>rivalchess-model</artifactId>
-        <version>5.1.2</version>
+        <version>5.1.3</version>
     </dependency>
     
 #### Gradle
 
-    compile group: 'com.netsensia.rivalchess', name: 'rivalchess-model', version: '5.1.2'
+    compile group: 'com.netsensia.rivalchess', name: 'rivalchess-model', version: '5.1.3'
 
 ### Quick Start
 
