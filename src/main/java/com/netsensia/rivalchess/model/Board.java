@@ -133,6 +133,10 @@ public class Board {
         return BoardUtils.isCheck(this);
     }
 
+    public static BoardBuilder builder() {
+        return new BoardBuilder();
+    }
+
     public boolean isSquareAttackedBy(final Square square, final Colour byColour) {
         return BoardUtils.isSquareAttackedBy(this, square, byColour);
     }
@@ -202,7 +206,7 @@ public class Board {
 
         private Colour sideToMove;
 
-        public BoardBuilder() {
+        private BoardBuilder() {
             enPassantFile = -1;
             isBlackQueenSideCastleAvailable = false;
             isWhiteQueenSideCastleAvailable = false;

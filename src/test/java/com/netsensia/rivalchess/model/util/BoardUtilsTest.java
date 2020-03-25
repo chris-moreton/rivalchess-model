@@ -337,7 +337,7 @@ public class BoardUtilsTest {
 
     @Test
     public void testGetDirectionalPotentialSquaresFromSquare_shouldIncludeCaptureSquare() {
-        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder();
+        final Board.BoardBuilder boardBuilder = Board.builder();
 
         boardBuilder.withSquareOccupant(Square.fromCoords(5, 6), SquareOccupant.BB);
         boardBuilder.withSideToMove(Colour.WHITE);
@@ -363,7 +363,7 @@ public class BoardUtilsTest {
 
     @Test
     public void testGetDirectionalPotentialSquaresFromSquare_shouldNotCaptureOwnPiece() {
-        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder();
+        final Board.BoardBuilder boardBuilder = Board.builder();
 
         boardBuilder.withSquareOccupant(Square.fromCoords(5, 6), SquareOccupant.BB);
         boardBuilder.withSideToMove(Colour.BLACK);

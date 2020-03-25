@@ -261,12 +261,12 @@ public class BoardUtils {
 
     public static boolean isSquareAttackedBy(final Board board, final Square square, final Colour byColour) {
 
-        return isSquareAttackedByKing(board, square, byColour) ||
-                isSquareAttackedByKnight(board, square, byColour) ||
+        return
                 isSquareAttackedByPawn(board, square, byColour) ||
                 isSquareAttackedByBishopOrQueen(board, square, byColour) ||
-                isSquareAttackedByRookOrQueen(board, square, byColour);
-
+                isSquareAttackedByRookOrQueen(board, square, byColour) ||
+                isSquareAttackedByKing(board, square, byColour) ||
+                isSquareAttackedByKnight(board, square, byColour);
     }
 
     private static boolean isSquareAttackedByKing(Board board, Square square, Colour byColour) {
@@ -362,17 +362,14 @@ public class BoardUtils {
 
         final Square ourKingSquare = squares.get(0);
 
-        return BoardUtils.isSquareAttackedBy(
-                board,
-                ourKingSquare,
-                board.getSideToMove().opponent());
+        return BoardUtils.isSquareAttackedBy(board, ourKingSquare, board.getSideToMove().opponent());
 
     }
 
     public static List<Move> getLegalMoves(final Board board) {
-        final List<Move> moves = getAllMovesWithoutRemovingChecks(board);
 
-        return moves.parallelStream()
+        return getAllMovesWithoutRemovingChecks(board)
+                .parallelStream()
                 .filter(m -> !BoardUtils.isMoveLeavesMoverInCheck(board, m))
                 .collect(Collectors.toList());
     }

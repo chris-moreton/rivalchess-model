@@ -7,7 +7,7 @@ import com.netsensia.rivalchess.model.SquareOccupant;
 
 public class CommonTestUtils {
     public static Board getStartBoard() {
-        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder();
+        final Board.BoardBuilder boardBuilder = Board.builder();
 
         boardBuilder.withIsWhiteQueenSideCastleAvailable(true);
         boardBuilder.withIsWhiteKingSideCastleAvailable(true);

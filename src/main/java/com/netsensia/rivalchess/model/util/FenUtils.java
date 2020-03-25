@@ -26,7 +26,7 @@ public class FenUtils {
             );
         }
 
-        final Board.BoardBuilder boardBuilder = new Board.BoardBuilder();
+        final Board.BoardBuilder boardBuilder = Board.builder();
 
         setBoardParts(boardBuilder, fenParts[0]);
         setMover(boardBuilder, fenParts[1]);

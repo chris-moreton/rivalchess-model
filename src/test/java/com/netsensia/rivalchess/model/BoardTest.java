@@ -17,7 +17,7 @@ public class BoardTest {
 
     @Test
     public void testSetSquareOccupant() {
-        Board.BoardBuilder boardBuilder = new Board.BoardBuilder();
+        Board.BoardBuilder boardBuilder = Board.builder();
         boardBuilder.withSquareOccupant(Square.fromCoords(1,7), SquareOccupant.BB);
         assertEquals(SquareOccupant.BB, boardBuilder.build().getSquareOccupant(Square.fromCoords(1, 7)));
     }

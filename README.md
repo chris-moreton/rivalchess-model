@@ -29,12 +29,12 @@ It's not a fast as the Rival Chess engine's internal move generation and board m
     <dependency>
         <groupId>com.netsensia.rivalchess</groupId>
         <artifactId>rivalchess-model</artifactId>
-        <version>5.1.3</version>
+        <version>6.0.0</version>
     </dependency>
     
 #### Gradle
 
-    compile group: 'com.netsensia.rivalchess', name: 'rivalchess-model', version: '5.1.3'
+    compile group: 'com.netsensia.rivalchess', name: 'rivalchess-model', version: '6.0.0'
 
 ### Quick Start
 
@@ -65,7 +65,7 @@ Board newBoard = Board.fromMove(board, new Move("e7f8Q"));
 The Board class is immutable. When a move is made, you get a new Board. To change a Board's state without making a move, use the builder.
 
     // Create a builder with the current board as a base
-    Board.BoardBuilder boardBuilder = new Board.BoardBuilder(board);
+    BoardBuilder boardBuilder = Board.builder();
     
     // Modify state as required
     boardBuilder.withSquareOccupant(Square.E2, SquareOccupant.NONE);
@@ -75,7 +75,7 @@ The Board class is immutable. When a move is made, you get a new Board. To chang
     Board newBoard = boardBuilder.build();
     
     // Or do it all in one
-    Board newBoard = new Board.BoardBuilder(board)
+    Board newBoard = Board.builder()
             .withSquareOccupant(Square.E2, SquareOccupant.NONE)
             .withSquareOccupant(Square.E4, SquareOccupant.WP)
             .build()
