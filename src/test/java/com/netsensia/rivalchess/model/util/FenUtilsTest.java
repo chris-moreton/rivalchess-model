@@ -55,7 +55,7 @@ public class FenUtilsTest {
     public void throwsExceptionWhenMoverIsBlank() {
         exception.expect(IllegalFenException.class);
         exception.expectMessage(
-                INVALID_FEN_MESSAGE);
+                "Unexpected error processing side to move");
         final Board board = FenUtils.getBoardModel("6k1/6p2/1p2q2p/1p5P/1P3RP1/2PK1B2/1r2N3/8   - g3 5 7");
     }
 
