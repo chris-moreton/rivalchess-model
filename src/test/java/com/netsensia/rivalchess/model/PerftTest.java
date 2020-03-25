@@ -96,6 +96,6 @@ public class PerftTest {
 
     @Test
     public void epdPerftSuite() throws IOException, InvalidMoveException {
-        epdPerftSuiteToDepth(1,4);
+        epdPerftSuiteToDepth(1,6);
     }
 }

@@ -25,6 +25,8 @@ public class Board {
     private final int halfMoveCount;
     private final Colour sideToMove;
 
+    private final int fullMoveCount;
+
     public Board(final BoardBuilder builder) {
         this.squareOccupants = new EnumMap<>(builder.squareOccupants);
         this.enPassantFile = builder.enPassantFile;
@@ -34,6 +36,7 @@ public class Board {
         this.isBlackKingSideCastleAvailable = builder.isBlackKingSideCastleAvailable;
         this.halfMoveCount = builder.halfMoveCount;
         this.sideToMove = builder.sideToMove;
+        this.fullMoveCount = builder.fullMoveCount;
 
         this.occupantSquares = new EnumMap<>(SquareOccupant.class);
 
@@ -61,6 +64,7 @@ public class Board {
         this.isWhiteQueenSideCastleAvailable = board.isQueenSideCastleAvailable(Colour.WHITE);
 
         this.halfMoveCount = board.getHalfMoveCount();
+        this.fullMoveCount = board.getFullMoveCount();
 
         this.occupantSquares = new EnumMap<>(SquareOccupant.class);
 
@@ -109,6 +113,10 @@ public class Board {
         return this.halfMoveCount;
     }
 
+    public int getFullMoveCount() {
+        return this.fullMoveCount;
+    }
+
     public Colour getSideToMove() {
         return sideToMove;
     }
@@ -144,6 +152,7 @@ public class Board {
             return  this.getEnPassantFile() == bo.getEnPassantFile() &&
                     this.getSideToMove() == bo.getSideToMove() &&
                     this.getHalfMoveCount() == bo.getHalfMoveCount() &&
+                    this.getFullMoveCount() == bo.getFullMoveCount() &&
                     this.isKingSideCastleAvailable(Colour.WHITE) == bo.isKingSideCastleAvailable(Colour.WHITE) &&
                     this.isKingSideCastleAvailable(Colour.BLACK) == bo.isKingSideCastleAvailable(Colour.BLACK) &&
                     this.isQueenSideCastleAvailable(Colour.WHITE) == bo.isQueenSideCastleAvailable(Colour.WHITE) &&
@@ -189,6 +198,8 @@ public class Board {
         private boolean isBlackQueenSideCastleAvailable;
 
         private int halfMoveCount;
+        private int fullMoveCount;
+
         private Colour sideToMove;
 
         public BoardBuilder() {
@@ -218,6 +229,7 @@ public class Board {
             isBlackQueenSideCastleAvailable = board.isQueenSideCastleAvailable(Colour.BLACK);
             halfMoveCount = board.getHalfMoveCount();
             sideToMove = board.getSideToMove();
+            fullMoveCount = board.getFullMoveCount();
         }
 
         public BoardBuilder withSquareOccupant(final Square square, final SquareOccupant squareOccupant) {
@@ -227,6 +239,11 @@ public class Board {
 
         public BoardBuilder withEnPassantFile(final int enPassantFile) {
             this.enPassantFile = enPassantFile;
+            return this;
+        }
+
+        public BoardBuilder withFullMoveCount(final int fullMoveCount) {
+            this.fullMoveCount = fullMoveCount;
             return this;
         }
 
