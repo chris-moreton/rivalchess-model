@@ -3,21 +3,15 @@ Rival Chess Model
 
 Chess board and move utilities.
 
-I've written some horrific code over the years, a great deal of it involving chess programming. 
-
 My first chess program was Rival for DOS, written while listening to Metallica's newly-released Black Album, a few years back in the early nineties.
-It was pretty good and pretty fast, but not very well written. My chess program, that is, not the Black Album.
- 
-It was written in C++. How I ever understood what was going on in the code, I do not know. I think I was
-smarter back then, but not smart enough to realise how confused I would become by my own code.
+It was pretty good and pretty fast, but not very well written. Rival, that is, not the Black Album.
 
 Next up was Rival for Windows a couple of years later, again in C++ (Borland). Then, Rival for Android was released which
-used the Rival Chess Engine written in Java. At the time, I thought the code was high quality.
+used the Rival Chess Engine written in Java.
 
-It wasn't. [Still isn't](https://github.com/chris-moreton/rivalchess-engine). It's because I didn't care.
+None of the code was particularly well-written.  It's because I didn't care.
 
-This is better. It's a brutally-tested library of chess utilities with an expressive interface and code that is reasonably-well
-written.
+This is better. It's a well-tested library of chess utilities with an expressive interface and simple code.
 
 It's not a fast as the Rival Chess engine's internal move generation and board manipulation routines. Those use magic bitboards and are at least
 20x faster than this library.

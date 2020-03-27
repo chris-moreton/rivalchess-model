@@ -14,6 +14,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Objects;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class PerftTest {
 
@@ -98,4 +103,5 @@ public class PerftTest {
     public void epdPerftSuite() throws IOException, InvalidMoveException {
         epdPerftSuiteToDepth(1,4);
     }
+
 }
