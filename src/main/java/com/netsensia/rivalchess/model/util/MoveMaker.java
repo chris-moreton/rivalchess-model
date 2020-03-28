@@ -69,7 +69,9 @@ public class MoveMaker {
     }
 
     private static void makeCastleMoves(
-            final Board board, final Board.BoardBuilder boardBuilder, final Move move) {
+            final Board board,
+            final Board.BoardBuilder boardBuilder,
+            final Move move) {
 
         if (board.getSquareOccupant(move.getSrcBoardRef()).getPiece() != Piece.KING) {
             return;
@@ -107,25 +109,17 @@ public class MoveMaker {
             final Board.BoardBuilder boardBuilder,
             final Move move) {
 
-        if (board.getSquareOccupant(move.getSrcBoardRef()).getPiece() != Piece.PAWN) {
+        if (board.getSquareOccupant(move.getSrcBoardRef()).getPiece() != Piece.PAWN ||
+                move.getSrcBoardRef().getXFile() == move.getTgtBoardRef().getXFile() ||
+                board.getSquareOccupant(move.getTgtBoardRef()) != SquareOccupant.NONE) {
             return;
         }
-
-        if (move.getSrcBoardRef().getXFile() == move.getTgtBoardRef().getXFile()) {
-            return;
-        }
-
-        if (board.getSquareOccupant(move.getTgtBoardRef()) != SquareOccupant.NONE) {
-            return;
-        }
-
-        final Colour mover = board.getSideToMove();
 
         final Square targetSquare = move.getTgtBoardRef();
         boardBuilder.withSquareOccupant(
                 Square.fromCoords(
                         targetSquare.getXFile(),
-                        targetSquare.getYRank() + PawnMoveHelper.advanceDirection(mover.opponent())),
+                        targetSquare.getYRank() + PawnMoveHelper.advanceDirection(board.getSideToMove().opponent())),
                 SquareOccupant.NONE);
 
     }

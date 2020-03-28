@@ -23,12 +23,12 @@ It's not a fast as the Rival Chess engine's internal move generation and board m
     <dependency>
         <groupId>com.netsensia.rivalchess</groupId>
         <artifactId>rivalchess-model</artifactId>
-        <version>6.0.0</version>
+        <version>6.0.1</version>
     </dependency>
     
 #### Gradle
 
-    compile group: 'com.netsensia.rivalchess', name: 'rivalchess-model', version: '6.0.0'
+    compile group: 'com.netsensia.rivalchess', name: 'rivalchess-model', version: '6.0.1'
 
 ### Quick Start
 

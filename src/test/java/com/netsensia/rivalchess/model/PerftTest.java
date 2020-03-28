@@ -14,27 +14,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Objects;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class PerftTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PerftTest.class);
 
-    public static long getPerft(Board board, int depth) throws InvalidMoveException {
+    public static long getPerft(final Board board, final int depth) throws InvalidMoveException {
         if (depth == 0) {
             return 1;
         }
         long nodes = 0;
-        int moveNum = 0;
 
         for (Move move : board.getLegalMoves()) {
             Board newBoard = Board.fromMove(board, move);
             nodes += getPerft(newBoard, depth - 1);
-            moveNum++;
         }
 
         return nodes;
