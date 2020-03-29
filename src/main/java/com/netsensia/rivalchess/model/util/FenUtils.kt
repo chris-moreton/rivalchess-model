@@ -6,13 +6,14 @@ import com.netsensia.rivalchess.model.Colour
 import com.netsensia.rivalchess.model.Square
 import com.netsensia.rivalchess.model.SquareOccupant
 import com.netsensia.rivalchess.model.exception.IllegalFenException
+import kotlin.system.exitProcess
 
 object FenUtils {
     const val startPos = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
     @kotlin.jvm.JvmStatic
     fun getBoardModel(fen: String): Board? {
-        val fenParts = fen.split(" ").toTypedArray()
+        val fenParts = fen.trim().split(" ").toTypedArray()
         if (fenParts.size < 4) {
             throw IllegalFenException(
                     "Expected at least 2 sections to FEN - board and mover"

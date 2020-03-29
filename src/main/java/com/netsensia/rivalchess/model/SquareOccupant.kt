@@ -31,7 +31,7 @@ enum class SquareOccupant(val index: Int) {
 
     val colour: Colour
         get() = when (this) {
-            NONE -> throw EnumConversionException("Can't get colour of an empty square")
+            NONE -> throw EnumConversionException("CCan't get piece colour of an empty square")
             WP, WK, WN, WB, WR, WQ -> Colour.WHITE
             BP, BK, BN, BB, BR, BQ -> Colour.BLACK
         }
