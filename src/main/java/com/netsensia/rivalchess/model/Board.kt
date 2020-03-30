@@ -4,7 +4,6 @@ import com.netsensia.rivalchess.model.util.BoardUtils
 import com.netsensia.rivalchess.model.util.FenUtils
 import com.netsensia.rivalchess.model.util.MoveMaker
 import java.util.*
-import java.util.stream.Stream
 
 class Board {
     private val squareOccupants: Map<Square, SquareOccupant>
@@ -74,10 +73,6 @@ class Board {
         return if (colour == Colour.WHITE) isWhiteQueenSideCastleAvailable else isBlackQueenSideCastleAvailable
     }
 
-    fun squareOccupantStream(): Stream<Map.Entry<Square, SquareOccupant>> {
-        return squareOccupants.entries.stream()
-    }
-
     fun getSquaresWithOccupant(squareOccupant: SquareOccupant): List<Square> {
         return ArrayList(occupantSquares[squareOccupant])
     }
@@ -85,22 +80,22 @@ class Board {
     val legalMoves: List<Move>
         get() = BoardUtils.getLegalMoves(this)
 
-    val isCheck: Boolean
-        get() = BoardUtils.isCheck(this)
-
-    fun isSquareAttackedBy(square: Square, byColour: Colour): Boolean {
-        return BoardUtils.isSquareAttackedBy(this, square, byColour)
-    }
-
-    override fun equals(o: Any?): Boolean {
-        if (o is Board) {
-            val bo = o
+    override fun equals(other: Any?): Boolean {
+        if (other is Board) {
+            val bo = other
             for (square in Square.values()) {
                 if (getSquareOccupant(square) != bo.getSquareOccupant(square)) {
                     return false
                 }
             }
-            return enPassantFile == bo.enPassantFile && sideToMove == bo.sideToMove && halfMoveCount == bo.halfMoveCount && fullMoveCount == bo.fullMoveCount && isKingSideCastleAvailable(Colour.WHITE) == bo.isKingSideCastleAvailable(Colour.WHITE) && isKingSideCastleAvailable(Colour.BLACK) == bo.isKingSideCastleAvailable(Colour.BLACK) && isQueenSideCastleAvailable(Colour.WHITE) == bo.isQueenSideCastleAvailable(Colour.WHITE) && isQueenSideCastleAvailable(Colour.BLACK) == bo.isQueenSideCastleAvailable(Colour.BLACK)
+            return enPassantFile == bo.enPassantFile &&
+                    sideToMove == bo.sideToMove &&
+                    halfMoveCount == bo.halfMoveCount &&
+                    fullMoveCount == bo.fullMoveCount &&
+                    isKingSideCastleAvailable(Colour.WHITE) == bo.isKingSideCastleAvailable(Colour.WHITE) &&
+                    isKingSideCastleAvailable(Colour.BLACK) == bo.isKingSideCastleAvailable(Colour.BLACK) &&
+                    isQueenSideCastleAvailable(Colour.WHITE) == bo.isQueenSideCastleAvailable(Colour.WHITE) &&
+                    isQueenSideCastleAvailable(Colour.BLACK) == bo.isQueenSideCastleAvailable(Colour.BLACK)
         }
         return false
     }
@@ -161,52 +156,44 @@ class Board {
             fullMoveCount = board.fullMoveCount
         }
 
-        fun withSquareOccupant(square: Square, squareOccupant: SquareOccupant): BoardBuilder {
+        fun withSquareOccupant(square: Square, squareOccupant: SquareOccupant) = apply {
             squareOccupants[square] = squareOccupant
-            return this
         }
 
-        fun withEnPassantFile(enPassantFile: Int): BoardBuilder {
+        fun withEnPassantFile(enPassantFile: Int) = apply {
             this.enPassantFile = enPassantFile
-            return this
         }
 
-        fun withFullMoveCount(fullMoveCount: Int): BoardBuilder {
+        fun withFullMoveCount(fullMoveCount: Int) = apply {
             this.fullMoveCount = fullMoveCount
-            return this
         }
 
-        fun withHalfMoveCount(halfMoveCount: Int): BoardBuilder {
+        fun withHalfMoveCount(halfMoveCount: Int) = apply {
             this.halfMoveCount = halfMoveCount
             return this
         }
 
-        fun withSideToMove(sideToMove: Colour): BoardBuilder {
+        fun withSideToMove(sideToMove: Colour) = apply {
             this.sideToMove = sideToMove
-            return this
         }
 
-        fun withIsWhiteKingSideCastleAvailable(isWhiteKingSideCastleAvailable: Boolean): BoardBuilder {
+        fun withIsWhiteKingSideCastleAvailable(isWhiteKingSideCastleAvailable: Boolean) = apply {
             this.isWhiteKingSideCastleAvailable = isWhiteKingSideCastleAvailable
-            return this
         }
 
-        fun withIsBlackKingSideCastleAvailable(isBlackKingSideCastleAvailable: Boolean): BoardBuilder {
+        fun withIsBlackKingSideCastleAvailable(isBlackKingSideCastleAvailable: Boolean) = apply {
             this.isBlackKingSideCastleAvailable = isBlackKingSideCastleAvailable
-            return this
         }
 
-        fun withIsWhiteQueenSideCastleAvailable(isWhiteQueenSideCastleAvailable: Boolean): BoardBuilder {
+        fun withIsWhiteQueenSideCastleAvailable(isWhiteQueenSideCastleAvailable: Boolean) = apply {
             this.isWhiteQueenSideCastleAvailable = isWhiteQueenSideCastleAvailable
-            return this
         }
 
-        fun withIsBlackQueenSideCastleAvailable(isBlackQueenSideCastleAvailable: Boolean): BoardBuilder {
+        fun withIsBlackQueenSideCastleAvailable(isBlackQueenSideCastleAvailable: Boolean) = apply {
             this.isBlackQueenSideCastleAvailable = isBlackQueenSideCastleAvailable
-            return this
         }
 
-        fun withIsQueenSideCastleAvailable(colour: Colour, isQueenSideCastleAvailable: Boolean): BoardBuilder {
+        fun withIsQueenSideCastleAvailable(colour: Colour, isQueenSideCastleAvailable: Boolean) = apply {
             if (colour == Colour.WHITE) {
                 isWhiteQueenSideCastleAvailable = isQueenSideCastleAvailable
             } else {
@@ -215,21 +202,19 @@ class Board {
             return this
         }
 
-        fun withIsKingSideCastleAvailable(colour: Colour, isKingSideCastleAvailable: Boolean): BoardBuilder {
+        fun withIsKingSideCastleAvailable(colour: Colour, isKingSideCastleAvailable: Boolean) = apply {
             if (colour == Colour.WHITE) {
                 isWhiteKingSideCastleAvailable = isKingSideCastleAvailable
             } else {
                 isBlackKingSideCastleAvailable = isKingSideCastleAvailable
             }
-            return this
         }
 
-        fun withNoCastleFlags(): BoardBuilder {
+        fun withNoCastleFlags() = apply {
             isWhiteQueenSideCastleAvailable = false
             isBlackQueenSideCastleAvailable = false
             isWhiteKingSideCastleAvailable = false
             isBlackKingSideCastleAvailable = false
-            return this
         }
 
         fun build(): Board {
@@ -239,12 +224,12 @@ class Board {
 
     companion object {
         @kotlin.jvm.JvmStatic
-        fun fromFen(fen: String): Board? {
+        fun fromFen(fen: String): Board {
             return FenUtils.getBoardModel(fen)
         }
 
         @kotlin.jvm.JvmStatic
-        fun fromMove(board: Board, move: Move): Board? {
+        fun fromMove(board: Board, move: Move): Board {
             return MoveMaker.makeMove(board, move)
         }
 

@@ -250,14 +250,15 @@ object BoardUtils {
     }
 
     private fun isSquareAttackedBySliderInDirection(
-            board: Board?,
-            square: Square?,
-            byColour: Colour?,
+            board: Board,
+            square: Square,
+            byColour: Colour,
             sliderDirection: SliderDirection,
             piece: Piece): Boolean {
-        if (square!!.isValidDirection(sliderDirection)) {
+
+        if (square.isValidDirection(sliderDirection)) {
             val newSquare = square.fromDirection(sliderDirection)
-            val squareOccupant = board!!.getSquareOccupant(newSquare)
+            val squareOccupant = board.getSquareOccupant(newSquare)
             if (squareOccupant == SquareOccupant.NONE) {
                 return isSquareAttackedBySliderInDirection(board, newSquare, byColour, sliderDirection, piece)
             }
