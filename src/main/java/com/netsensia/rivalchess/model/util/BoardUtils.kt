@@ -12,13 +12,13 @@ import java.util.stream.Collectors
 
 object BoardUtils {
     @kotlin.jvm.JvmStatic
-    fun getSliderMoves(board: Board, piece: Piece): List<Move> {
-        val fromSquares = board.getSquaresWithOccupant(piece.toSquareOccupant(board.sideToMove))
+    fun Board.getSliderMoves(piece: Piece): List<Move> {
+        val fromSquares = getSquaresWithOccupant(piece.toSquareOccupant(sideToMove))
         val moves: MutableList<Move> = ArrayList()
         for (fromSquare in fromSquares) {
             for (sliderDirection in SliderDirection.getDirectionsForPiece(piece)) {
                 moves.addAll(
-                        getDirectionalSquaresFromSquare(fromSquare, sliderDirection, board)
+                        getDirectionalSquaresFromSquare(fromSquare, sliderDirection)
                                 .stream()
                                 .map { s: Square -> Move(fromSquare, s) }
                                 .collect(Collectors.toList()))
@@ -28,34 +28,33 @@ object BoardUtils {
     }
 
     @kotlin.jvm.JvmStatic
-    fun getDirectionalSquaresFromSquare(
+    fun Board.getDirectionalSquaresFromSquare(
             square: Square,
-            direction: SliderDirection,
-            board: Board): MutableList<Square> {
+            direction: SliderDirection): MutableList<Square> {
         if (!square.isValidDirection(direction)) {
             return ArrayList()
         }
         val head = square.fromDirection(direction)
-        val squareOccupant = board.getSquareOccupant(head)
+        val squareOccupant = getSquareOccupant(head)
         if (squareOccupant != SquareOccupant.NONE) {
-            return if (squareOccupant.colour == board.sideToMove) ArrayList() else ArrayList(Arrays.asList(head))
+            return if (squareOccupant.colour == sideToMove) ArrayList() else ArrayList(listOf(head))
         }
-        val tail = getDirectionalSquaresFromSquare(head, direction, board)
+        val tail = getDirectionalSquaresFromSquare(head, direction)
         tail.add(head)
         return tail
     }
 
     @kotlin.jvm.JvmStatic
-    fun getKnightMoves(board: Board): List<Move> {
+    fun Board.getKnightMoves(): List<Move> {
         val moves: MutableList<Move> = ArrayList()
-        val fromSquares = board.getSquaresWithOccupant(
-                Piece.KNIGHT.toSquareOccupant(board.sideToMove))
+        val fromSquares = getSquaresWithOccupant(
+                Piece.KNIGHT.toSquareOccupant(sideToMove))
         for (fromSquare in fromSquares) {
             for (knightDirection in KnightDirection.values()) {
                 if (fromSquare.isValidDirection(knightDirection)) {
                     val targetSquare = fromSquare.fromDirection(knightDirection)
-                    val capturePiece = board.getSquareOccupant(targetSquare)
-                    if (capturePiece == SquareOccupant.NONE || capturePiece.colour != board.sideToMove) {
+                    val capturePiece = getSquareOccupant(targetSquare)
+                    if (capturePiece == SquareOccupant.NONE || capturePiece.colour != sideToMove) {
                         moves.add(Move(fromSquare, targetSquare))
                     }
                 }
@@ -65,14 +64,14 @@ object BoardUtils {
     }
 
     @kotlin.jvm.JvmStatic
-    fun getPawnMoves(board: Board): List<Move> {
+    fun Board.getPawnMoves(): List<Move> {
         val moves: MutableList<Move> = ArrayList()
-        val mover = board.sideToMove
-        val fromSquares = board.getSquaresWithOccupant(Piece.PAWN.toSquareOccupant(board.sideToMove))
+        val mover = sideToMove
+        val fromSquares = getSquaresWithOccupant(Piece.PAWN.toSquareOccupant(sideToMove))
         for (fromSquare in fromSquares) {
             val oneSquareForward: Square = Square.fromCoords(fromSquare.xFile,
                     fromSquare.yRank + PawnMoveHelper.advanceDirection(mover))
-            if (board.getSquareOccupant(oneSquareForward) == SquareOccupant.NONE) {
+            if (getSquareOccupant(oneSquareForward) == SquareOccupant.NONE) {
                 if (fromSquare.yRank == PawnMoveHelper.promotionRank(mover)) {
                     moves.addAll(getAllPromotionOptionsForMove(mover, fromSquare, oneSquareForward))
                 } else {
@@ -81,17 +80,18 @@ object BoardUtils {
                 if (fromSquare.yRank == PawnMoveHelper.homeRank(mover)) {
                     val twoSquaresForward: Square = Square.fromCoords(fromSquare.xFile,
                             PawnMoveHelper.homeRank(mover) + PawnMoveHelper.advanceDirection(mover) * 2)
-                    if (board.getSquareOccupant(twoSquaresForward) == SquareOccupant.NONE) {
+                    if (getSquareOccupant(twoSquaresForward) == SquareOccupant.NONE) {
                         moves.add(Move(fromSquare, twoSquaresForward))
                     }
                 }
             }
-            moves.addAll(getPawnCaptures(board, mover, fromSquare))
+            moves.addAll(getPawnCaptures(mover, fromSquare))
         }
         return moves
     }
 
-    private fun getAllPromotionOptionsForMove(
+    @kotlin.jvm.JvmStatic
+    fun getAllPromotionOptionsForMove(
             mover: Colour,
             fromSquare: Square,
             toSquare: Square): List<Move> {
@@ -103,19 +103,19 @@ object BoardUtils {
         return moves
     }
 
-    private fun getPawnCaptures(
-            board: Board,
+    @kotlin.jvm.JvmStatic
+    fun Board.getPawnCaptures(
             mover: Colour,
             fromSquare: Square): List<Move> {
         val moves: MutableList<Move> = ArrayList()
         for (captureDirection in PawnMoveHelper.captureDirections) {
-            moves.addAll(getPawnCapturesInDirection(board, mover, fromSquare, captureDirection))
+            moves.addAll(getPawnCapturesInDirection(mover, fromSquare, captureDirection))
         }
         return moves
     }
 
-    private fun getPawnCapturesInDirection(
-            board: Board,
+    @kotlin.jvm.JvmStatic
+    fun Board.getPawnCapturesInDirection(
             mover: Colour,
             fromSquare: Square,
             captureDirection: SliderDirection): List<Move> {
@@ -124,12 +124,12 @@ object BoardUtils {
         val captureY = fromSquare.yRank + PawnMoveHelper.advanceDirection(mover)
         if (fromSquare.isValidDirection(captureDirection)) {
             val captureSquare: Square = Square.fromCoords(captureX, captureY)
-            if (board.getSquareOccupant(captureSquare) == SquareOccupant.NONE) {
-                if (board.enPassantFile == captureSquare.xFile &&
+            if (getSquareOccupant(captureSquare) == SquareOccupant.NONE) {
+                if (enPassantFile == captureSquare.xFile &&
                         captureSquare.yRank == PawnMoveHelper.enPassantToRank(mover)) {
                     moves.add(Move(fromSquare, captureSquare))
                 }
-            } else if (board.getSquareOccupant(captureSquare).colour == mover.opponent()) {
+            } else if (getSquareOccupant(captureSquare).colour == mover.opponent()) {
                 if (fromSquare.yRank == PawnMoveHelper.promotionRank(mover)) {
                     moves.addAll(getAllPromotionOptionsForMove(mover, fromSquare, captureSquare))
                 } else {
@@ -141,66 +141,67 @@ object BoardUtils {
     }
 
     @kotlin.jvm.JvmStatic
-    fun getKingMoves(board: Board): List<Move> {
-        val fromSquare = board.getSquaresWithOccupant(Piece.KING.toSquareOccupant(board.sideToMove))[0]
+    fun Board.getKingMoves(): List<Move> {
+        val fromSquare = getSquaresWithOccupant(Piece.KING.toSquareOccupant(sideToMove))[0]
         val moves: MutableList<Move> = ArrayList()
         for (sliderDirection in SliderDirection.getDirectionsForPiece(Piece.KING)) {
             if (fromSquare.isValidDirection(sliderDirection)) {
                 val targetSquare = fromSquare.fromDirection(sliderDirection)
-                val capturePiece = board.getSquareOccupant(targetSquare)
-                if (capturePiece == SquareOccupant.NONE || capturePiece.colour != board.sideToMove) {
+                val capturePiece = getSquareOccupant(targetSquare)
+                if (capturePiece == SquareOccupant.NONE || capturePiece.colour != sideToMove) {
                     moves.add(Move(fromSquare, targetSquare))
                 }
             }
         }
-        moves.addAll(getCastlingMoves(board))
+        moves.addAll(getCastlingMoves())
         return moves
     }
 
     @kotlin.jvm.JvmStatic
-    fun getCastlingMoves(board: Board): List<Move> {
+    fun Board.getCastlingMoves(): List<Move> {
         val moves: MutableList<Move> = ArrayList()
-        val colour = board.sideToMove
-        if (board.isKingSideCastleAvailable(colour) && board.getSquareOccupant(CastlingHelper.kingHome(colour)) == SquareOccupant.WK.ofColour(colour) && board.getSquareOccupant(CastlingHelper.kingRookHome(colour)) == SquareOccupant.WR.ofColour(colour) && board.getSquareOccupant(CastlingHelper.kingKnightHome(colour)) == SquareOccupant.NONE && board.getSquareOccupant(CastlingHelper.kingBishopHome(colour)) == SquareOccupant.NONE &&
-                !isSquareAttackedBy(board, CastlingHelper.kingHome(colour), colour.opponent()) &&
-                !isSquareAttackedBy(board, CastlingHelper.kingKnightHome(colour), colour.opponent()) &&
-                !isSquareAttackedBy(board, CastlingHelper.kingBishopHome(colour), colour.opponent())) {
+        val colour = sideToMove
+        if (isKingSideCastleAvailable(colour) && getSquareOccupant(CastlingHelper.kingHome(colour)) == SquareOccupant.WK.ofColour(colour) && getSquareOccupant(CastlingHelper.kingRookHome(colour)) == SquareOccupant.WR.ofColour(colour) && getSquareOccupant(CastlingHelper.kingKnightHome(colour)) == SquareOccupant.NONE && getSquareOccupant(CastlingHelper.kingBishopHome(colour)) == SquareOccupant.NONE &&
+                !isSquareAttackedBy(CastlingHelper.kingHome(colour), colour.opponent()) &&
+                !isSquareAttackedBy(CastlingHelper.kingKnightHome(colour), colour.opponent()) &&
+                !isSquareAttackedBy(CastlingHelper.kingBishopHome(colour), colour.opponent())) {
             moves.add(Move(CastlingHelper.kingHome(colour), CastlingHelper.kingKnightHome(colour)))
         }
-        if (board.isQueenSideCastleAvailable(colour) && board.getSquareOccupant(CastlingHelper.kingHome(colour)) == SquareOccupant.WK.ofColour(colour) && board.getSquareOccupant(CastlingHelper.queenRookHome(colour)) == SquareOccupant.WR.ofColour(colour) && board.getSquareOccupant(CastlingHelper.queenHome(colour)) == SquareOccupant.NONE && board.getSquareOccupant(CastlingHelper.queenKnightHome(colour)) == SquareOccupant.NONE && board.getSquareOccupant(CastlingHelper.queenBishopHome(colour)) == SquareOccupant.NONE &&
-                !isSquareAttackedBy(board, CastlingHelper.kingHome(colour), colour.opponent()) &&
-                !isSquareAttackedBy(board, CastlingHelper.queenBishopHome(colour), colour.opponent()) &&
-                !isSquareAttackedBy(board, CastlingHelper.queenHome(colour), colour.opponent())) {
+        if (isQueenSideCastleAvailable(colour) && getSquareOccupant(CastlingHelper.kingHome(colour)) == SquareOccupant.WK.ofColour(colour) && getSquareOccupant(CastlingHelper.queenRookHome(colour)) == SquareOccupant.WR.ofColour(colour) && getSquareOccupant(CastlingHelper.queenHome(colour)) == SquareOccupant.NONE && getSquareOccupant(CastlingHelper.queenKnightHome(colour)) == SquareOccupant.NONE && getSquareOccupant(CastlingHelper.queenBishopHome(colour)) == SquareOccupant.NONE &&
+                !isSquareAttackedBy(CastlingHelper.kingHome(colour), colour.opponent()) &&
+                !isSquareAttackedBy(CastlingHelper.queenBishopHome(colour), colour.opponent()) &&
+                !isSquareAttackedBy(CastlingHelper.queenHome(colour), colour.opponent())) {
             moves.add(Move(CastlingHelper.kingHome(colour), CastlingHelper.queenBishopHome(colour)))
         }
         return moves
     }
 
     @kotlin.jvm.JvmStatic
-    fun getAllMovesWithoutRemovingChecks(board: Board): List<Move> {
+    fun Board.getAllMovesWithoutRemovingChecks(): List<Move> {
         val moves: MutableList<Move> = ArrayList()
-        moves.addAll(getPawnMoves(board))
-        moves.addAll(getKnightMoves(board))
-        moves.addAll(getKingMoves(board))
-        moves.addAll(getSliderMoves(board, Piece.QUEEN))
-        moves.addAll(getSliderMoves(board, Piece.BISHOP))
-        moves.addAll(getSliderMoves(board, Piece.ROOK))
+        moves.addAll(getPawnMoves())
+        moves.addAll(getKnightMoves())
+        moves.addAll(getKingMoves())
+        moves.addAll(getSliderMoves(Piece.QUEEN))
+        moves.addAll(getSliderMoves(Piece.BISHOP))
+        moves.addAll(getSliderMoves(Piece.ROOK))
         return moves
     }
 
     @kotlin.jvm.JvmStatic
-    fun isSquareAttackedBy(board: Board, square: Square, byColour: Colour): Boolean {
-        return isSquareAttackedByPawn(board, square, byColour) ||
-                isSquareAttackedByBishopOrQueen(board, square, byColour) ||
-                isSquareAttackedByRookOrQueen(board, square, byColour) ||
-                isSquareAttackedByKing(board, square, byColour) ||
-                isSquareAttackedByKnight(board, square, byColour)
+    fun Board.isSquareAttackedBy(square: Square, byColour: Colour): Boolean {
+        return isSquareAttackedByPawn(square, byColour) ||
+                isSquareAttackedByBishopOrQueen(square, byColour) ||
+                isSquareAttackedByRookOrQueen(square, byColour) ||
+                isSquareAttackedByKing(square, byColour) ||
+                isSquareAttackedByKnight(square, byColour)
     }
 
-    private fun isSquareAttackedByKing(board: Board?, square: Square?, byColour: Colour?): Boolean {
+    @kotlin.jvm.JvmStatic
+    fun Board.isSquareAttackedByKing(square: Square, byColour: Colour): Boolean {
         for (sliderDirection in SliderDirection.getDirectionsForPiece(Piece.KING)) {
-            if (square!!.isValidDirection(sliderDirection) &&
-                    board!!.getSquareOccupant(square.fromDirection(sliderDirection)) ==
+            if (square.isValidDirection(sliderDirection) &&
+                    getSquareOccupant(square.fromDirection(sliderDirection)) ==
                     SquareOccupant.WK.ofColour(byColour)) {
                 return true
             }
@@ -208,10 +209,11 @@ object BoardUtils {
         return false
     }
 
-    private fun isSquareAttackedByKnight(board: Board?, square: Square?, byColour: Colour?): Boolean {
+    @kotlin.jvm.JvmStatic
+    fun Board.isSquareAttackedByKnight(square: Square, byColour: Colour): Boolean {
         for (knightDirection in KnightDirection.values()) {
-            if (square!!.isValidDirection(knightDirection) &&
-                    board!!.getSquareOccupant(square.fromDirection(knightDirection)) ==
+            if (square.isValidDirection(knightDirection) &&
+                    getSquareOccupant(square.fromDirection(knightDirection)) ==
                     SquareOccupant.WN.ofColour(byColour)) {
                 return true
             }
@@ -219,38 +221,41 @@ object BoardUtils {
         return false
     }
 
-    private fun isSquareAttackedByPawn(board: Board, square: Square, byColour: Colour): Boolean {
+    @kotlin.jvm.JvmStatic
+    fun Board.isSquareAttackedByPawn(square: Square, byColour: Colour): Boolean {
         for (captureDirection in PawnMoveHelper.captureDirections) {
             val newX = square.xFile + captureDirection.xIncrement
             val newY = square.yRank + PawnMoveHelper.advanceDirection(byColour.opponent())
             if (CommonUtils.isValidSquareReference(newX, newY)
-                    && board.getSquareOccupant(Square.fromCoords(newX, newY)) == SquareOccupant.WP.ofColour(byColour)) {
+                    && getSquareOccupant(Square.fromCoords(newX, newY)) == SquareOccupant.WP.ofColour(byColour)) {
                 return true
             }
         }
         return false
     }
 
-    private fun isSquareAttackedByBishopOrQueen(board: Board, square: Square, byColour: Colour): Boolean {
+    @kotlin.jvm.JvmStatic
+    fun Board.isSquareAttackedByBishopOrQueen(square: Square, byColour: Colour): Boolean {
         for (sliderDirection in SliderDirection.getDirectionsForPiece(Piece.BISHOP)) {
-            if (isSquareAttackedBySliderInDirection(board, square, byColour, sliderDirection, Piece.BISHOP)) {
+            if (isSquareAttackedBySliderInDirection(square, byColour, sliderDirection, Piece.BISHOP)) {
                 return true
             }
         }
         return false
     }
 
-    private fun isSquareAttackedByRookOrQueen(board: Board, square: Square, byColour: Colour): Boolean {
+    @kotlin.jvm.JvmStatic
+    fun Board.isSquareAttackedByRookOrQueen(square: Square, byColour: Colour): Boolean {
         for (sliderDirection in SliderDirection.getDirectionsForPiece(Piece.ROOK)) {
-            if (isSquareAttackedBySliderInDirection(board, square, byColour, sliderDirection, Piece.ROOK)) {
+            if (isSquareAttackedBySliderInDirection(square, byColour, sliderDirection, Piece.ROOK)) {
                 return true
             }
         }
         return false
     }
 
-    private fun isSquareAttackedBySliderInDirection(
-            board: Board,
+    @kotlin.jvm.JvmStatic
+    fun Board.isSquareAttackedBySliderInDirection(
             square: Square,
             byColour: Colour,
             sliderDirection: SliderDirection,
@@ -258,9 +263,9 @@ object BoardUtils {
 
         if (square.isValidDirection(sliderDirection)) {
             val newSquare = square.fromDirection(sliderDirection)
-            val squareOccupant = board.getSquareOccupant(newSquare)
+            val squareOccupant = getSquareOccupant(newSquare)
             if (squareOccupant == SquareOccupant.NONE) {
-                return isSquareAttackedBySliderInDirection(board, newSquare, byColour, sliderDirection, piece)
+                return isSquareAttackedBySliderInDirection(newSquare, byColour, sliderDirection, piece)
             }
             if (squareOccupant == piece.toSquareOccupant(byColour) ||
                     squareOccupant == SquareOccupant.WQ.ofColour(byColour)) {
@@ -270,32 +275,33 @@ object BoardUtils {
         return false
     }
 
-    private fun isMoveLeavesMoverInCheck(board: Board, move: Move): Boolean {
-        val boardBuilder = BoardBuilder(MoveMaker.makeMove(board, move))
-                .withSideToMove(board.sideToMove)
+    @kotlin.jvm.JvmStatic
+    fun Board.isMoveLeavesMoverInCheck(move: Move): Boolean {
         return try {
-            isCheck(boardBuilder.build())
+            BoardBuilder(MoveMaker.makeMove(this, move))
+                    .withSideToMove(sideToMove)
+                    .build().isCheck()
         } catch (e: InvalidBoardException) {
             throw InvalidBoardException("After making trial move " + move + ", I caught " + e.message)
         }
     }
 
     @kotlin.jvm.JvmStatic
-    fun isCheck(board: Board): Boolean {
-        val squares = board.getSquaresWithOccupant(
-                SquareOccupant.WK.ofColour(board.sideToMove))
+    fun Board.isCheck(): Boolean {
+        val squares = getSquaresWithOccupant(
+                SquareOccupant.WK.ofColour(sideToMove))
         if (squares.isEmpty()) {
-            throw InvalidBoardException("Given a board with no ${board.sideToMove} king on it. $board")
+            throw InvalidBoardException("Given a board with no ${sideToMove} king on it. $this")
         }
         val ourKingSquare = squares[0]
-        return isSquareAttackedBy(board, ourKingSquare, board.sideToMove.opponent())
+        return isSquareAttackedBy(ourKingSquare, sideToMove.opponent())
     }
 
     @kotlin.jvm.JvmStatic
-    fun getLegalMoves(board: Board): List<Move> {
-        return getAllMovesWithoutRemovingChecks(board)
+    fun Board.getLegalMoves(): List<Move> {
+        return getAllMovesWithoutRemovingChecks()
                 .parallelStream()
-                .filter { m: Move -> !isMoveLeavesMoverInCheck(board, m) }
+                .filter { m: Move -> !isMoveLeavesMoverInCheck(m) }
                 .collect(Collectors.toList())
     }
 }

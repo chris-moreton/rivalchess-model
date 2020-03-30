@@ -342,11 +342,13 @@ public class BoardUtilsTest {
         boardBuilder.withSquareOccupant(Square.fromCoords(5, 6), SquareOccupant.BB);
         boardBuilder.withSideToMove(Colour.WHITE);
 
+        final Board board = boardBuilder.build();
+
         final List<Square> actualSquares =
                 BoardUtils.getDirectionalSquaresFromSquare(
+                        boardBuilder.build(),
                         Square.fromCoords(2,3),
-                        SliderDirection.SE,
-                        boardBuilder.build());
+                        SliderDirection.SE);
 
         final List<Square> expectedSquares =
                 new ArrayList<>(Arrays.asList(
@@ -370,7 +372,9 @@ public class BoardUtilsTest {
 
         final List<Square> actualSquares =
                 BoardUtils.getDirectionalSquaresFromSquare(
-                        Square.fromCoords(2,3), SliderDirection.SE, boardBuilder.build());
+                        boardBuilder.build(),
+                        Square.fromCoords(2,3),
+                        SliderDirection.SE);
 
         final List<Square> expectedSquares =
                 new ArrayList<>(Arrays.asList(

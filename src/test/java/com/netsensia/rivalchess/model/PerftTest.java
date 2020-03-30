@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.netsensia.rivalchess.model.exception.IllegalFenException;
 import com.netsensia.rivalchess.model.exception.InvalidMoveException;
+import com.netsensia.rivalchess.model.util.BoardUtils;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public class PerftTest {
         }
         long nodes = 0;
 
-        for (Move move : board.getLegalMoves()) {
+        for (Move move : BoardUtils.getLegalMoves(board)) {
             Board newBoard = Board.fromMove(board, move);
             nodes += getPerft(newBoard, depth - 1);
         }

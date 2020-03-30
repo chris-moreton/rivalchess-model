@@ -1,6 +1,5 @@
 package com.netsensia.rivalchess.model
 
-import com.netsensia.rivalchess.model.util.BoardUtils
 import com.netsensia.rivalchess.model.util.FenUtils
 import com.netsensia.rivalchess.model.util.MoveMaker
 import java.util.*
@@ -76,9 +75,6 @@ class Board {
     fun getSquaresWithOccupant(squareOccupant: SquareOccupant): List<Square> {
         return ArrayList(occupantSquares[squareOccupant])
     }
-
-    val legalMoves: List<Move>
-        get() = BoardUtils.getLegalMoves(this)
 
     override fun equals(other: Any?): Boolean {
         if (other is Board) {
