@@ -1,23 +1,6 @@
 Rival Chess Board and Move Generation Utilities
 ===============================================
 
-My first chess program was Rival for DOS, written while listening to Metallica's newly-released Black Album, a few years back in the early nineties.
-It was pretty good and pretty fast, but not very well written. Rival, that is, not the Black Album.
-
-Do you remember, back in the day? When you had to write your own mouse driver and mouse-handling routines if you wanted a graphical interface in DOS? Do you remember? You don't see much of that these days, do you? What's that all about?
-
-A bit of observational comedy for you there.
-
-Next up was Rival for Windows a couple of years later, again in C++ (Borland). Then, Rival for Android was released which
-used the Rival Chess Engine written in Java.
-
-This library moves the board-management, move-generation and move-making routines into a single component.
-
-This is better. It's a well-tested library of chess utilities with an expressive interface and simple code, written in Kotlin.
-
-It's not a fast as the Rival Chess engine's internal move generation and board manipulation routines. Those use magic bitboards and are at least
-20x faster than this library.
-
 ### Installation
 
 #### Maven
@@ -115,4 +98,17 @@ The Board class is immutable. When a move is made, you get a new Board. To chang
     
     squareOccupant.WB.ofColour(Colour.BLACK); // == SquareOccupant.BB
     
+### History
 
+My first chess program was Rival for DOS, written while listening to Metallica's newly-released Black Album, a few years back in the early nineties.
+It was pretty good and pretty fast, but not very well written. Rival, that is, not the Black Album.
+
+Next up was Rival for Windows a couple of years later, again in C++ (Borland). Then, Rival for Android was released which
+used the Rival Chess Engine written in Java.
+
+This library moves the board-management, move-generation and move-making routines into a single component.
+
+This is better. It's a well-tested library of chess utilities with an expressive interface and simple code, written in Kotlin.
+
+It's not a fast as the Rival Chess engine's internal move generation and board manipulation routines. Those use magic bitboards and are at least
+20x faster than this library.

@@ -8,7 +8,6 @@ import com.netsensia.rivalchess.model.SquareOccupant
 import com.netsensia.rivalchess.model.exception.IllegalFenException
 
 object FenUtils {
-    const val startPos = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
     @kotlin.jvm.JvmStatic
     fun getBoardModel(fen: String): Board {
@@ -18,7 +17,7 @@ object FenUtils {
                     "Expected at least 2 sections to FEN - board and mover"
             )
         }
-        val boardBuilder: BoardBuilder = Board.Companion.builder()
+        val boardBuilder: BoardBuilder = Board.builder()
         setBoardParts(boardBuilder, fenParts[0])
         setMover(boardBuilder, fenParts[1])
         setCastleFlags(boardBuilder, if (fenParts.size > 2) fenParts[2] else "kqKQ")
@@ -32,8 +31,7 @@ object FenUtils {
         if (boardPart.length != 1) {
             throw IllegalFenException("Unexpected error processing side to move")
         }
-        val mover = boardPart.toCharArray()[0]
-        when (mover) {
+        when (val mover = boardPart.toCharArray()[0]) {
             'w' -> boardBuilder.withSideToMove(Colour.WHITE)
             'b' -> boardBuilder.withSideToMove(Colour.BLACK)
             else -> throw IllegalFenException("Invalid side to move: $mover")
@@ -103,26 +101,25 @@ object FenUtils {
         }
     }
 
-    fun collectRankParts(
+    private fun collectRankParts(
             boardBuilder: BoardBuilder, rankParts: Array<String>, file: Int, rank: Int) {
         if (file == 8) {
             return
         }
-        val piece = rankParts[rank].toCharArray()[file]
-        when (piece) {
-            'p' -> boardBuilder.withSquareOccupant(Square.Companion.fromCoords(file, rank), SquareOccupant.BP)
-            'P' -> boardBuilder.withSquareOccupant(Square.Companion.fromCoords(file, rank), SquareOccupant.WP)
-            'q' -> boardBuilder.withSquareOccupant(Square.Companion.fromCoords(file, rank), SquareOccupant.BQ)
-            'Q' -> boardBuilder.withSquareOccupant(Square.Companion.fromCoords(file, rank), SquareOccupant.WQ)
-            'r' -> boardBuilder.withSquareOccupant(Square.Companion.fromCoords(file, rank), SquareOccupant.BR)
-            'R' -> boardBuilder.withSquareOccupant(Square.Companion.fromCoords(file, rank), SquareOccupant.WR)
-            'b' -> boardBuilder.withSquareOccupant(Square.Companion.fromCoords(file, rank), SquareOccupant.BB)
-            'B' -> boardBuilder.withSquareOccupant(Square.Companion.fromCoords(file, rank), SquareOccupant.WB)
-            'n' -> boardBuilder.withSquareOccupant(Square.Companion.fromCoords(file, rank), SquareOccupant.BN)
-            'N' -> boardBuilder.withSquareOccupant(Square.Companion.fromCoords(file, rank), SquareOccupant.WN)
-            'k' -> boardBuilder.withSquareOccupant(Square.Companion.fromCoords(file, rank), SquareOccupant.BK)
-            'K' -> boardBuilder.withSquareOccupant(Square.Companion.fromCoords(file, rank), SquareOccupant.WK)
-            '-' -> boardBuilder.withSquareOccupant(Square.Companion.fromCoords(file, rank), SquareOccupant.NONE)
+        when (val piece = rankParts[rank].toCharArray()[file]) {
+            'p' -> boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.BP)
+            'P' -> boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.WP)
+            'q' -> boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.BQ)
+            'Q' -> boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.WQ)
+            'r' -> boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.BR)
+            'R' -> boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.WR)
+            'b' -> boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.BB)
+            'B' -> boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.WB)
+            'n' -> boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.BN)
+            'N' -> boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.WN)
+            'k' -> boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.BK)
+            'K' -> boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.WK)
+            '-' -> boardBuilder.withSquareOccupant(Square.fromCoords(file, rank), SquareOccupant.NONE)
             else -> throw IllegalFenException("Unexpected character in FEN: $piece")
         }
         collectRankParts(boardBuilder, rankParts, file + 1, rank)
@@ -130,31 +127,31 @@ object FenUtils {
 
     @kotlin.jvm.JvmStatic
     fun invertFen(fen: String): String {
-        var fen = fen
-        fen = fen.trim { it <= ' ' }
-        fen = fen.replace(" b ", " . ")
-        fen = fen.replace(" w ", " ; ")
-        fen = fen.replace('Q', 'z')
-        fen = fen.replace('K', 'x')
-        fen = fen.replace('N', 'c')
-        fen = fen.replace('B', 'v')
-        fen = fen.replace('R', 'm')
-        fen = fen.replace('P', ',')
-        fen = fen.replace('q', 'Q')
-        fen = fen.replace('k', 'K')
-        fen = fen.replace('n', 'N')
-        fen = fen.replace('b', 'B')
-        fen = fen.replace('r', 'R')
-        fen = fen.replace('p', 'P')
-        fen = fen.replace('z', 'q')
-        fen = fen.replace('x', 'k')
-        fen = fen.replace('c', 'n')
-        fen = fen.replace('v', 'b')
-        fen = fen.replace('m', 'r')
-        fen = fen.replace(',', 'p')
-        fen = fen.replace(" . ", " w ")
-        fen = fen.replace(" ; ", " b ")
-        val fenParts = fen.split(" ").toTypedArray()
+        var invertedFen = fen
+        invertedFen = invertedFen.trim { it <= ' ' }
+        invertedFen = invertedFen.replace(" b ", " . ")
+        invertedFen = invertedFen.replace(" w ", " ; ")
+        invertedFen = invertedFen.replace('Q', 'z')
+        invertedFen = invertedFen.replace('K', 'x')
+        invertedFen = invertedFen.replace('N', 'c')
+        invertedFen = invertedFen.replace('B', 'v')
+        invertedFen = invertedFen.replace('R', 'm')
+        invertedFen = invertedFen.replace('P', ',')
+        invertedFen = invertedFen.replace('q', 'Q')
+        invertedFen = invertedFen.replace('k', 'K')
+        invertedFen = invertedFen.replace('n', 'N')
+        invertedFen = invertedFen.replace('b', 'B')
+        invertedFen = invertedFen.replace('r', 'R')
+        invertedFen = invertedFen.replace('p', 'P')
+        invertedFen = invertedFen.replace('z', 'q')
+        invertedFen = invertedFen.replace('x', 'k')
+        invertedFen = invertedFen.replace('c', 'n')
+        invertedFen = invertedFen.replace('v', 'b')
+        invertedFen = invertedFen.replace('m', 'r')
+        invertedFen = invertedFen.replace(',', 'p')
+        invertedFen = invertedFen.replace(" . ", " w ")
+        invertedFen = invertedFen.replace(" ; ", " b ")
+        val fenParts = invertedFen.split(" ").toTypedArray()
         val boardParts = fenParts[0].split("/").toTypedArray()
         val newFen = boardParts[7] + "/" +
                 boardParts[6] + "/" +
@@ -187,5 +184,9 @@ object FenUtils {
         val newFile = ('h' - file + 'a'.toInt()).toChar()
         val newRank = ('8' - rank + '1'.toInt()).toChar()
         return newFile.toString() + newRank
+    }
+
+    private fun getFenFromBoard(board: Board): String {
+        return "";
     }
 }

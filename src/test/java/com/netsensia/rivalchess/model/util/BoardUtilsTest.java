@@ -83,7 +83,7 @@ public class BoardUtilsTest {
                 BoardUtils.getSliderMoves(boardBuilder.build(), Piece.ROOK);
 
         final List<Move> expectedMoves =
-                new ArrayList<>(Arrays.asList());
+                new ArrayList<>(Collections.emptyList());
 
         Collections.sort(expectedMoves);
         Collections.sort(actualMoves);
@@ -162,7 +162,7 @@ public class BoardUtilsTest {
     public void testNoCastlingAvailable() {
         final Board.BoardBuilder boardBuilder = new Board.BoardBuilder(CommonTestUtils.getStartBoard());
 
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
+        assertEquals(new ArrayList<>(Collections.emptyList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
     }
 
     @Test
@@ -173,7 +173,7 @@ public class BoardUtilsTest {
         boardBuilder.withIsQueenSideCastleAvailable(Colour.WHITE, true);
         boardBuilder.withIsQueenSideCastleAvailable(Colour.BLACK, true);
 
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
+        assertEquals(new ArrayList<>(Collections.emptyList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
     }
 
     @Test
@@ -186,7 +186,7 @@ public class BoardUtilsTest {
         boardBuilder.withIsQueenSideCastleAvailable(Colour.BLACK, true);
 
         boardBuilder.withSquareOccupant(Square.fromCoords(5, 7), SquareOccupant.NONE);
-        assertEquals(new ArrayList<>(Arrays.asList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
+        assertEquals(new ArrayList<>(Collections.emptyList()), BoardUtils.getCastlingMoves(boardBuilder.build()));
 
         boardBuilder.withSquareOccupant(Square.fromCoords(6, 7), SquareOccupant.NONE);
         assertEquals(new ArrayList<>(Arrays.asList(

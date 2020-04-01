@@ -106,7 +106,8 @@ object BoardUtils {
     @kotlin.jvm.JvmStatic
     fun Board.getPawnCaptures(
             mover: Colour,
-            fromSquare: Square): List<Move> {
+            fromSquare: Square
+    ): List<Move> {
         val moves: MutableList<Move> = ArrayList()
         for (captureDirection in PawnMoveHelper.captureDirections) {
             moves.addAll(getPawnCapturesInDirection(mover, fromSquare, captureDirection))
@@ -259,7 +260,8 @@ object BoardUtils {
             square: Square,
             byColour: Colour,
             sliderDirection: SliderDirection,
-            piece: Piece): Boolean {
+            piece: Piece
+    ): Boolean {
 
         if (square.isValidDirection(sliderDirection)) {
             val newSquare = square.fromDirection(sliderDirection)
@@ -272,6 +274,7 @@ object BoardUtils {
                 return true
             }
         }
+
         return false
     }
 
@@ -291,7 +294,7 @@ object BoardUtils {
         val squares = getSquaresWithOccupant(
                 SquareOccupant.WK.ofColour(sideToMove))
         if (squares.isEmpty()) {
-            throw InvalidBoardException("Given a board with no ${sideToMove} king on it. $this")
+            throw InvalidBoardException("Given a board with no $sideToMove king on it. $this")
         }
         val ourKingSquare = squares[0]
         return isSquareAttackedBy(ourKingSquare, sideToMove.opponent())

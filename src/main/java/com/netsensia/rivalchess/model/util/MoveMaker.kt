@@ -4,6 +4,7 @@ import com.netsensia.rivalchess.model.*
 import com.netsensia.rivalchess.model.Board.BoardBuilder
 import com.netsensia.rivalchess.model.helper.CastlingHelper
 import com.netsensia.rivalchess.model.helper.PawnMoveHelper
+import kotlin.math.abs
 
 object MoveMaker {
     @kotlin.jvm.JvmStatic
@@ -12,16 +13,22 @@ object MoveMaker {
         val fromSquare = move.srcBoardRef
         val toSquare = move.tgtBoardRef
         val movingPiece = board.getSquareOccupant(fromSquare)
+
         disableCastleFlags(newBoardBuilder, fromSquare, board.sideToMove)
         disableCastleFlags(newBoardBuilder, toSquare, board.sideToMove.opponent())
+
         makeEnPassantMoves(board, newBoardBuilder, move)
         setEnPassantFile(move, newBoardBuilder, movingPiece)
+
         makeCastleMoves(board, newBoardBuilder, move)
+
         newBoardBuilder.withSquareOccupant(move.tgtBoardRef, movingPiece)
-        makePromotionMoves(board, newBoardBuilder, move)
-        newBoardBuilder.withSquareOccupant(move.srcBoardRef, SquareOccupant.NONE)
-        newBoardBuilder.withSideToMove(board.sideToMove.opponent())
-        return newBoardBuilder.build()
+
+        makePromotionMove(board, newBoardBuilder, move)
+
+        return newBoardBuilder
+                .withSquareOccupant(move.srcBoardRef, SquareOccupant.NONE)
+                .withSideToMove(board.sideToMove.opponent()).build();
     }
 
     private fun disableCastleFlags(
@@ -45,7 +52,7 @@ object MoveMaker {
             boardBuilder: BoardBuilder,
             movingPiece: SquareOccupant) {
         if (movingPiece.piece == Piece.PAWN &&
-                Math.abs(move.tgtBoardRef.yRank - move.srcBoardRef.yRank) == 2) {
+                abs(move.tgtBoardRef.yRank - move.srcBoardRef.yRank) == 2) {
             boardBuilder.withEnPassantFile(move.srcBoardRef.xFile)
         } else {
             boardBuilder.withEnPassantFile(-1)
@@ -71,7 +78,7 @@ object MoveMaker {
         }
     }
 
-    private fun makePromotionMoves(
+    private fun makePromotionMove(
             board: Board,
             boardBuilder: BoardBuilder,
             move: Move) {
@@ -92,7 +99,7 @@ object MoveMaker {
         }
         val targetSquare = move.tgtBoardRef
         boardBuilder.withSquareOccupant(
-                Square.Companion.fromCoords(
+                Square.fromCoords(
                         targetSquare.xFile,
                         targetSquare.yRank + PawnMoveHelper.advanceDirection(board.sideToMove.opponent())),
                 SquareOccupant.NONE)
