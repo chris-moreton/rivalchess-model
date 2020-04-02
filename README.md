@@ -108,7 +108,5 @@ used the Rival Chess Engine written in Java.
 
 This library moves the board-management, move-generation and move-making routines into a single component.
 
-This is better. It's a well-tested library of chess utilities with an expressive interface and simple code, written in Kotlin.
-
 It's not a fast as the Rival Chess engine's internal move generation and board manipulation routines. Those use magic bitboards and are at least
 20x faster than this library.

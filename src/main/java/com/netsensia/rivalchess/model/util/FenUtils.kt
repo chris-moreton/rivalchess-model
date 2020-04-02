@@ -7,6 +7,7 @@ import com.netsensia.rivalchess.model.Square
 import com.netsensia.rivalchess.model.SquareOccupant
 import com.netsensia.rivalchess.model.exception.IllegalFenException
 import com.netsensia.rivalchess.model.helper.SliderDirection
+import java.lang.NumberFormatException
 import java.util.stream.Collectors.toList
 
 object FenUtils {
@@ -63,11 +64,19 @@ object FenUtils {
     }
 
     private fun setHalfMoves(boardBuilder: BoardBuilder, boardPart: String) {
-        boardBuilder.withHalfMoveCount(boardPart.toInt())
+        try {
+            boardBuilder.withHalfMoveCount(boardPart.toInt())
+        } catch (e: NumberFormatException) {
+            throw IllegalFenException("Invalid number for half moves: $boardPart")
+        }
     }
 
     private fun setFullMoves(boardBuilder: BoardBuilder, boardPart: String) {
-        boardBuilder.withFullMoveCount(boardPart.toInt())
+        try {
+            boardBuilder.withFullMoveCount(boardPart.toInt())
+        } catch (e: NumberFormatException) {
+            throw IllegalFenException("Invalid number for full moves: $boardPart")
+        }
     }
 
     private fun setBoardParts(boardBuilder: BoardBuilder, boardPart: String) {
