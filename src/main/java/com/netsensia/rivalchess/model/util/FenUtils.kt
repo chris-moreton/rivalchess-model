@@ -193,7 +193,7 @@ object FenUtils {
         if (board.getSquareOccupant(square) != SquareOccupant.NONE) {
             return 0;
         }
-        
+
         return 1 + if (square.isValidDirection(SliderDirection.E))
             getEmptyCount(board, square.fromDirection(SliderDirection.E))
         else 0
