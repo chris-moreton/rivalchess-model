@@ -8,12 +8,12 @@ Rival Chess Board and Move Generation Utilities
     <dependency>
         <groupId>com.netsensia.rivalchess</groupId>
         <artifactId>rivalchess-model</artifactId>
-        <version>6.1.1</version>
+        <version>7.0.0</version>
     </dependency>
     
 #### Gradle
 
-    compile group: 'com.netsensia.rivalchess', name: 'rivalchess-model', version: '6.1.1'
+    compile group: 'com.netsensia.rivalchess', name: 'rivalchess-model', version: '7.0.0'
 
 ### Quick Start
 
