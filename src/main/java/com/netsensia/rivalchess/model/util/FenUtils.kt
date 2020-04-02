@@ -6,6 +6,8 @@ import com.netsensia.rivalchess.model.Colour
 import com.netsensia.rivalchess.model.Square
 import com.netsensia.rivalchess.model.SquareOccupant
 import com.netsensia.rivalchess.model.exception.IllegalFenException
+import com.netsensia.rivalchess.model.helper.SliderDirection
+import java.util.stream.Collectors.toList
 
 object FenUtils {
 
@@ -186,7 +188,66 @@ object FenUtils {
         return newFile.toString() + newRank
     }
 
-    private fun getFenFromBoard(board: Board): String {
-        return "";
+    private fun getEmptyCount(board: Board, square: Square): Int {
+
+        if (board.getSquareOccupant(square) != SquareOccupant.NONE) {
+            return 0;
+        }
+        
+        return 1 + if (square.isValidDirection(SliderDirection.E))
+            getEmptyCount(board, square.fromDirection(SliderDirection.E))
+        else 0
+    }
+
+    private fun getRowString(board: Board, square: Square): String {
+
+        val sb = StringBuilder()
+
+        val squareOccupant = board.getSquareOccupant(square)
+
+        if (squareOccupant != SquareOccupant.NONE) {
+            sb.append(squareOccupant.toChar())
+            if (square.isValidDirection(SliderDirection.E)) {
+                sb.append(getRowString(board, square.fromDirection(SliderDirection.E)))
+            }
+        } else {
+            val emptyToRight = if (square.isValidDirection(SliderDirection.E))
+                getEmptyCount(board, square.fromDirection(SliderDirection.E))
+            else 0
+            sb.append(1 + emptyToRight)
+            val newSquare = square.fromDirection(SliderDirection.E, emptyToRight)
+            if (newSquare.isValidDirection(SliderDirection.E)) {
+                sb.append(getRowString(board, newSquare.fromDirection(SliderDirection.E)))
+            }
+        }
+
+        return sb.toString()
+    }
+
+    @kotlin.jvm.JvmStatic
+    fun Board.getFen(): String {
+        val sb = StringBuilder()
+        for (square in listOf(Square.A8, Square.A7, Square.A6, Square.A5, Square.A4, Square.A3, Square.A2)) {
+            sb.append(getRowString(this, square));
+            sb.append("/")
+        }
+        sb.append(getRowString(this, Square.A1));
+        sb.append(" ");
+        sb.append(this.sideToMove.value)
+        sb.append(" ")
+        sb.append(if (this.isKingSideCastleAvailable(Colour.BLACK)) "k" else "")
+        sb.append(if (this.isQueenSideCastleAvailable(Colour.BLACK)) "q" else "")
+        sb.append(if (this.isKingSideCastleAvailable(Colour.WHITE)) "K" else "")
+        sb.append(if (this.isQueenSideCastleAvailable(Colour.WHITE)) "Q" else "")
+        sb.append(" ")
+        sb.append((this.enPassantFile + 97).toChar())
+        sb.append(if (this.sideToMove == Colour.WHITE) '6' else '3')
+        sb.append(" ")
+        sb.append(this.halfMoveCount)
+        sb.append(" ")
+        sb.append(this.fullMoveCount)
+
+        return sb.toString()
+
     }
 }

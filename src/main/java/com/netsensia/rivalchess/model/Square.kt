@@ -137,7 +137,7 @@ enum class Square(val xFile: Int, val yRank: Int) {
         }
     }
 
-    fun isValidDirection(sliderDirection: SliderDirection?): Boolean {
+    fun isValidDirection(sliderDirection: SliderDirection): Boolean {
         return validSliderDirections[this]!!.contains(sliderDirection)
     }
 
@@ -148,6 +148,12 @@ enum class Square(val xFile: Int, val yRank: Int) {
     fun fromDirection(sliderDirection: SliderDirection): Square {
         val newX = xFile + sliderDirection.xIncrement
         val newY = yRank + sliderDirection.yIncrement
+        return fromCoords(newX, newY)
+    }
+
+    fun fromDirection(sliderDirection: SliderDirection, count: Int): Square {
+        val newX = xFile + sliderDirection.xIncrement * count
+        val newY = yRank + sliderDirection.yIncrement * count
         return fromCoords(newX, newY)
     }
 

@@ -9,4 +9,6 @@ object CommonUtils {
     fun isValidSquareReference(x: Int, y: Int): Boolean {
         return isValidRankFileBoardReference(x) && isValidRankFileBoardReference(y)
     }
+
+
 }

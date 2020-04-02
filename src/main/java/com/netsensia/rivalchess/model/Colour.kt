@@ -2,8 +2,8 @@ package com.netsensia.rivalchess.model
 
 import java.util.*
 
-enum class Colour(val value: Int) {
-    WHITE(0), BLACK(1);
+enum class Colour(val value: Char) {
+    WHITE('w'), BLACK('b');
 
     fun opponent(): Colour {
         return if (this == WHITE) BLACK else WHITE
@@ -11,7 +11,7 @@ enum class Colour(val value: Int) {
 
     companion object {
         fun list(): List<Colour> {
-            return ArrayList(Arrays.asList(WHITE, BLACK))
+            return ArrayList(listOf(WHITE, BLACK))
         }
     }
 

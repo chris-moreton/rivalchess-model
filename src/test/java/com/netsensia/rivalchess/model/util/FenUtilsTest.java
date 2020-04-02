@@ -20,6 +20,13 @@ public class FenUtilsTest {
     public final ExpectedException exception = ExpectedException.none();
 
     @Test
+    public void getFen() {
+        String fen = "6k1/6p1/1p2q2p/1p5P/1P3RP1/2PK1B2/1r2N3/8 b kQ g3 5 56";
+        Board board = FenUtils.getBoardModel(fen);
+        assertEquals(fen, FenUtils.getFen(board));
+    }
+
+    @Test
     public void throwsExceptionWhenNotTwoPartsToFen() {
         exception.expect(IllegalFenException.class);
         exception.expectMessage(
