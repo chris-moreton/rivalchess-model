@@ -13,6 +13,8 @@ import static org.junit.Assert.*;
 
 public class FenUtilsTest {
 
+    String FEN_START_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqKQ - 0 1";
+
     private static final String INVALID_FEN_MESSAGE =
             "Expected at least 2 sections to FEN - board and mover";
     
@@ -24,6 +26,12 @@ public class FenUtilsTest {
         String fen = "6k1/6p1/1p2q2p/1p5P/1P3RP1/2PK1B2/1r2N3/8 b kQ g3 5 56";
         Board board = FenUtils.getBoardModel(fen);
         assertEquals(fen, FenUtils.getFen(board));
+    }
+
+    @Test
+    public void getFenFromStartPosition() {
+        Board board = Board.fromFen(FEN_START_POS);
+        assertEquals(FEN_START_POS, FenUtils.getFen(board));
     }
 
     @Test

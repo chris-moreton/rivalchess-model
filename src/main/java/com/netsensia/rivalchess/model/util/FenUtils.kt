@@ -249,8 +249,12 @@ object FenUtils {
         sb.append(if (this.isKingSideCastleAvailable(Colour.WHITE)) "K" else "")
         sb.append(if (this.isQueenSideCastleAvailable(Colour.WHITE)) "Q" else "")
         sb.append(" ")
-        sb.append((this.enPassantFile + 97).toChar())
-        sb.append(if (this.sideToMove == Colour.WHITE) '6' else '3')
+        if (this.enPassantFile == -1) {
+            sb.append("-")
+        } else {
+            sb.append((this.enPassantFile + 97).toChar())
+            sb.append(if (this.sideToMove == Colour.WHITE) '6' else '3')
+        }
         sb.append(" ")
         sb.append(this.halfMoveCount)
         sb.append(" ")

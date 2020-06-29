@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "com.netsensia.rivalchess"
-version = '7.0.3'
+version = '7.0.4'
 
 jar.baseName("rivalchess-model")
 
@@ -109,14 +109,6 @@ task createProperties(dependsOn: processResources) {
     }
 }
 
-sonarqube {
-    properties {
-        property "sonar.projectKey", "chris-moreton_rivalchess-model"
-        property "sonar.organization", "aca26fcd4934a63f04e0c5b7af37da3002eaa877"
-        property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.login", "76a7c9377391556345ac12d13b91edc76e3d7df7"
-    }
-}
 compileKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
