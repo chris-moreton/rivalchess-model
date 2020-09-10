@@ -24,7 +24,7 @@ Rival Chess Board and Move Generation Utilities
 #### Generating Legal Moves
 
 ```   
-List<Move> legalMoves = board.getLegalMoves();
+List<Move> legalMoves = BoardUtils.getLegalMoves(board);
 ```
 
 #### Making a Move
